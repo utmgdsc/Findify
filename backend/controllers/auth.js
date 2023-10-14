@@ -11,6 +11,18 @@ const register = async (req, res, next) => {
     await user.save();
     res.json({ message: 'Registration successful' });
   } catch (error) {
+    if (error.name === 'MongoServerError' && error.code === 11000) {
+      // Handle duplicate key error (code 11000) for unique constraints
+      if (error.keyPattern) {
+        if (error.keyPattern.email) 
+          return res.status(400).json({ error: 'Email is already registered' });
+        if (error.keyPattern.username)
+          return res.status(400).json({ error: 'Username is already registered' });
+      } else {
+        // Handle other unique constraints if needed
+        return res.status(400).json({ error: 'Duplicate key error' });
+      }
+    }
     next(error);
   }
 };
