@@ -8,16 +8,21 @@ module.exports.register = async (req, res, next) => {
     const { username, email, password, firstName, lastName, contactNumber } = req.body;
     const user = new User({ username, email, password, firstName, lastName, contactNumber });
     await user.save();
-    res.json({ message: 'Registration Successful' });
-    req.login(req, res, err => {
-      if (err) return next(err);
-      // After register take to homepage
-      res.redirect('/home')
-    })
-  } catch (err) {
-    handleMongoError(err, res);
-    next(err);
-    res.redirect('/register');
+    res.json({ message: 'Registration successful' });
+  } catch (error) {
+    if (error.name === 'MongoServerError' && error.code === 11000) {
+      // Handle duplicate key error (code 11000) for unique constraints
+      if (error.keyPattern) {
+        if (error.keyPattern.email) 
+          return res.status(400).json({ error: 'Email is already registered' });
+        if (error.keyPattern.username)
+          return res.status(400).json({ error: 'Username is already registered' });
+      } else {
+        // Handle other unique constraints if needed
+        return res.status(400).json({ error: 'Duplicate key error' });
+      }
+    }
+    next(error);
   }
 };
 
