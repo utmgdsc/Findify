@@ -6,14 +6,13 @@
     rgba(0, 0, 0, 0) 0%,
     rgba(255, 254, 254, 0) 100%
   );
-  color: #ffffff;
+  color: rgb(214, 118, 99);
   display: flex;
   justify-content: space-between;
   align-items: stretch;
   gap: 2rem;
   padding: 0 1rem;
-  border-bottom: #ffffff;
-  border-bottom: 1.5px solid white;
+  border-bottom: 1.5px solid rgb(214, 118, 99);
 }
 
 

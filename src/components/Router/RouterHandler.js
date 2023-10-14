@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "../views/Homeview/Home.js";
-import Login from "../views/Loginview/Login.js";
-import Profile from "../views/Profileview/Profile.js";
+import Home from "../views/HomeView/Home.js";
+import Login from "../views/LoginView/Login.js";
+import Profile from "../views/ProfileView/Profile.js";
 
 
 export default function RouteHandler() {

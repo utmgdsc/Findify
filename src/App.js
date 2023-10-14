@@ -1,5 +1,5 @@
 import './App.css';
-import RouteHandler from "./component/router/RouterHandler.js";
+import RouteHandler from "./components/Router/RouterHandler.js";
 
 function App() {
   return (
@@ -10,3 +10,4 @@ function App() {
 }
 
 export default App;
+
