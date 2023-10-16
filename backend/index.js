@@ -1,6 +1,5 @@
 const express = require('express');
 const connectDB = require('./db');
-const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 
 const app = express();
@@ -11,9 +10,6 @@ connectDB();
 
 // Parse JSON request body
 app.use(express.json());
-
-// Define authentication routes
-app.use('/auth', authRoutes);
 
 // Define user routes
 app.use('/user', userRoutes);
