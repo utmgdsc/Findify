@@ -1,11 +1,28 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link } from "react-router-dom"
+import { PhoneInput } from 'react-international-phone';
+import { PhoneNumberUtil } from 'google-libphonenumber';
+import 'react-international-phone/style.css';
 
+
+  
 
 const SignUp = () => {
+
+        const [phone, setPhone] = useState("");
+        const phoneUtil = PhoneNumberUtil.getInstance();
+
+
+        const isPhoneValid = (phone) => {
+        try {
+            return phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone));
+        } catch (error) {
+            return false;
+        }
+        };
+
     return (
         <div class="vh-100 bg-image">
-        <div class="mask d-flex align-items-center h-100 gradient-custom-3">
             <div class="container h-40">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-12 col-md-9 col-lg-7 col-xl-6">
@@ -49,8 +66,17 @@ const SignUp = () => {
                         </div>
 
                         <div class="form-outline mb-4">
-                        <label class="form-label" for="form3Example4cdg">Contact Number</label>
-                        <input type="tel" id="form3Example4cdg" class="form-control form-control-lg" />
+                        <label class="form-label style:{}" for="form3Example4cdg">Contact Number</label>
+                        <div>
+                            <PhoneInput
+                                defaultCountry="ua"
+                                value={phone}
+                                onChange={(phone) => setPhone(phone)}
+                            />
+
+                            {!isPhoneValid(phone) && <div style={{ color: 'red' }}>Phone is not valid</div>}
+
+                        </div>
                         </div>
 
                         <div class="d-flex justify-content-center">
@@ -67,7 +93,6 @@ const SignUp = () => {
                 </div>
             </div>
             </div>
-        </div>
         </div>
      )
  }
