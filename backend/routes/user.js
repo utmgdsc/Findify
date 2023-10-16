@@ -37,7 +37,7 @@ router.route('/edit')
   })
 
 const errorHandler = err => {
-  console.error(err)
+  // console.error(err)
 }
 
 module.exports = router;
