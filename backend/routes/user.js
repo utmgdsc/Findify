@@ -18,7 +18,6 @@ router.route('/register')
       User.register(req, res, errorHandler);
     } catch (err) {
       res.json({ message: `Register User Error: ${err}` })
-      res.redirect('/register');
     }
   })
 
@@ -31,7 +30,6 @@ router.route('/edit')
       User.edit(req, res, errorHandler);
     } catch (err) {
       res.json({ message: `Edit User Error: ${err}` })
-      res.redirect('/register');
     }
   })
 

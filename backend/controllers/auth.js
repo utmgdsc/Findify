@@ -11,13 +11,10 @@ module.exports.register = async (req, res, next) => {
     res.json({ message: 'Registration Successful' });
     req.login(req, res, err => {
       if (err) return next(err);
-      // After register take to homepage
-      res.redirect('/home')
     })
   } catch (err) {
     handleMongoError(err, res);
     next(err);
-    res.redirect('/register');
   }
 };
 
@@ -55,15 +52,12 @@ module.exports.edit = async (req, res, next) => {
       res.json({ message: 'Profile Update Successful' });
       req.login(updatedUser, err => {
         if (err) return next(err);
-        // After edit profile take to homepage
-        res.redirect('/home')
       })
     })
 
   } catch (err) {
     handleMongoError(err, res);
     next(err);
-    res.redirect('/edit');
   }
 };
 
