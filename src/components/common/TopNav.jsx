@@ -8,7 +8,6 @@ const TopNav = () => {
       <ul>
         <CustomLink to="/Home">Home</CustomLink>
         <CustomLink to="/Profile">Profile</CustomLink>
-        
         <CustomLink to="/">Logout</CustomLink>
       </ul>
     </nav>

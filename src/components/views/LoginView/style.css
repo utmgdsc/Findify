@@ -1,15 +1,25 @@
-
 body {
     margin:0;
-	padding:0;
-    background-image: url("../../../assets/img/login_bg.jpg");
+	  padding:0;
+    background: url("../../../assets/img/background.jpg") !important;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
     background-size: cover;
    }
 
-.center {
+.container h1{
+  margin-top: 20px;
+  color: white;
+}
+
+label{
+  color: white;
+  margin-bottom: 3px;
+  margin-bottom: 3px;
+  align-self: right;
+}
+center {
   margin: 0;
   position: absolute;
   top: 40%;
@@ -18,53 +28,12 @@ body {
   transform: translate(-50%, -50%);
   }
 
-.info {
-    margin-top:32%;
-
+.container{
+  width: 400px;
+  height: 600px;
+  margin-top: 100px;
+  background-color: rgb(0, 0, 0);
+  padding-bottom: 30px;
+  padding-left: 50px;
+  align-items: center; 
 }
-
-.info p{
-    background-color: #fff;
-    font-family: 'Raleway',sans-serif;
-	color: #fff;
-	font-size: 22px;
-	font-weight: 300;
-	color:black;
-	letter-spacing: 0.5px;
-}
-
-.info button{
-    font-family: 'Raleway',sans-serif;
-	color: #fff;
-	background:rgb(224, 200, 16);
-	padding:10px 20px; 
-	font-size: 2em;
-	font-weight: 600;
-}
-.info button:hover{
-	background: purple;
-}
-
-.typewriter {
-    overflow: hidden; /* Ensures the content is not revealed until the animation */
-    border-right: .15em solid orange; /* The typwriter cursor */
-    white-space: nowrap; /* Keeps the content on a single line */
-    margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-    letter-spacing: .20em; /* Adjust as needed */
-    animation: 
-      typing 3.5s steps(40, end),
-      blink-caret .75s step-end infinite;
-    margin-bottom: 7px;
-  }
-  
-  /* The typing effect */
-  @keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
-  }
-  
-  /* The typewriter cursor effect */
-  @keyframes blink-caret {
-    from, to { border-color: transparent }
-    50% { border-color: rgb(207, 0, 134); }
-  }
