@@ -44,6 +44,11 @@ module.exports.login = async (req, res, next) => {
 // Edit an existing user
 module.exports.edit = async (req, res, next) => {
   try {
+    // TODO: Need check if user is logged in
+    // Non-admin user can only edit their own profile
+    // Admin user can edit any user profile
+    // should not be able to edit username and email
+    // should not expect userId in the request body
     const { userId, username, password, firstName, lastName, contactNumber } = req.body;
     const filter = { _id: userId };
 

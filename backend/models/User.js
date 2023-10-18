@@ -30,12 +30,6 @@ userSchema.pre('save', async function (next) {
   }
 });
 
-userSchema.methods.hashPassword = async function (password) {
-  const salt = await bcrypt.genSalt();
-  const hashedPassword = await bcrypt.hash(password, salt);
-  return hashedPassword;
-}
-
 // Compare the given password with the hashed password in the database
 userSchema.methods.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);
