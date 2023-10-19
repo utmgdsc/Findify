@@ -10,6 +10,11 @@ module.exports.register = async (req, res, next) => {
   
   try {
     const otpPair = await OtpPairs.findOne({ email });
+    const numExistingUsers = await User.countDocuments({ email });
+    if (numExistingUsers > 0) {
+      return res.status(400).json({ message: 'Email is already registered' });
+    }
+
     if (!otpPair) {
       return res.status(404).json({ message: 'User has not been sent OTP' });
     }
@@ -109,8 +114,12 @@ module.exports.edit = async (req, res, next) => {
 module.exports.sendOTP = async (req, res, next) => {
   const { email } = req.body;
   try {
+    const numExistingUsers = await User.countDocuments({ email });
+    if (numExistingUsers > 0) {
+      return res.status(400).json({ message: 'Email is already verified' });
+    }
+    
     let otpPair = await OtpPairs.findOne({ email });
-
     if (!otpPair) {
       otpPair = new OtpPairs({ email });
     }
