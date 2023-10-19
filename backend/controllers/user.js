@@ -1,12 +1,13 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const { generateOTP, sendOTP } = require('../utils/otp');
 
 // Register a new user
 module.exports.register = async (req, res, next) => {
   try {
-    const { username, email, password, firstName, lastName, contactNumber } = req.body;
-
+    const { username, email, password, firstName, lastName, contactNumber, OTP } = req.body;
+    // TODO: Verify otp
     const user = new User({ username, email, password, firstName, lastName, contactNumber });
     await user.save();
     res.json({ message: 'Registration Successful' });
@@ -44,11 +45,11 @@ module.exports.login = async (req, res, next) => {
 // Edit an existing user
 module.exports.edit = async (req, res, next) => {
   try {
-    // TODO: Need check if user is logged in
+    // TODO: Need to check if user is logged in
     // Non-admin user can only edit their own profile
     // Admin user can edit any user profile
     // should not be able to edit username and email
-    // should not expect userId in the request body
+    // should not expect userId in the request body 
     const { userId, username, password, firstName, lastName, contactNumber } = req.body;
     const filter = { _id: userId };
 
@@ -61,6 +62,21 @@ module.exports.edit = async (req, res, next) => {
       })
     })
 
+  } catch (err) {
+    handleMongoError(err, res);
+    next(err);
+  }
+};
+
+
+// generates and sends the OTP to the user
+module.exports.sendOTP = async (req, res, next) => {
+  const { email } = req.body;
+  const OTP = generateOTP();
+  try {
+    // TODO
+    sendOTP(email, OTP)
+    res.json({message: "OTP sent"});
   } catch (err) {
     handleMongoError(err, res);
     next(err);

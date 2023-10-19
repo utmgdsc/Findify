@@ -1,6 +1,7 @@
 const express = require('express');
 const { authenticate } = require('../middlewares/user');
 const UserController = require('../controllers/user')
+const { generateOTP, sendOTP } = require("../utils/otp");
 
 const router = express.Router();
 
@@ -24,6 +25,15 @@ router.route('/login')
       UserController.login(req, res, errorHandler);
     } catch (err) {
       res.json({ message: `Login User Error: ${err}` })
+    }
+  })
+
+router.route('/sendOTP')
+  .post(async (req, res) => {
+    try {
+      UserController.sendOTP(req, res, errorHandler);
+    } catch (err) {
+      res.json({ message: `Failed to send OTP: ${err}` })
     }
   })
 
