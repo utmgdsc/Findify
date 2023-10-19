@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const OtpPairs = require('../models/Otp');
 const { generateOTP, sendOTP } = require('../utils/otp');
+const { authenticate } = require('../middlewares/user')
 
 // Register a new user
 module.exports.register = async (req, res, next) => {
@@ -90,19 +91,22 @@ module.exports.edit = async (req, res, next) => {
     // TODO: Need to check if user is logged in
     // Non-admin user can only edit their own profile
     // Admin user can edit any user profile
-    // should not be able to edit username and email
+    // should not be able to edit email. only using email for verification
     // should not expect userId in the request body 
-    const { userId, password, firstName, lastName, contactNumber } = req.body;
-    const filter = { _id: userId };
+    await authenticate(req, res, next);
+    const { email, password, firstName, lastName, contactNumber } = req.body;
+    if (email !== req.user.email) {
+      throw new Error('Email does not match user!')
+    }
 
-    const data = { password, firstName, lastName, contactNumber };
-    const updatedUser = User.findOneAndUpdate(filter, data, (err, res) => {
-      if (err) return next(err);
-      res.json({ message: 'Profile Update Successful' });
-      req.login(updatedUser, err => {
-        if (err) return next(err);
-      })
-    });
+    req.user = {
+      ...req.user,
+      password: password || req.user.password,
+      firstName: firstName || req.user.firstName,
+      lastName: lastName || req.user.lastName,
+      contactNumber: contactNumber || req.user.contactNumber
+    };
+    req.user.save();
   } catch (err) {
     handleMongoError(err, res);
     next(err);
