@@ -1,6 +1,6 @@
 const express = require('express');
 const { authenticate } = require('../middlewares/auth');
-const User = require('../controllers/User')
+const UserController = require('../controllers/user')
 
 const router = express.Router();
 
@@ -10,28 +10,29 @@ router.route('/profile')
   });
 
 router.route('/register')
-  .get((req, res) => {
-    res.render('users/register');
-  })
   .post(async (req, res) => {
     try {
-      User.register(req, res, errorHandler);
+      UserController.register(req, res, errorHandler);
     } catch (err) {
       res.json({ message: `Register User Error: ${err}` })
-      res.redirect('/register');
+    }
+  })
+
+router.route('/login')
+  .post(async (req, res) => {
+    try {
+      UserController.login(req, res, errorHandler);
+    } catch (err) {
+      res.json({ message: `Login User Error: ${err}` })
     }
   })
 
 router.route('/edit')
-  .get((req, res) => {
-    res.render('users/edit');
-  })
   .post(async (req, res) => {
     try {
-      User.edit(req, res, errorHandler);
+      UserController.edit(req, res, errorHandler);
     } catch (err) {
       res.json({ message: `Edit User Error: ${err}` })
-      res.redirect('/register');
     }
   })
 
