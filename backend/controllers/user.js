@@ -33,7 +33,7 @@ module.exports.register = async (req, res, next) => {
       otpPair.OTPAttempts++;
 
       // If OTP attempts >= 5, block user for 1 hour
-      if (otpPair.OTPAttempts >= 5) {
+      if (otpPair.OTPAttempts > 5) {
         otpPair.isBlocked = true;
         let blockUntil = new Date();
         blockUntil.setHours(blockUntil.getHours() + 1);
@@ -48,8 +48,8 @@ module.exports.register = async (req, res, next) => {
     const OTPCreatedTime = otpPair.OTPCreatedTime;
     const currentTime = new Date();
 
-    // OTP expires after 5 minutes
-    if (currentTime - OTPCreatedTime > 5 * 60 * 1000) {
+    // OTP expires after 30 minutes
+    if (currentTime - OTPCreatedTime > 30 * 60 * 1000) {
       return res.status(403).send("OTP expired");
     }
     
