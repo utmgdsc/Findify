@@ -15,7 +15,7 @@ const sendOTP = (email, OTP) => {
   });
 
   const mailOptions = {
-    from: process.env.EMAIL_SERVICE_USER,
+    from: `Findify <${process.env.EMAIL_SERVICE_USER}>`,
     to: email,
     subject: "Findify: Account verification OTP",
     text: `Your OTP is: ${OTP}`,
