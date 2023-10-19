@@ -4,17 +4,31 @@ import { PhoneNumberUtil } from 'google-libphonenumber';
 import 'react-international-phone/style.css';
 
 export default function SignUp() {
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [userType, setUserType] = useState("");
-  const [secretKey, setSecretKey] = useState("");
-  const [verifyButton, setVerifyButton] = useState(false);
-  const [otp, setOtp] = useState(0);
-  const [otpSent, setotpSent] = useState(false);
-  const [OtpVerified, setotpVerified] = useState(false);
-  const [phone, setPhone] = useState("");
+
+    const [data, setData] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        phone: "",
+        email_format: false
+    });
+    const [errors, setErrors] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        username: "",
+        password: "",
+        address: "",
+        phone_number: ""
+    });
+
+    const [otpData, setOtpData] = useState({
+        otp:"",
+        otpVerified:false,
+        optSent:false,
+    })
+
   const phoneUtil = PhoneNumberUtil.getInstance();
 
   const isPhoneValid = (phone) => {
@@ -33,59 +47,19 @@ export default function SignUp() {
             // this is a valid email address
             // call setState({email: email}) to update the email
             // or update the data in redux store.
-            setVerifyButton(true)
-            setEmail(email)
+            setData({ ...data, email_format: true})
+            setData({ ...data, email: email})
+            console.log(data.email_format)
         }
         else {
             <div style={{ color: 'red' }}>Email is not valid. Please enter a valid UofT email.</div>
-            setVerifyButton(false)
+            setData({ ...data, email_format: false})
         }
     }
 
-const sendOtp = (e) => {
-    setotpSent(true)
-}
-
-const verifyOtp = (e) => {
-    setotpVerified(true)
-}
-
 
   const handleSubmit = (e) => {
-    if (userType == "Admin" && secretKey != "AdarshT") {
-      e.preventDefault();
-      alert("Invalid Admin");
-    } else {
-      e.preventDefault();
-
-      console.log(fname, lname, email, password);
-      fetch("http://localhost:5000/register", {
-        method: "POST",
-        crossDomain: true,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-          fname,
-          email,
-          lname,
-          password,
-          phone,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data, "userRegister");
-          if (data.status == "ok") {
-            alert("Registration Successful");
-          } else {
-            alert("Something went wrong");
-          }
-        });
-    }
-  };
+    };
 
   return (
     <div class="auth-wrapper container h-40">
@@ -103,7 +77,7 @@ const verifyOtp = (e) => {
                         type="text"
                         className="form-control"
                         placeholder="First name"
-                        onChange={(e) => setFname(e.target.value)}
+                        onChange={(e) => setData({ ...data, firstName: e.target.value})}
                         />
                     </div>
 
@@ -113,7 +87,7 @@ const verifyOtp = (e) => {
                         type="text"
                         className="form-control"
                         placeholder="Last name"
-                        onChange={(e) => setLname(e.target.value)}
+                        onChange={(e) =>  setData({ ...data, lastName: e.target.value})}
                         />
                     </div>
 
@@ -123,12 +97,12 @@ const verifyOtp = (e) => {
                         type="email"
                         className="form-control"
                         placeholder="Enter email"
-                        onChange={(e) => emailValid(e)}
-                        />
-                        {verifyButton? <input
+                        onChange={(e) => emailValid(e)}/>
+
+                        {data.email_format? <input
                         type="button"
                         value="Verify"
-                        onClick={(e) => sendOtp(e)}
+                        onClick={(e) =>  setOtpData({ ...data, otpSent: true})}
                         style={{
                             backgroundColor:"blue",
                             width:"100%",
@@ -139,7 +113,7 @@ const verifyOtp = (e) => {
                         />: null}
                     </div>
 
-                    {otpSent?  <div className="mb-3">
+                    {otpData.otpSent?  <div className="mb-3">
                         <label>One Time Password</label>
                         <input
                         type="number"
@@ -164,7 +138,7 @@ const verifyOtp = (e) => {
                         type="password"
                         className="form-control"
                         placeholder="Enter password"
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) =>  setData({ ...data, password: e.target.value})}
                         />
                     </div>
 
@@ -174,7 +148,7 @@ const verifyOtp = (e) => {
                         type="password"
                         className="form-control"
                         placeholder="Enter password"
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => setData({ ...data, password: e.target.value})}
                         />
                     </div>
 
@@ -182,19 +156,18 @@ const verifyOtp = (e) => {
                         <label>Contact Information</label>
                         <div>
                             <PhoneInput
-                                defaultCountry="ua"
-                                value={phone}
-                                onChange={(phone) => setPhone(phone)}
+                                defaultCountry="ca"
+                                onChange={(phone) => setData({ ...data, phone: phone})}
                             />
 
-                            {!isPhoneValid(phone) && <div style={{ color: 'red' }}>Phone is not valid</div>}
+                            {!isPhoneValid(data.phone) && <div style={{ color: 'red' }}>Phone is not valid</div>}
                         </div>
                     </div>
 
 
 
                     <div className="d-grid">
-                        <button type="submit" className="btn btn-primary">
+                        <button type="submit" className="btn btn-primary" disabled = {otpData.otpVerified}>
                         Sign Up
                         </button>
                     </div>
