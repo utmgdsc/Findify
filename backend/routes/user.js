@@ -1,13 +1,12 @@
 const express = require('express');
 const { authenticate } = require('../middlewares/user');
 const UserController = require('../controllers/user')
-const { generateOTP, sendOTP } = require("../utils/otp");
 
 const router = express.Router();
 
 router.route('/profile')
   .get(authenticate, (req, res) => {
-    res.json({ message: `Welcome ${req.user.username}` });
+    res.json({ message: `Welcome ${req.user.email}` });
   });
 
 router.route('/register')

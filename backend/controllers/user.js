@@ -6,7 +6,7 @@ const { generateOTP, sendOTP } = require('../utils/otp');
 
 // Register a new user
 module.exports.register = async (req, res, next) => {
-  const { username, email, password, firstName, lastName, contactNumber, OTP } = req.body;
+  const { email, password, firstName, lastName, contactNumber, OTP } = req.body;
   
   try {
     const otpPair = await OtpPairs.findOne({ email });
@@ -53,7 +53,7 @@ module.exports.register = async (req, res, next) => {
       return res.status(403).send("OTP expired");
     }
     
-    const user = new User({ username, email, password, firstName, lastName, contactNumber });
+    const user = new User({ email, password, firstName, lastName, contactNumber });
     await user.save();
     res.json({ message: 'Registration Successful' });
   } catch (err) {
@@ -64,10 +64,10 @@ module.exports.register = async (req, res, next) => {
 
 // Login with an existing user
 module.exports.login = async (req, res, next) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -92,10 +92,10 @@ module.exports.edit = async (req, res, next) => {
     // Admin user can edit any user profile
     // should not be able to edit username and email
     // should not expect userId in the request body 
-    const { userId, username, password, firstName, lastName, contactNumber } = req.body;
+    const { userId, password, firstName, lastName, contactNumber } = req.body;
     const filter = { _id: userId };
 
-    const data = { username, password, firstName, lastName, contactNumber };
+    const data = { password, firstName, lastName, contactNumber };
     const updatedUser = User.findOneAndUpdate(filter, data, (err, res) => {
       if (err) return next(err);
       res.json({ message: 'Profile Update Successful' });
@@ -168,8 +168,6 @@ const handleMongoError = (err, res) => {
     // Handle duplicate key error (code 11000) for unique constraints
     if (err.keyPattern && err.keyPattern.email) {
       return res.status(400).json({ error: 'Email is already registered' });
-    } else if (err.keyPattern && err.keyPattern.username) {
-      return res.status(400).json({ error: 'Username is already registered' });
     } else {
       // Handle other unique constraints if needed
       return res.status(400).json({ error: 'Duplicate key error' });
