@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const OtpPairs = require('../models/Otp');
 const { generateOTP, sendOTP } = require('../utils/otp');
 
 // Register a new user
@@ -60,8 +61,7 @@ module.exports.edit = async (req, res, next) => {
       req.login(updatedUser, err => {
         if (err) return next(err);
       })
-    })
-
+    });
   } catch (err) {
     handleMongoError(err, res);
     next(err);
@@ -72,11 +72,46 @@ module.exports.edit = async (req, res, next) => {
 // generates and sends the OTP to the user
 module.exports.sendOTP = async (req, res, next) => {
   const { email } = req.body;
-  const OTP = generateOTP();
   try {
-    // TODO
-    sendOTP(email, OTP)
-    res.json({message: "OTP sent"});
+    let otpPair = await OtpPairs.findOne({ email });
+
+    if (!otpPair) {
+      otpPair = new OtpPairs({ email });
+    }
+
+    if (otpPair.isBlocked) {
+      const currentTime = new Date();
+      if (currentTime < otpPair.blockUntil) {
+        return res.status(403).send("Account blocked. Try after some time.");
+      } else {
+        otpPair.isBlocked = false;
+        otpPair.OTPAttempts = 0;
+      }
+    }
+
+    // Check for minimum 1-minute gap between OTP requests
+    const lastOTPTime = otpPair.OTPCreatedTime;
+    const currentTime = new Date();
+
+    if (lastOTPTime && currentTime - lastOTPTime < 60000) {
+      return res
+        .status(403)
+        .send("Minimum 1-minute gap required between OTP requests");
+    }
+
+  const OTP = generateOTP();
+    otpPair.OTP = OTP;
+    otpPair.OTPCreatedTime = currentTime;
+
+    otpPair.save();
+
+    sendOTP(email, OTP).catch((err) => {
+      console.log(err);
+      return res.status(500).send("Failed to send OTP");
+    });
+
+    res.status(200).send("OTP sent successfully");
+
   } catch (err) {
     handleMongoError(err, res);
     next(err);

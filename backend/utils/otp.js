@@ -21,13 +21,7 @@ const sendOTP = (email, OTP) => {
     text: `Your OTP is: ${OTP}`,
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
-  });
+  return transporter.sendMail(mailOptions);
 };
 
 module.exports = { generateOTP, sendOTP };
