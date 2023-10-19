@@ -6,15 +6,51 @@ const { generateOTP, sendOTP } = require('../utils/otp');
 
 // Register a new user
 module.exports.register = async (req, res, next) => {
+  const { username, email, password, firstName, lastName, contactNumber, OTP } = req.body;
+  
   try {
-    const { username, email, password, firstName, lastName, contactNumber, OTP } = req.body;
-    // TODO: Verify otp
+    const otpPair = await OtpPairs.findOne({ email });
+    if (!otpPair) {
+      return res.status(404).json({ message: 'User has not been sent OTP' });
+    }
+
+    if (otpPair.isBlocked) {
+      const currentTime = new Date();
+      if (currentTime < otpPair.blockUntil) {
+        return res.status(403).send("User blocked. Try after some time again.");
+      } else {
+        otpPair.isBlocked = false;
+        otpPair.OTPAttempts = 0;
+      }
+    }
+
+    if (otpPair.OTP !== OTP) {
+      otpPair.OTPAttempts++;
+
+      // If OTP attempts >= 5, block user for 1 hour
+      if (otpPair.OTPAttempts >= 5) {
+        otpPair.isBlocked = true;
+        let blockUntil = new Date();
+        blockUntil.setHours(blockUntil.getHours() + 1);
+        otpPair.blockUntil = blockUntil;
+      }
+
+      await otpPair.save();
+
+      return res.status(403).send("Invalid OTP");
+    }
+
+    const OTPCreatedTime = otpPair.OTPCreatedTime;
+    const currentTime = new Date();
+
+    // OTP expires after 5 minutes
+    if (currentTime - OTPCreatedTime > 5 * 60 * 1000) {
+      return res.status(403).send("OTP expired");
+    }
+    
     const user = new User({ username, email, password, firstName, lastName, contactNumber });
     await user.save();
     res.json({ message: 'Registration Successful' });
-    req.login(req, res, err => {
-      if (err) return next(err);
-    })
   } catch (err) {
     handleMongoError(err, res);
     next(err);
@@ -99,7 +135,7 @@ module.exports.sendOTP = async (req, res, next) => {
         .send("Minimum 1-minute gap required between OTP requests");
     }
 
-  const OTP = generateOTP();
+    const OTP = generateOTP();
     otpPair.OTP = OTP;
     otpPair.OTPCreatedTime = currentTime;
 
