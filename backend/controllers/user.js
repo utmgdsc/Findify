@@ -7,7 +7,7 @@ const { generateOTP, sendOTP } = require('../utils/otp');
 // Register a new user
 module.exports.register = async (req, res, next) => {
   const { email, password, firstName, lastName, contactNumber, OTP } = req.body;
-  
+
   try {
     const otpPair = await OtpPairs.findOne({ email });
     const numExistingUsers = await User.countDocuments({ email });
@@ -22,7 +22,7 @@ module.exports.register = async (req, res, next) => {
     if (otpPair.isBlocked) {
       const currentTime = new Date();
       if (currentTime < otpPair.blockUntil) {
-        return res.status(403).send("User blocked. Try after some time again.");
+        return res.status(403).json({ message: "User blocked. Try after some time again." });
       } else {
         otpPair.isBlocked = false;
         otpPair.OTPAttempts = 0;
@@ -42,7 +42,7 @@ module.exports.register = async (req, res, next) => {
 
       await otpPair.save();
 
-      return res.status(403).send("Invalid OTP");
+      return res.status(403).json({ message: "Invalid OTP" });
     }
 
     const OTPCreatedTime = otpPair.OTPCreatedTime;
@@ -50,9 +50,9 @@ module.exports.register = async (req, res, next) => {
 
     // OTP expires after 30 minutes
     if (currentTime - OTPCreatedTime > 30 * 60 * 1000) {
-      return res.status(403).send("OTP expired");
+      return res.status(403).json({ message: "OTP expired" });
     }
-    
+
     const user = new User({ email, password, firstName, lastName, contactNumber });
     await user.save();
     res.json({ message: 'Registration Successful' });
@@ -118,7 +118,7 @@ module.exports.sendOTP = async (req, res, next) => {
     if (numExistingUsers > 0) {
       return res.status(400).json({ message: 'Email is already verified' });
     }
-    
+
     let otpPair = await OtpPairs.findOne({ email });
     if (!otpPair) {
       otpPair = new OtpPairs({ email });
@@ -127,7 +127,7 @@ module.exports.sendOTP = async (req, res, next) => {
     if (otpPair.isBlocked) {
       const currentTime = new Date();
       if (currentTime < otpPair.blockUntil) {
-        return res.status(403).send("Account blocked. Try after some time.");
+        return res.status(403).json({ message: "Account blocked. Try after some time." });
       } else {
         otpPair.isBlocked = false;
         otpPair.OTPAttempts = 0;
@@ -141,7 +141,7 @@ module.exports.sendOTP = async (req, res, next) => {
     if (lastOTPTime && currentTime - lastOTPTime < 60000) {
       return res
         .status(403)
-        .send("Minimum 1-minute gap required between OTP requests");
+        .json({ message: "Minimum 1-minute gap required between OTP requests" });
     }
 
     const OTP = generateOTP();
@@ -152,10 +152,10 @@ module.exports.sendOTP = async (req, res, next) => {
 
     sendOTP(email, OTP).catch((err) => {
       console.log(err);
-      return res.status(500).send("Failed to send OTP");
+      return res.status(500).json({ message: "Failed to send OTP" });
     });
 
-    res.status(200).send("OTP sent successfully");
+    res.status(200).json({ message: "OTP sent successfully" });
 
   } catch (err) {
     handleMongoError(err, res);
