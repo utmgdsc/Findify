@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.route('/profile')
   .get(authenticate, (req, res) => {
-    res.json({ message: `Welcome ${req.user.username}` });
+    res.json({ message: `Welcome ${req.user.email}` });
   });
 
 router.route('/register')
@@ -27,6 +27,15 @@ router.route('/login')
     }
   })
 
+router.route('/sendOTP')
+  .post(async (req, res) => {
+    try {
+      UserController.sendOTP(req, res, errorHandler);
+    } catch (err) {
+      res.json({ message: `Failed to send OTP: ${err}` })
+    }
+  })
+
 router.route('/edit')
   .post(async (req, res) => {
     try {
@@ -37,7 +46,7 @@ router.route('/edit')
   })
 
 const errorHandler = err => {
-  console.error(err)
+  // console.error(err)
 }
 
 module.exports = router;
