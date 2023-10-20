@@ -4,7 +4,7 @@ const UserController = require('../controllers/user')
 
 const router = express.Router();
 
-router.route('/profile')
+router.route('/testLogin')
   .get(authenticate, (req, res) => {
     res.json({ message: `Welcome ${req.user.email}` });
   });
