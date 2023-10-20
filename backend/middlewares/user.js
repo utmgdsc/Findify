@@ -22,3 +22,17 @@ module.exports.authenticate = async (req, res, next) => {
     res.status(401).json({ message: 'Invalid token' });
   }
 };
+
+// TODO: use this middleware in all routes
+module.exports.checkRequiredAttributes = (requiredAttributes) => {
+  return (req, res, next) => {
+    const requestBody = req.body;
+    const missingAttributes = requiredAttributes.filter(attr => !(attr in requestBody));
+    
+    if (missingAttributes.length > 0) {
+      return res.status(400).json({ message: `Missing required attribute(s) in request body: ${missingAttributes.join(', ')}` });
+    }
+    
+    next();
+  };
+};
