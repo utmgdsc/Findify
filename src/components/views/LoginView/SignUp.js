@@ -24,12 +24,14 @@ export default function SignUp() {
     password: "",
     repeatPassword: "",
     phone_number: "",
+    otp: "",
   });
 
   const [otpData, setOtpData] = useState({
     otp: "",
     otpVerified: false,
     otpSent: false,
+    numAttempts: 0,
   });
 
   const phoneUtil = PhoneNumberUtil.getInstance();
@@ -45,18 +47,13 @@ export default function SignUp() {
   const emailValid = (e) => {
     let email = e.target.value;
     if (validator.isEmail(email) && email.endsWith("mail.utoronto.ca")) {
-      // this is a valid email address
-      // call setState({email: email}) to update the email
-      // or update the data in redux store.
       setData({ ...data, email: email, email_format: true });
+      setDisabled(false);
     } else {
-      <p style={{ color: "red" }}>
-        Email is not valid. Please enter a valid UofT email.
-      </p>;
       setData({ ...data, email_format: false });
       setOtpData({ ...otpData, otpSent: false });
+      setDisabled(true);
     }
-    console.log(data);
   };
 
   const updateEmail = (event) => {
@@ -98,35 +95,23 @@ export default function SignUp() {
     event.preventDefault();
     var controller = new AbortController();
     const signal = controller.signal;
-    const postData = new FormData();
-    postData.append("email", data.email);
-    return fetch("http://localhost:8000/user/sendOTP", {
-      mode: "no-cors",
+    const data = new FormData();
+    data.append("email", data.email);
+    return fetch("http://localhost:3000/user/sendOTP", {
       method: "POST",
-      body: postData,
+      body: data,
       signal: signal,
     })
       .then((response) => {
-        if (response.status === 400) {
-          return response.text().then((errorMessage) => {
-            alert(`Bad Request: ${errorMessage}`);
-            controller.abort();
-          });
-        }
-        if (response.status === 403) {
-          return response.text().then((errorMessage) => {
-            alert(`Forbidden: ${errorMessage}`);
-            controller.abort();
-          });
-        }
         if (response.status === 200) {
-          return response.json().then((json) => {
-            console.log(json);
+          return response.text().then((msg) => {
+            console.log(msg);
+            setOtpData({ ...otpData, otpSent: true });
           });
         } else {
           // Handle other status codes
           return response.text().then((errorMessage) => {
-            alert(`Unexpected Error: ${errorMessage}`);
+            alert(`Error: ${errorMessage}`);
             controller.abort();
           });
         }
@@ -136,6 +121,18 @@ export default function SignUp() {
         setDisabled(true);
         setValidated(false);
       });
+  };
+
+  const resendOtp = async (event) => {
+    if (otpData.numAttempts < 5) {
+      sendOtp(event);
+      otpData.numAttempts = otpData.numAttempts + 1;
+    } else {
+      setErrors({
+        ...errors,
+        otp: "Sorry, you've already had atleast 5 attempts. Please try again after 1 hour",
+      });
+    }
   };
 
   const submitHandler = async (event) => {
@@ -155,29 +152,33 @@ export default function SignUp() {
       formData.append("password", data.password);
       formData.append("repeatPassword", data.repeatPassword);
       formData.append("contactNumber", data.contactNumber);
-      return fetch("http://localhost:3000/register", {
+      formData.append("otp", otpData.otp);
+      return fetch("http://localhost:3000/user/register", {
         method: "POST",
         body: formData,
         signal: signal,
       })
         .then((response) => {
-          if (response.status === 401 || response.status === 403) {
-            alert("An error occured please try again");
-            controller.abort();
+          if (response.status === 200) {
+            return response.json().then((json) => {
+              console.log(json);
+              setDisabled(false);
+              setValidated(true);
+              setOtpData({ ...otpData, otpVerified: true });
+              navigate("/login", { replace: true });
+            });
+          } else {
+            // Handle other status codes
+            return response.text().then((errorMessage) => {
+              alert(`Error: ${errorMessage}`);
+              controller.abort();
+            });
           }
-          return response.json();
-        })
-        .then((json) => {
-          console.log(json);
-          setDisabled(false);
-          setValidated(true);
-          localStorage.setItem("token", `${json.token}`);
-          navigate("/home", { replace: true });
         })
         .catch((err) => {
-          console.log("form", err);
-          setDisabled(false);
-          setValidated(true);
+          console.log(err);
+          setDisabled(true);
+          setValidated(false);
         });
     }
   };
@@ -251,10 +252,14 @@ export default function SignUp() {
                         type="number"
                         className="form-control"
                         placeholder="Enter OPT sent to your email"
+                        onChange={(e) =>
+                          setOtpData({ ...otpData, otp: e.target.value })
+                        }
                       />
                       <input
                         type="button"
-                        value="OTP"
+                        value="Resend OTP"
+                        onClick={(e) => resendOtp(e)}
                         style={{
                           backgroundColor: "blue",
                           width: "100%",
@@ -311,7 +316,7 @@ export default function SignUp() {
                     <button
                       type="submit"
                       className="btn btn-primary"
-                      disabled={otpData.otpVerified}
+                      disabled={disabled}
                     >
                       Sign Up
                     </button>
