@@ -1,7 +1,7 @@
 
 body {
     margin:0;
-	padding:0;
+	  padding:0;
     background-image: url("../../../assets/img/login_bg.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -9,59 +9,73 @@ body {
     background-size: cover;
    }
 
-.center {
-  margin: 0;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  }
-
-.info {
-    margin-top:32%;
-
+.root {
+  margin: auto;
+  margin-top: 150px;
 }
 
-.info p{
-  background-color: #fff;
-  font-family: 'Raleway',sans-serif;
-	color: #fff;
+.root .card {
+  padding: 25px 50px;
+  border-radius: 25px;
+  align-items: center;
+}
+
+#Logo {
+  width: 250px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background: rgb(202,201,223);
+  background: linear-gradient(90deg, rgba(202,201,223,1) 0%, rgba(40,40,159,1) 0%, rgba(28,92,188,1) 30%, rgba(0,212,255,1) 100%);
+  border: 0px rgb(54, 200, 249) solid;
+  border-radius: 0.5em;
+  font-size: 3.25em;
+  font-weight: 900;
+  margin: 25px;
+  margin-bottom: 50px;
+}
+
+.card p {
+  width: 675px;
 	font-size: 22px;
-	font-weight: 300;
+  font-weight: 325;
 	color:black;
-	letter-spacing: 0.5px;
+  margin-bottom: 25px;
 }
 
-.info button{
-  font-family: 'Raleway',sans-serif;
-	color: #fff;
-	background:rgb(224, 200, 16);
-	padding:10px 20px; 
-	font-size: 2em;
-	font-weight: 600;
-  margin-left: 3%;
+.card button {
+	color: white;
+	background:rgb(69, 171, 205);
+  border-radius: 2em;
+  width: 125px;
+	padding: 12px 17px; 
+	font-size: 18px;
+  font-weight: 700;
+  margin: 25px 5px;
 }
-.info button:hover{
-	background: purple;
+.card button:hover{
+	background:rgb(29, 141, 227);
+  color: white;
 }
 
-.typewriter {
+.card p.typewriter {
     overflow: hidden; /* Ensures the content is not revealed until the animation */
     border-right: .15em solid orange; /* The typwriter cursor */
     white-space: nowrap; /* Keeps the content on a single line */
     margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-    letter-spacing: .20em; /* Adjust as needed */
+    font-size: 25px;
+    font-weight: 700;
     animation: 
-      typing 3.5s steps(40, end),
+      typing 2.5s steps(40, end),
       blink-caret .75s step-end infinite;
-    margin-bottom: 7px;
   }
   
   /* The typing effect */
   @keyframes typing {
     from { width: 0 }
-    to { width: 100% }
+    to { width: 62% }
   }
   
   /* The typewriter cursor effect */
