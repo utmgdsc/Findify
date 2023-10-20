@@ -58,7 +58,7 @@ module.exports.register = async (req, res, next) => {
     await user.save();
     res.json({ message: 'Registration Successful' });
   } catch (err) {
-    handleMongoError(err, res);
+    errorHandler(err, res);
     next(err);
   }
 };
@@ -93,10 +93,10 @@ module.exports.edit = async (req, res, next) => {
     // Admin user can edit any user profile
     // should not be able to edit email. only using email for verification
     // should not expect userId in the request body 
-    await authenticate(req, res, next);
+    await authenticate(req, res);
     const { email, password, firstName, lastName, contactNumber } = req.body;
-    if (email !== req.user.email) {
-      throw new Error('Email does not match user!')
+    if (req.user.isAdmin && email !== req.user.email) {
+      throw new Error({ name: 'Verification Error', message: 'Email does not match user!' })
     }
 
     req.user = {
@@ -108,7 +108,7 @@ module.exports.edit = async (req, res, next) => {
     };
     req.user.save();
   } catch (err) {
-    handleMongoError(err, res);
+    errorHandler(err, res);
     next(err);
   }
 };
@@ -162,12 +162,12 @@ module.exports.sendOTP = async (req, res, next) => {
     res.status(200).json({ message: "OTP sent successfully" });
 
   } catch (err) {
-    handleMongoError(err, res);
+    errorHandler(err, res);
     next(err);
   }
 };
 
-const handleMongoError = (err, res) => {
+const errorHandler = (err, res) => {
   if (err.name === 'MongoServerError' && err.code === 11000) {
     // Handle duplicate key error (code 11000) for unique constraints
     if (err.keyPattern && err.keyPattern.email) {

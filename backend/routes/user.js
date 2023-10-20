@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.route('/testLogin')
   .get(authenticate, (req, res) => {
-    res.json({ message: `Welcome ${req.user.email}` });
+    res.json({s message: `Welcome ${req.user.email}` });
   });
 
 router.route('/register')
