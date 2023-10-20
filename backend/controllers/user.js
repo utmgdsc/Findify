@@ -32,8 +32,8 @@ module.exports.register = async (req, res, next) => {
     if (otpPair.OTP !== OTP) {
       otpPair.OTPAttempts++;
 
-      // If OTP attempts >= 5, block user for 1 hour
-      if (otpPair.OTPAttempts > 5) {
+      // Block user for 1 hour after 4 failed attempts
+      if (otpPair.OTPAttempts >= 4) {
         otpPair.isBlocked = true;
         let blockUntil = new Date();
         blockUntil.setHours(blockUntil.getHours() + 1);
