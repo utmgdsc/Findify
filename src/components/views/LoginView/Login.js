@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
+import "./style.css";
 
 export default function Login() {
   let navigate = useNavigate();
@@ -49,12 +50,16 @@ export default function Login() {
       event.stopPropagation();
       setDisabled(false);
     } else {
-      const formData = new FormData();
-      formData.append("email", data.email);
-      formData.append("password", data.password);
+      const jsonData = {
+        email: data.email,
+        password: data.password,
+      };
       return fetch("http://localhost:3000/user/login", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(jsonData),
         signal: signal,
       })
         .then((response) => {

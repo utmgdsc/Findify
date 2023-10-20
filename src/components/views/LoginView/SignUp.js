@@ -4,6 +4,7 @@ import validator from "validator";
 import { PhoneInput } from "react-international-phone";
 import { PhoneNumberUtil } from "google-libphonenumber";
 import "react-international-phone/style.css";
+import "./style.css";
 
 export default function SignUp() {
   let navigate = useNavigate();
@@ -14,8 +15,10 @@ export default function SignUp() {
     lastName: "",
     email: "",
     password: "",
-    repeatPassword: "",
-    phone_number: "",
+    contactNumber: "",
+    email_format: false,
+    passwordCheck: false,
+    passwordMatch: false,
   });
   const [errors, setErrors] = useState({
     firstName: "",
@@ -23,7 +26,7 @@ export default function SignUp() {
     email: "",
     password: "",
     repeatPassword: "",
-    phone_number: "",
+    contactNumber: "",
     otp: "",
   });
 
@@ -36,9 +39,11 @@ export default function SignUp() {
 
   const phoneUtil = PhoneNumberUtil.getInstance();
 
-  const isPhoneValid = (phone) => {
+  const isPhoneValid = (contactNumber) => {
     try {
-      return phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone));
+      return phoneUtil.isValidNumber(
+        phoneUtil.parseAndKeepRawInput(contactNumber)
+      );
     } catch (error) {
       return false;
     }
@@ -48,45 +53,50 @@ export default function SignUp() {
     let email = e.target.value;
     if (validator.isEmail(email) && email.endsWith("mail.utoronto.ca")) {
       setData({ ...data, email: email, email_format: true });
+      setErrors({ ...data, email: "" });
       setDisabled(false);
     } else {
+      setErrors({ ...data, email: "Please enter a valid UofT email." });
       setData({ ...data, email_format: false });
       setOtpData({ ...otpData, otpSent: false });
       setDisabled(true);
     }
   };
 
-  const updateEmail = (event) => {
-    const email = event.target.value;
-    if (!validator.isEmail(email) || !email.endsWith("mail.utoronto.ca")) {
-      setErrors({ ...errors, email: "email address is invalid" });
-      setDisabled(true);
-    } else {
-      setData({ ...data, email });
-      setErrors({ ...errors, email: "" });
-      setDisabled(false);
-    }
-  };
-
   const updatePassword = (e) => {
     const password = e.target.value;
-    if (password === "" || password === undefined || password === null) {
-      setErrors({ ...errors, password: "password is required" });
+    let pwd = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,24}$/;
+    if (!pwd.test(password)) {
+      setErrors({
+        ...errors,
+        password:
+          "Password must contain one digit from 1 to 9, one lowercase letter, one uppercase letter, one special character, no space, and it must be 8-16 characters long ",
+      });
+      setData({ ...data, passwordCheck: false });
       setDisabled(true);
     } else {
-      setData({ ...data, password });
+      setData({ ...data, password: password });
+      setData({ ...data, passwordCheck: true });
       setErrors({ ...errors, password: "" });
       setDisabled(false);
     }
   };
 
-  const updatecontactNumber = (val) => {
-    if (!validator.isMobilePhone(val + "", "any", { strictMode: true })) {
-      setErrors({ ...errors, contactNumber: "contact number is invalid" });
+  const confirmpassword = (e) => {
+    const repeatPassword = e.target.value;
+    if (repeatPassword != data.password) {
+      setErrors({
+        ...errors,
+        repeatPassword: "Both the passwords do not match.",
+      });
+      setData({ ...data, passwordMatch: false });
       setDisabled(true);
     } else {
-      setData({ ...data, contactNumber: val });
-      setErrors({ ...errors, contactNumber: "" });
+      setErrors({
+        ...errors,
+        repeatPassword: "",
+      });
+      setData({ ...data, passwordMatch: true });
       setDisabled(false);
     }
   };
@@ -95,11 +105,15 @@ export default function SignUp() {
     event.preventDefault();
     var controller = new AbortController();
     const signal = controller.signal;
-    const data = new FormData();
-    data.append("email", data.email);
+    const jsonData = {
+      email: data.email,
+    };
     return fetch("http://localhost:3000/user/sendOTP", {
       method: "POST",
-      body: data,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(jsonData),
       signal: signal,
     })
       .then((response) => {
@@ -145,17 +159,20 @@ export default function SignUp() {
       event.stopPropagation();
       setDisabled(false);
     } else {
-      const formData = new FormData();
-      formData.append("firstName", data.firstName);
-      formData.append("lastName", data.lastName);
-      formData.append("email", data.email);
-      formData.append("password", data.password);
-      formData.append("repeatPassword", data.repeatPassword);
-      formData.append("contactNumber", data.contactNumber);
-      formData.append("otp", otpData.otp);
+      const jsonData = {
+        email: data.email,
+        password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        contactNumber: data.contactNumber,
+        OTP: otpData.otp,
+      };
       return fetch("http://localhost:3000/user/register", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(jsonData),
         signal: signal,
       })
         .then((response) => {
@@ -225,23 +242,30 @@ export default function SignUp() {
                       type="email"
                       className="form-control"
                       placeholder="Enter email"
-                      onChange={(e) => emailValid(e)}
                       required
+                      onChange={(e) => emailValid(e)}
                     />
+                    {data.email_format == false && (
+                      <span style={{ fontSize: 15, color: "red" }}>
+                        {errors.email}{" "}
+                      </span>
+                    )}
 
                     {data.email_format ? (
-                      <input
-                        type="button"
-                        value="Verify"
-                        onClick={(e) => sendOtp(e)}
-                        style={{
-                          backgroundColor: "blue",
-                          width: "100%",
-                          padding: 8,
-                          color: "white",
-                          border: "none",
-                        }}
-                      />
+                      <div>
+                        <input
+                          type="button"
+                          value="Verify"
+                          onClick={(e) => sendOtp(e)}
+                          style={{
+                            backgroundColor: "blue",
+                            width: "100%",
+                            padding: 8,
+                            color: "white",
+                            border: "none",
+                          }}
+                        />
+                      </div>
                     ) : null}
                   </div>
 
@@ -252,17 +276,15 @@ export default function SignUp() {
                         type="number"
                         className="form-control"
                         placeholder="Enter OPT sent to your email"
-                        onChange={(e) =>
-                          setOtpData({ ...otpData, otp: e.target.value })
-                        }
                       />
                       <input
                         type="button"
                         value="Resend OTP"
-                        onClick={(e) => resendOtp(e)}
+                        onChange={(e) => resendOtp(e)}
                         style={{
                           backgroundColor: "blue",
-                          width: "100%",
+                          marginLeft: 25,
+                          width: "25%",
                           padding: 8,
                           color: "white",
                           border: "none",
@@ -278,10 +300,13 @@ export default function SignUp() {
                       type="password"
                       className="form-control"
                       placeholder="Enter password"
-                      onChange={(e) =>
-                        setData({ ...data, password: e.target.value })
-                      }
+                      onChange={(e) => updatePassword(e)}
                     />
+                    {data.passwordCheck == false && (
+                      <span style={{ fontSize: 15, color: "red" }}>
+                        {errors.password}{" "}
+                      </span>
+                    )}
                   </div>
 
                   <div className="mb-3">
@@ -291,10 +316,13 @@ export default function SignUp() {
                       type="password"
                       className="form-control"
                       placeholder="Enter password"
-                      onChange={(e) =>
-                        setData({ ...data, password: e.target.value })
-                      }
+                      onChange={(e) => confirmpassword(e)}
                     />
+                    {!data.passwordMatch && (
+                      <span style={{ fontSize: 15, color: "red" }}>
+                        {errors.repeatPassword}{" "}
+                      </span>
+                    )}
                   </div>
 
                   <div className="mb-3">
@@ -307,12 +335,14 @@ export default function SignUp() {
                       />
 
                       {!isPhoneValid(data.phone) && (
-                        <div style={{ color: "red" }}>Phone is not valid</div>
+                        <div style={{ color: "red" }}>
+                          {errors.contactNumber}
+                        </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="d-grid">
+                  <div>
                     <button
                       type="submit"
                       className="btn btn-primary"
@@ -321,9 +351,9 @@ export default function SignUp() {
                       Sign Up
                     </button>
                   </div>
-                  <p className="forgot-password text-right">
-                    Already registered <a href="/sign-in">sign in?</a>
-                  </p>
+                  <span className="forgot-password text-right">
+                    Already registered? <a href="/login">sign in</a>
+                  </span>
                 </form>
               </div>
             </div>

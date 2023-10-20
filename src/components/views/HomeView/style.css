@@ -1,7 +1,7 @@
 body {
     font-family: Georgia, 'Times New Roman', Times, serif !important;
     letter-spacing: 0.5px;
-    background-image: url(../../../assets/img/background.jpg);
+    background-image: url(../../../assets/img/background.jpg) ;
 }
 #requestLostItem a {
     line-height: 3;
