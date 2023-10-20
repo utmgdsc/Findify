@@ -41,7 +41,7 @@ router.route('/sendOTP')
 
 router.route('/edit')
   // TODO: add checkRequiredAttributes middleware
-  .post(async (req, res) => {
+  .post(authenticate, async (req, res) => {
     try {
       UserController.edit(req, res, errorHandler);
     } catch (err) {

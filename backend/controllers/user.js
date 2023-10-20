@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const OtpPairs = require('../models/Otp');
 const { generateOTP, sendOTP } = require('../utils/otp');
-const { authenticate } = require('../middlewares/user')
 
 // Register a new user
 module.exports.register = async (req, res, next) => {
@@ -93,7 +92,6 @@ module.exports.edit = async (req, res, next) => {
     // Admin user can edit any user profile
     // should not be able to edit email. only using email for verification
     // should not expect userId in the request body 
-    await authenticate(req, res);
     const { email, password, firstName, lastName, contactNumber } = req.body;
     if (req.user.isAdmin && email !== req.user.email) {
       throw new Error({ name: 'Verification Error', message: 'Email does not match user!' })
