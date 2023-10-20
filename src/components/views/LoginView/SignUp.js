@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
-import fetcher from "../../../fetchHelper";
 import { PhoneInput } from "react-international-phone";
 import { PhoneNumberUtil } from "google-libphonenumber";
 import "react-international-phone/style.css";
@@ -15,6 +14,7 @@ export default function SignUp() {
     lastName: "",
     email: "",
     password: "",
+    repeatPassword: "",
     phone_number: "",
   });
   const [errors, setErrors] = useState({
@@ -22,6 +22,7 @@ export default function SignUp() {
     lastName: "",
     email: "",
     password: "",
+    repeatPassword: "",
     phone_number: "",
   });
 
@@ -95,6 +96,46 @@ export default function SignUp() {
 
   const sendOtp = async (event) => {
     event.preventDefault();
+    var controller = new AbortController();
+    const signal = controller.signal;
+    const postData = new FormData();
+    postData.append("email", data.email);
+    return fetch("http://localhost:8000/user/sendOTP", {
+      mode: "no-cors",
+      method: "POST",
+      body: postData,
+      signal: signal,
+    })
+      .then((response) => {
+        if (response.status === 400) {
+          return response.text().then((errorMessage) => {
+            alert(`Bad Request: ${errorMessage}`);
+            controller.abort();
+          });
+        }
+        if (response.status === 403) {
+          return response.text().then((errorMessage) => {
+            alert(`Forbidden: ${errorMessage}`);
+            controller.abort();
+          });
+        }
+        if (response.status === 200) {
+          return response.json().then((json) => {
+            console.log(json);
+          });
+        } else {
+          // Handle other status codes
+          return response.text().then((errorMessage) => {
+            alert(`Unexpected Error: ${errorMessage}`);
+            controller.abort();
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setDisabled(true);
+        setValidated(false);
+      });
   };
 
   const submitHandler = async (event) => {
@@ -112,6 +153,7 @@ export default function SignUp() {
       formData.append("lastName", data.lastName);
       formData.append("email", data.email);
       formData.append("password", data.password);
+      formData.append("repeatPassword", data.repeatPassword);
       formData.append("contactNumber", data.contactNumber);
       return fetch("http://localhost:3000/register", {
         method: "POST",
@@ -141,11 +183,11 @@ export default function SignUp() {
   };
 
   return (
-    <div class="auth-wrapper container h-40">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-          <div class="card rounded-3">
-            <div class="card-body p-4">
+    <div className="auth-wrapper container h-40">
+      <div className="row d-flex justify-content-center align-items-center h-100">
+        <div className="col-12 col-md-9 col-lg-7 col-xl-6">
+          <div className="card rounded-3">
+            <div className="card-body p-4">
               <div className="auth-inner">
                 <form onSubmit={submitHandler}>
                   <h3>Sign Up</h3>
