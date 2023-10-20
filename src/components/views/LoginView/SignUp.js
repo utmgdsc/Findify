@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
 import fetcher from "../../../fetchHelper";
+import { PhoneInput } from 'react-international-phone';
+import { PhoneNumberUtil } from 'google-libphonenumber';
+import 'react-international-phone/style.css';
 
 export default function SignUp() {
 
@@ -12,29 +15,49 @@ export default function SignUp() {
         firstName: "",
         lastName: "",
         email: "",
-        username: "",
         password: "",
-        address: "",
         phone_number: ""
     });
     const [errors, setErrors] = useState({
         firstName: "",
         lastName: "",
         email: "",
-        username: "",
         password: "",
-        address: "",
         phone_number: ""
     });
-    
-    const updateFirstName = (e) => {
-        setData({ ...data, firstName: e.target.value})
-      };
-    
-    
-      const updateLastName = (e) => {
-        setData({ ...data, lastName: e.target.value})
-      };
+
+    const [otpData, setOtpData] = useState({
+      otp:"",
+      otpVerified:false,
+      optSent:false,
+  })
+
+  const phoneUtil = PhoneNumberUtil.getInstance();
+
+  const isPhoneValid = (phone) => {
+    try {
+        return phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone));
+    } catch (error) {
+        return false;
+    }
+    };
+
+    const emailValid= ( e ) => {
+      // don't remember from where i copied this code, but this works.
+      let email = e.target.value
+      if (validator.isEmail(email) && email.endsWith("mail.utoronto.ca")) {
+          // this is a valid email address
+          // call setState({email: email}) to update the email
+          // or update the data in redux store.
+          setData({ ...data, email:email, email_format: true})
+      }
+      else {
+          <p style={{ color: 'red' }}>Email is not valid. Please enter a valid UofT email.</p>
+          setData({ ...data, email_format: false})
+          setOtpData({...otpData, otpSent: false })
+      }
+      console.log(data)
+  }
     
     const updateEmail = (event) => {
         const email = event.target.value
@@ -46,34 +69,10 @@ export default function SignUp() {
             setErrors({ ...errors, email: "" });
             setDisabled(false);
         }
-    };
-
-    const updateUsername = (e) => {
-        const username = e.target.value;
-        if (username === "" || username === undefined || username === null) {
-            setErrors({ ...errors, username: "username is required" });
-            setDisabled(true);
-        } else {
-            setData({ ...data, username });
-            setErrors({ ...errors, username: "" });
-            setDisabled(false);
-        }
-    };
+    }
 
     const updatePassword = (e) => {
         const password = e.target.value;
-        if (password === "" || password === undefined || password === null) {
-            setErrors({ ...errors, password: "password is required" });
-            setDisabled(true);
-        } else {
-            setData({ ...data, password});
-            setErrors({ ...errors, password: "" });
-            setDisabled(false);
-        }
-    };
-
-    const updateAddress = (e) => {
-        const address = e.target.value;
         if (password === "" || password === undefined || password === null) {
             setErrors({ ...errors, password: "password is required" });
             setDisabled(true);
@@ -109,9 +108,7 @@ export default function SignUp() {
           formData.append("firstName", data.firstName);
           formData.append("lastName", data.lastName);
           formData.append("email", data.email);
-          formData.append("username", data.username);
           formData.append("password", data.password);
-          formData.append("address", data.address);
           formData.append("contactNumber", data.contactNumber);
           return fetch('http://localhost:3000/register', {
             method: "POST",
@@ -141,6 +138,129 @@ export default function SignUp() {
       };
 
     return(
-        <h1>Sign Up page</h1>
+      <div class="auth-wrapper container h-40">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+        <div class="card rounded-3">
+          <div class="card-body p-4">
+             <div className="auth-inner">
+                <form onSubmit={submitHandler}>
+                    <h3>Sign Up</h3>
+
+                    <div className="mb-3">
+                        <label>First name</label>
+                        <input
+                        required
+                        type="text"
+                        className="form-control"
+                        placeholder="First name"
+                        onChange={(e) => setData({ ...data, firstName: e.target.value})}
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label>Last name</label>
+                        <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Last name"
+                        required
+                        onChange={(e) =>  setData({ ...data, lastName: e.target.value})}
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label>Email address</label>
+                        <input
+                        type="email"
+                        className="form-control"
+                        placeholder="Enter email"
+                        onChange={(e) => emailValid(e)}
+                        required/>
+
+                        {data.email_format? <input
+                        type="button"
+                        value="Verify"
+                        onClick={(e) =>  setOtpData({ ...data, otpSent: true})}
+                        style={{
+                            backgroundColor:"blue",
+                            width:"100%",
+                            padding:8, 
+                            color:"white",
+                            border:"none"}}
+                        
+                        />: null}
+                    </div>
+
+                    {otpData.otpSent?  <div className="mb-3">
+                        <label>One Time Password</label>
+                        <input
+                        type="number"
+                        className="form-control"
+                        placeholder="Enter OPT sent to your email"
+                        />
+                        <input
+                        type="button"
+                        value="OTP"
+                        style={{
+                            backgroundColor:"blue",
+                            width:"100%",
+                            padding:8, 
+                            color:"white",
+                            border:"none"}}
+                         />
+                    </div>: null}
+
+                    <div className="mb-3">
+                        <label>Password</label>
+                        <input
+                        required
+                        type="password"
+                        className="form-control"
+                        placeholder="Enter password"
+                        onChange={(e) =>  setData({ ...data, password: e.target.value})}
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label>Repeat Password</label>
+                        <input
+                        required
+                        type="password"
+                        className="form-control"
+                        placeholder="Enter password"
+                        onChange={(e) => setData({ ...data, password: e.target.value})}
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label>Contact Information</label>
+                        <div>
+                            <PhoneInput required
+                                defaultCountry="ca"
+                                onChange={(phone) => setData({ ...data, phone: phone})}
+                            />
+
+                            {!isPhoneValid(data.phone) && <div style={{ color: 'red' }}>Phone is not valid</div>}
+                        </div>
+                    </div>
+
+
+
+                    <div className="d-grid">
+                        <button type="submit" className="btn btn-primary" disabled = {otpData.otpVerified}>
+                        Sign Up
+                        </button>
+                    </div>
+                    <p className="forgot-password text-right">
+                        Already registered <a href="/sign-in">sign in?</a>
+                    </p>
+                    </form>
+            </div>
+            </div>
+            </div>
+            </div>
+      </div>
+    </div>
     )
 }
