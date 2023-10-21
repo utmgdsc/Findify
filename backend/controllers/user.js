@@ -86,24 +86,19 @@ module.exports.login = async (req, res, next) => {
 // Edit an existing user
 module.exports.edit = async (req, res, next) => {
   try {
-    // TODO: Need to check if user is logged in
-    // Non-admin user can only edit their own profile
-    // Admin user can edit any user profile
-    // should not be able to edit email. only using email for verification
-    // should not expect userId in the request body 
     const { email, password, firstName, lastName, contactNumber } = req.body;
-    if (req.user.isAdmin && email !== req.user.email) {
-      throw new Error({ name: 'Verification Error', message: 'Email does not match user!' })
+
+    const user = req.user;
+    if (!user.isAdmin && email !== user.email) {
+      throw new Error('Email does not match user!');
     }
 
-    req.user = {
-      ...req.user,
-      password: password || req.user.password,
-      firstName: firstName || req.user.firstName,
-      lastName: lastName || req.user.lastName,
-      contactNumber: contactNumber || req.user.contactNumber
-    };
-    req.user.save();
+    user.password = password || user.password;
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
+    user.contactNumber = contactNumber || user.contactNumber;
+    await user.save();
+    res.status(200).json({ message: "User updated successfully" });
   } catch (err) {
     errorHandler(err, res);
     next(err);

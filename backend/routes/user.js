@@ -41,7 +41,9 @@ router.route('/sendOTP')
 
 router.route('/edit')
   // TODO: add checkRequiredAttributes middleware
-  .post(authenticate, async (req, res) => {
+  .post(authenticate,
+    checkRequiredAttributes(["email"]),
+    async (req, res) => {
     try {
       await UserController.edit(req, res, errorHandler);
     } catch (err) {
@@ -49,8 +51,6 @@ router.route('/edit')
     }
   })
 
-const errorHandler = err => {
-  // console.error(err)
-}
+const errorHandler = (err) => {}
 
 module.exports = router;
