@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const OtpPairs = require('../models/Otp');
 const { generateOTP, sendOTP } = require('../utils/otp');
