@@ -6,35 +6,33 @@ body {
 #requestLostItem a {
     line-height: 3;
     font-size: 2rem;
-    color: white;
-    background-color: rgb(214, 118, 99);
-    border-color: black;
+    color: rgb(29, 141, 227);
+    background-color:black;
 }
 #requestLostItem a:hover {
-    background-color: black;
+    background-color: white;
 }
 #reportFoundItem a {
     line-height: 3;
     font-size: 2rem;
-    color: white;
-    background-color:rgb(214, 118, 99);
-    border-color: black;
+    color: rgb(29, 141, 227);
+    background-color:black;
 }
 #reportFoundItem a:hover {
-    background-color: black;
+    background-color: white;
 }
 .nav {
-    border-color: rgb(214, 118, 99) !important;
+    border-color: rgb(29, 141, 227) !important;
 }
 .nav-link.active {
-    border-color: rgb(214, 118, 99) rgb(214, 118, 99) white !important;
+    border-color: rgb(29, 141, 227) rgb(29, 141, 227) white !important;
 }
 .nav-link {
-    color: rgb(214, 118, 99) !important;
+    color: rgb(29, 141, 227) !important;
     font-weight: 700;
 }
 .nav-link:hover {
-    border-color: rgb(214, 118, 99) !important;
+    border-color: rgb(29, 141, 227) !important;
 }
 .no-result {
     max-width: 20% !important;

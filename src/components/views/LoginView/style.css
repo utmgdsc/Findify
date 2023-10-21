@@ -8,67 +8,27 @@ body {
     background-size: cover;
    }
 
-.container {
-    position: absolute;
-    color: yellow;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-.root {
+#signup-card {
   margin: auto;
-  margin-top: 150px;
-}
-
-.root .card {
-  position: absolute;
-    color: yellow;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  margin-top: 10%;
   padding: 25px 50px;
   border-radius: 25px;
-  align-items: center;
+  align-items: left;
+  aspect-ratio: 100/29;
 }
 
-#Logo {
-  width: 250px;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.signup-button {
+  background-color:rgb(69, 171, 205);
+  width: 100%; 
+  height: 35px;
+  padding: 8;
   color: white;
-  background: rgb(202,201,223);
-  background: linear-gradient(90deg, rgba(202,201,223,1) 0%, rgba(40,40,159,1) 0%, rgba(28,92,188,1) 30%, rgba(0,212,255,1) 100%);
-  border: 0px rgb(54, 200, 249) solid;
-  border-radius: 0.5em;
-  font-size: 3.25em;
-  font-weight: 900;
-  margin: 25px;
-  margin-bottom: 50px;
+  border: none;
+  border-radius: 0.5rem;
+  margin-top: 8px;
 }
 
-.card p {
-  width: 675px;
-  font-size: 22px;
-  font-weight: 325;
-  color:black;
-  margin-bottom: 25px;
-}
-
-.card button {
-  position: center;
-  color: white;
-  background:rgb(69, 171, 205);
-  border-radius: 2em;
-  width: 125px;
-  padding: 12px 17px; 
-  font-size: 18px;
-  font-weight: 700;
-  margin: 25px 5px;
-}
-.card button:hover{
+.signup-button:hover{
   background:rgb(29, 141, 227);
   color: white;
 }

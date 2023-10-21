@@ -1,12 +1,11 @@
 import React from "react";
-import logo from "../../../assets/img/logo2.png";
 import "./style.css";
 import { Link } from "react-router-dom";
 
 const Landing = () => {
   return (
     <div class="root col-md-8 justify-content-center">
-      <div class="card">
+      <div class="card" id="card1">
         {/* <img id="Logo" class="" src={logo} alt="loading..."/> */}
         <div id="Logo">Find.ify</div>
         <p class="text-center">

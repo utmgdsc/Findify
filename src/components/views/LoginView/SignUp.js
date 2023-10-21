@@ -17,8 +17,6 @@ export default function SignUp() {
     password: "",
     contactNumber: "",
     email_format: false,
-    passwordCheck: false,
-    passwordMatch: false,
   });
   const [errors, setErrors] = useState({
     firstName: "",
@@ -28,11 +26,11 @@ export default function SignUp() {
     repeatPassword: "",
     contactNumber: "",
     otp: "",
+    submit: "",
   });
 
   const [otpData, setOtpData] = useState({
     otp: "",
-    otpVerified: false,
     otpSent: false,
     numAttempts: 0,
   });
@@ -45,6 +43,7 @@ export default function SignUp() {
         phoneUtil.parseAndKeepRawInput(contactNumber)
       );
     } catch (error) {
+      console.log(error);
       return false;
     }
   };
@@ -53,10 +52,10 @@ export default function SignUp() {
     let email = e.target.value;
     if (validator.isEmail(email) && email.endsWith("mail.utoronto.ca")) {
       setData({ ...data, email: email, email_format: true });
-      setErrors({ ...data, email: "" });
+      setErrors({ ...errors, email: "" });
       setDisabled(false);
     } else {
-      setErrors({ ...data, email: "Please enter a valid UofT email." });
+      setErrors({ ...errors, email: "Please enter a valid UofT email." });
       setData({ ...data, email_format: false });
       setOtpData({ ...otpData, otpSent: false });
       setDisabled(true);
@@ -65,18 +64,16 @@ export default function SignUp() {
 
   const updatePassword = (e) => {
     const password = e.target.value;
-    let pwd = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,24}$/;
-    if (!pwd.test(password)) {
+    let regex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,24}$/;
+    if (!regex.test(password)) {
       setErrors({
         ...errors,
         password:
           "Password must contain one digit from 1 to 9, one lowercase letter, one uppercase letter, one special character, no space, and it must be 8-16 characters long ",
       });
-      setData({ ...data, passwordCheck: false });
       setDisabled(true);
     } else {
-      setData({ ...data, password: password });
-      setData({ ...data, passwordCheck: true });
+      setData({ ...data, password });
       setErrors({ ...errors, password: "" });
       setDisabled(false);
     }
@@ -84,19 +81,17 @@ export default function SignUp() {
 
   const confirmpassword = (e) => {
     const repeatPassword = e.target.value;
-    if (repeatPassword != data.password) {
+    if (repeatPassword !== data.password) {
       setErrors({
         ...errors,
         repeatPassword: "Both the passwords do not match.",
       });
-      setData({ ...data, passwordMatch: false });
       setDisabled(true);
     } else {
       setErrors({
         ...errors,
         repeatPassword: "",
       });
-      setData({ ...data, passwordMatch: true });
       setDisabled(false);
     }
   };
@@ -121,26 +116,40 @@ export default function SignUp() {
           return response.text().then((msg) => {
             console.log(msg);
             setOtpData({ ...otpData, otpSent: true });
+            setDisabled(false);
           });
         } else {
           // Handle other status codes
           return response.text().then((errorMessage) => {
-            alert(`Error: ${errorMessage}`);
+            const errorObject = JSON.parse(errorMessage);
+            setErrors({
+              ...errors,
+              otp: errorObject.message,
+            });
+            setOtpData({ ...otpData, otpSent: false });
+            setDisabled(true);
             controller.abort();
           });
         }
       })
       .catch((err) => {
-        console.log(err);
+        const errorObject = JSON.parse(err);
+        setErrors({
+          ...errors,
+          otp: errorObject.message,
+        });
+        setOtpData({ ...otpData, otpSent: false });
         setDisabled(true);
         setValidated(false);
       });
   };
 
   const resendOtp = async (event) => {
+    console.log("reached resend");
+    console.log(otpData.numAttempts);
     if (otpData.numAttempts < 5) {
-      sendOtp(event);
       otpData.numAttempts = otpData.numAttempts + 1;
+      sendOtp(event);
     } else {
       setErrors({
         ...errors,
@@ -167,6 +176,7 @@ export default function SignUp() {
         contactNumber: data.contactNumber,
         OTP: otpData.otp,
       };
+      console.log(jsonData);
       return fetch("http://localhost:3000/user/register", {
         method: "POST",
         headers: {
@@ -181,18 +191,24 @@ export default function SignUp() {
               console.log(json);
               setDisabled(false);
               setValidated(true);
-              setOtpData({ ...otpData, otpVerified: true });
+              setErrors({ ...errors, submit: "" });
               navigate("/login", { replace: true });
             });
           } else {
             // Handle other status codes
             return response.text().then((errorMessage) => {
-              alert(`Error: ${errorMessage}`);
+              const errorObject = JSON.parse(errorMessage);
+              setErrors({
+                ...errors,
+                submit: errorObject.message,
+              });
               controller.abort();
             });
           }
         })
         .catch((err) => {
+          const errorObject = JSON.parse(err);
+          setErrors({ ...errors, submit: errorObject.message });
           console.log(err);
           setDisabled(true);
           setValidated(false);
@@ -201,14 +217,14 @@ export default function SignUp() {
   };
 
   return (
-    <div className="auth-wrapper container h-40">
+    <div className="auth-wrapper container">
       <div className="row d-flex justify-content-center align-items-center h-100">
         <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-          <div className="card rounded-3">
+          <div className="card rounded-3" id="signup-card">
             <div className="card-body p-4">
-              <div className="auth-inner">
-                <form onSubmit={submitHandler}>
-                  <h3>Sign Up</h3>
+              <div>
+                <form noValidate validated={validated} onSubmit={submitHandler}>
+                  <h3 className="text-center">Sign Up</h3>
 
                   <div className="mb-3">
                     <label>First name</label>
@@ -245,7 +261,7 @@ export default function SignUp() {
                       required
                       onChange={(e) => emailValid(e)}
                     />
-                    {data.email_format == false && (
+                    {data.email_format === false && (
                       <span style={{ fontSize: 15, color: "red" }}>
                         {errors.email}{" "}
                       </span>
@@ -256,15 +272,18 @@ export default function SignUp() {
                         <input
                           type="button"
                           value="Verify"
+                          className="signup-button"
                           onClick={(e) => sendOtp(e)}
-                          style={{
-                            backgroundColor: "blue",
-                            width: "100%",
-                            padding: 8,
-                            color: "white",
-                            border: "none",
-                          }}
                         />
+                        {otpData.otpSent ? (
+                          <span style={{ fontSize: 15, color: "green" }}>
+                            OTP sent successfully
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: 15, color: "red" }}>
+                            {errors.otp}
+                          </span>
+                        )}
                       </div>
                     ) : null}
                   </div>
@@ -273,22 +292,19 @@ export default function SignUp() {
                     <div className="mb-3">
                       <label>One Time Password</label>
                       <input
-                        type="number"
+                        type="text"
                         className="form-control"
-                        placeholder="Enter OPT sent to your email"
+                        placeholder="Enter OTP sent to your email"
+                        onChange={(e) => {
+                          setOtpData({ ...otpData, otp: e.target.value });
+                          console.log(otpData.otp);
+                        }}
                       />
                       <input
                         type="button"
                         value="Resend OTP"
-                        onChange={(e) => resendOtp(e)}
-                        style={{
-                          backgroundColor: "blue",
-                          marginLeft: 25,
-                          width: "25%",
-                          padding: 8,
-                          color: "white",
-                          border: "none",
-                        }}
+                        className="signup-button"
+                        onClick={(e) => resendOtp(e)}
                       />
                     </div>
                   ) : null}
@@ -302,11 +318,9 @@ export default function SignUp() {
                       placeholder="Enter password"
                       onChange={(e) => updatePassword(e)}
                     />
-                    {data.passwordCheck == false && (
-                      <span style={{ fontSize: 15, color: "red" }}>
-                        {errors.password}{" "}
-                      </span>
-                    )}
+                    <span style={{ fontSize: 15, color: "red" }}>
+                      {errors.password}
+                    </span>
                   </div>
 
                   <div className="mb-3">
@@ -318,20 +332,20 @@ export default function SignUp() {
                       placeholder="Enter password"
                       onChange={(e) => confirmpassword(e)}
                     />
-                    {!data.passwordMatch && (
-                      <span style={{ fontSize: 15, color: "red" }}>
-                        {errors.repeatPassword}{" "}
-                      </span>
-                    )}
+                    <span style={{ fontSize: 15, color: "red" }}>
+                      {errors.repeatPassword}
+                    </span>
                   </div>
 
-                  <div className="mb-3">
+                  <div>
                     <label>Contact Information</label>
                     <div>
                       <PhoneInput
                         required
                         defaultCountry="ca"
-                        onChange={(phone) => setData({ ...data, phone: phone })}
+                        onChange={(contactNumber) =>
+                          setData({ ...data, contactNumber })
+                        }
                       />
 
                       {!isPhoneValid(data.phone) && (
@@ -342,10 +356,13 @@ export default function SignUp() {
                     </div>
                   </div>
 
+                  <span style={{ fontSize: 15, color: "red" }}>
+                    {errors.submit}
+                  </span>
                   <div>
                     <button
                       type="submit"
-                      className="btn btn-primary"
+                      className="signup-button mb-2 mt-2"
                       disabled={disabled}
                     >
                       Sign Up
