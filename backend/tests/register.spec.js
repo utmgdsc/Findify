@@ -140,5 +140,81 @@ describe('Register Controller', () => {
     expect(next.notCalled).to.be.true;
   });
 
-  // Add more test cases to cover other scenarios in the register controller
+  it('should return a 403 error if the user is already blocked', async () => {
+    // Mock the required functions for this test
+    sandbox.stub(User, 'countDocuments').resolves(0);
+    
+    // Mock the OtpPairs.findOne function to return a blocked OTP pair
+    const blockedOtpPairMock = {
+      ...otpPairMock,
+      isBlocked: true, // User is already blocked
+      blockUntil: new Date(Date.now() + (60 * 60 * 1000)), // 1 hour from now
+      OTPAttempts: 4, // Maximum allowed attempts reached
+    };
+
+    sandbox.stub(OtpPairs, 'findOne')
+      .withArgs({ email: req.body.email })
+      .resolves(blockedOtpPairMock);
+    
+    // Call the register controller function
+    await register(req, res, next);
+  
+    // Assertions
+    expect(res.status.calledWith(403)).to.be.true;
+    expect(res.json.calledWith({ message: 'User blocked. Try after some time again.' })).to.be.true;
+    expect(next.notCalled).to.be.true;
+  });
+  
+  it('should return a 403 error if the OTP attempts exceed the limit', async () => {
+    // Mock the required functions for this test
+    sandbox.stub(User, 'countDocuments').resolves(0);
+  
+    // Mock the OtpPairs.findOne function to return an OTP pair with exceeded attempts
+    const exceededAttemptsOtpPairMock = {
+      ...otpPairMock,
+      OTP: '999999', // incorrect OTP
+      OTPAttempts: 3,
+    };
+    sandbox.stub(OtpPairs, 'findOne')
+      .withArgs({ email: req.body.email })
+      .resolves(exceededAttemptsOtpPairMock);
+    
+    // Call the register controller function
+    await register(req, res, next);
+  
+    // Assertions
+    expect(res.status.calledWith(403)).to.be.true;
+    expect(res.json.calledWith({ message: 'Invalid OTP' })).to.be.true;
+    // make sure otpPaired is blocked
+    expect(exceededAttemptsOtpPairMock.isBlocked).to.be.true;
+    expect(exceededAttemptsOtpPairMock.blockUntil).to.be.lessThanOrEqual(new Date(Date.now() + (60 * 60 * 1000)));
+    expect(next.notCalled).to.be.true;
+  });
+  
+  it('should return a 403 error if the OTP has expired', async () => {
+    // Mock the required functions for this test
+    sandbox.stub(User, 'countDocuments').resolves(0);
+  
+    // Mock the OtpPairs.findOne function to return an OTP pair with an expired OTP
+    const expiredOTPPairMock = {
+      email: req.body.email,
+      OTP: '123456', // correct OTP
+      OTPCreatedTime: new Date(Date.now() - (31 * 60 * 1000)), // 31 minutes ago (expired)
+      isBlocked: false,
+      save: sandbox.stub().resolves(),
+      OTPAttempts: 0,
+    };
+    sandbox.stub(OtpPairs, 'findOne')
+      .withArgs({ email: req.body.email })
+      .resolves(expiredOTPPairMock);
+    
+    // Call the register controller function
+    await register(req, res, next);
+  
+    // Assertions
+    expect(res.status.calledWith(403)).to.be.true;
+    expect(res.json.calledWith({ message: 'OTP expired' })).to.be.true;
+    expect(next.notCalled).to.be.true;
+  });
+
 });
