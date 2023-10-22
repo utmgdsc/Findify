@@ -77,7 +77,7 @@ module.exports.login = async (req, res, next) => {
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1 hour' });
-    res.json({ token });
+    res.status(200).json({ token });
   } catch (error) {
     next(error);
   }
@@ -104,7 +104,6 @@ module.exports.edit = async (req, res, next) => {
     next(err);
   }
 };
-
 
 // generates and sends the OTP to the user
 module.exports.sendOTP = async (req, res, next) => {
