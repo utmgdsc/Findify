@@ -11,4 +11,4 @@ const emailOtpPairsSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("emailOtpPair", emailOtpPairsSchema)
+module.exports = mongoose.model("emailOtpPair", emailOtpPairsSchema);
