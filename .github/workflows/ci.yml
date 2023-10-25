@@ -4,7 +4,10 @@ on:
   push:
     paths:
       - 'backend/**'
-
+  pull_request:
+    types:
+      - opened
+      - synchronize
 jobs:
   test:
     runs-on: ubuntu-latest
