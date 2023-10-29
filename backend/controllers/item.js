@@ -10,31 +10,7 @@ module.exports.createLostRequest = async (req, res, next) => {
 
   try {
     if (req.file) {
-      const file = req.file;
-      const fileName = `lost-items/${Date.now()}-${file.originalname}`;
-
-      const command = new PutObjectCommand({
-        Bucket: process.env.S3_BUCKET_NAME,
-        Key: fileName,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-        ACL: 'public-read',
-      });
-
-      try {
-        await s3.send(command);
-        imageUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${encodeURIComponent(fileName)}`;
-      } catch (error) {
-        console.error('An error occurred while uploading the file:', error);
-        // Handle specific S3 errors or general AWS errors
-        if (error.code === 'AccessDenied') {
-          return res.status(403).json({ message: 'Access Denied to S3 bucket.' });
-        } else if (error.code === 'NoSuchBucket') {
-          return res.status(400).json({ message: 'S3 Bucket does not exist.' });
-        } else {
-          return res.status(500).json({ message: 'Failed to upload image.' });
-        }
-      }
+      imageUrl = await uploadToS3('lost-items', req.file);
     }
 
     const lostItem = new LostItem({
@@ -57,3 +33,24 @@ module.exports.createLostRequest = async (req, res, next) => {
     next(err);
   }
 };
+
+
+async function uploadToS3(folder, file) {
+  const fileName = `${folder}/${Date.now()}-${file.originalname}`;
+  
+  const command = new PutObjectCommand({
+    Bucket: process.env.S3_BUCKET_NAME,
+    Key: fileName,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+    ACL: 'public-read',
+  });
+
+  try {
+    await s3.send(command);
+    return `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${encodeURIComponent(fileName)}`;
+  } catch (error) {
+    console.error('An error occurred while uploading the file:', error);
+    throw error; // Re-throw the error to be handled by the caller
+  }
+}
