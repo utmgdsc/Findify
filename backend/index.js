@@ -1,6 +1,7 @@
 const express = require('express');
 const connectDB = require('./db');
 const userRoutes = require('./routes/user');
+const itemRoutes = require('./routes/item');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +14,9 @@ app.use(express.json());
 
 // Define user routes
 app.use('/user', userRoutes);
+
+// Define item routes
+app.use('/item', itemRoutes);
 
 // Start the server
 app.listen(PORT, () => {
