@@ -11,17 +11,19 @@ module.exports.register = async (req, res, next) => {
     const otpPair = await OtpPairs.findOne({ email });
     const numExistingUsers = await User.countDocuments({ email });
     if (numExistingUsers > 0) {
-      return res.status(400).json({ message: 'Email is already registered' });
+      return res.status(400).json({ message: "Email is already registered" });
     }
 
     if (!otpPair) {
-      return res.status(404).json({ message: 'User has not been sent OTP' });
+      return res.status(404).json({ message: "User has not been sent OTP" });
     }
 
     if (otpPair.isBlocked) {
       const currentTime = new Date();
       if (currentTime < otpPair.blockUntil) {
-        return res.status(403).json({ message: "User blocked. Try after some time again." });
+        return res
+          .status(403)
+          .json({ message: "User blocked. Try after some time again." });
       } else {
         otpPair.isBlocked = false;
         otpPair.OTPAttempts = 0;
@@ -52,7 +54,13 @@ module.exports.register = async (req, res, next) => {
       return res.status(403).json({ message: "OTP expired" });
     }
 
-    const user = new User({ email, password, firstName, lastName, contactNumber });
+    const user = new User({
+      email,
+      password,
+      firstName,
+      lastName,
+      contactNumber,
+    });
     await user.save();
     res.status(200).json({ message: 'Registration Successful' });
   } catch (err) {
@@ -68,12 +76,12 @@ module.exports.login = async (req, res, next) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const passwordMatch = await user.comparePassword(password);
     if (!passwordMatch) {
-      return res.status(401).json({ message: 'Incorrect password' });
+      return res.status(401).json({ message: "Incorrect password" });
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1 hour' });
@@ -111,7 +119,7 @@ module.exports.sendOTP = async (req, res, next) => {
   try {
     const numExistingUsers = await User.countDocuments({ email });
     if (numExistingUsers > 0) {
-      return res.status(400).json({ message: 'Email is already verified' });
+      return res.status(400).json({ message: "Email is already verified" });
     }
 
     let otpPair = await OtpPairs.findOne({ email });
@@ -122,7 +130,9 @@ module.exports.sendOTP = async (req, res, next) => {
     if (otpPair.isBlocked) {
       const currentTime = new Date();
       if (currentTime < otpPair.blockUntil) {
-        return res.status(403).json({ message: "Account blocked. Try after some time." });
+        return res
+          .status(403)
+          .json({ message: "Account blocked. Try after some time." });
       } else {
         otpPair.isBlocked = false;
         otpPair.OTPAttempts = 0;
@@ -134,9 +144,9 @@ module.exports.sendOTP = async (req, res, next) => {
     const currentTime = new Date();
 
     if (lastOTPTime && currentTime - lastOTPTime < 60000) {
-      return res
-        .status(403)
-        .json({ message: "Minimum 1-minute gap required between OTP requests" });
+      return res.status(403).json({
+        message: "Minimum 1-minute gap required between OTP requests",
+      });
     }
 
     const OTP = generateOTP();
@@ -151,7 +161,6 @@ module.exports.sendOTP = async (req, res, next) => {
     });
 
     res.status(200).json({ message: "OTP sent successfully" });
-
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -162,12 +171,12 @@ const errorHandler = (err, res) => {
   if (err.name === 'MongoServerError' && err.code === 11000) {
     // Handle duplicate key error (code 11000) for unique constraints
     if (err.keyPattern && err.keyPattern.email) {
-      return res.status(400).json({ error: 'Email is already registered' });
+      return res.status(400).json({ error: "Email is already registered" });
     } else {
       // Handle other unique constraints if needed
-      return res.status(400).json({ error: 'Duplicate key error' });
+      return res.status(400).json({ error: "Duplicate key error" });
     }
   } else if (err.name) {
     return res.status(400).json({ error: err.message });
   }
-}
+};
