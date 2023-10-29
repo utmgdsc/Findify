@@ -1,7 +1,9 @@
+const { v4: uuidv4 } = require('uuid');
 const { LostItem, FoundItem, PotentialMatch } = require('../models/Item');
 const { s3 } = require('../utils/aws');
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { errorHandler } = require('../utils/errorHandler');
+
 
 // Register a new user
 module.exports.createLostRequest = async (req, res, next) => {
@@ -36,7 +38,7 @@ module.exports.createLostRequest = async (req, res, next) => {
 
 
 async function uploadToS3(folder, file) {
-  const fileName = `${folder}/${Date.now()}-${file.originalname}`;
+  const fileName = `${folder}/${uuidv4()}-${file.originalname}`;
   
   const command = new PutObjectCommand({
     Bucket: process.env.S3_BUCKET_NAME,
