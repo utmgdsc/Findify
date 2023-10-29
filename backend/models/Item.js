@@ -8,8 +8,8 @@ const LostItemSchema = new mongoose.Schema({
   size: { type: String, enum: ['sm', 'md', 'lg', 'xl'], required: true },
   colour: { type: String, required: true },
   image: { data: Buffer, contentType: String },
-  locationFound: { type: String, required: true },
-  timeFound: { type: Date, default: Date.now() },
+  locationLost: { type: String, required: true },
+  timeLost: { type: Date, default: Date.now() },
   description: { type: String },
   host: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true }, // could add default value of admin
   isActive: { type: Boolean, default: true },
