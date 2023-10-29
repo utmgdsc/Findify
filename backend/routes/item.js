@@ -1,18 +1,14 @@
 const express = require('express');
 const { authenticate, checkRequiredAttributes } = require('../middlewares/user');
 const ItemController = require('../controllers/item');
-const multer = require('multer');
+const multerUpload = require("../middlewares/multer");
 
 const router = express.Router();
-
-const upload = multer({
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
-});
 
 router.route('/lostRequest')
   .post(
     authenticate, 
-    upload.single('image'),
+    multerUpload,
     checkRequiredAttributes(["type", "brand", "size", "colour", "locationLost"]),
     async (req, res) => {
       try {
