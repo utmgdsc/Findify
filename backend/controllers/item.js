@@ -8,11 +8,12 @@ const { errorHandler } = require('../utils/errorHandler');
 // Register a new user
 module.exports.createLostRequest = async (req, res, next) => {
   const { type, brand, size, colour, locationLost, description } = req.body;
-  let imageUrl = '';
+  let imageUrls = [];
 
   try {
-    if (req.file) {
-      imageUrl = await uploadToS3('lost-items', req.file);
+    if (req.files && req.files.length > 0) {
+      const uploadPromises = req.files.map(file => uploadToS3('lost-items', file));
+      imageUrls = await Promise.all(uploadPromises);
     }
 
     const lostItem = new LostItem({
@@ -21,7 +22,7 @@ module.exports.createLostRequest = async (req, res, next) => {
       size,
       colour,
       locationLost,
-      imageUrl,
+      imageUrls,
       host: req.user._id,
       description
     });
@@ -29,7 +30,7 @@ module.exports.createLostRequest = async (req, res, next) => {
     // Save to database
     await lostItem.save();
 
-    res.status(200).json({ message: 'Uploaded file', urlLocation: imageUrl });
+    res.status(200).json({ message: 'Uploaded file', urlLocations: imageUrls });
   } catch (err) {
     errorHandler(err, res);
     next(err);

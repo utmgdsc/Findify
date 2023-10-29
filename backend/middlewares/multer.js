@@ -1,8 +1,8 @@
 const multer = require('multer');
 
 const upload = multer({
-  limits: { fileSize: 5 * 1024 * 1024 } // Limit of 5MB
-}).single('image');
+  limits: { fileSize: 3 * 1024 * 1024 } // Limit of 5MB
+}).array('images', 5);
 
 function multerUpload(req, res, next) {
   upload(req, res, function (err) {

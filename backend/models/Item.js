@@ -10,7 +10,7 @@ const LostItemSchema = new mongoose.Schema(
     host: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true }, // could add default value of admin
 
     // optional fields:
-    imageUrl: { type: String, default: '' },
+    imageUrls: [{ type: String, default: [] }],
     timeLost: { type: Date, default: Date.now },
     description: { type: String, default: '' },
     isActive: { type: Boolean, default: true },
@@ -29,7 +29,7 @@ const FoundItemSchema = new mongoose.Schema(
     host: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true }, // could add default value of admin
 
     // optinal fields:
-    imageUrl: { type: String, default: '' },
+    imageUrls: [{ type: String, default: [] }],
     timeFound: { type: Date, default: Date.now },
     description: { type: String, default: '' },
     isActive: { type: Boolean, default: true },
