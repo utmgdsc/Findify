@@ -3,16 +3,16 @@ const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
   {
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    isAdmin: { type: Boolean, default: false },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    contactNumber: { type: String },
+    email: {type: String, required: true, unique: true},
+    password: {type: String, required: true},
+    isAdmin: {type: Boolean, default: false},
+    firstName: {type: String, required: true},
+    lastName: {type: String, required: true},
+    contactNumber: {type: String},
     // TODO: Need to decide query limit
-    queryLimit: { type: Number, default: 3 }
+    queryLimit: {type: Number, default: 3}
   },
-  { timestamps: true }
+  {timestamps: true}
 );
 
 // Hash the password before saving it to the database
