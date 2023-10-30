@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import "./style.css";
+import { set } from "mongoose";
 
 export default function RequestLost() {
   let navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function RequestLost() {
     colour: "",
     images: "",
     description: "",
-    timeFound: "",
+    timeLost: "",
     timeSubmitted: new Date(),
     location: "",
     brand: "",
@@ -29,11 +30,16 @@ export default function RequestLost() {
     colour: "",
     images: "",
     description: "",
-    timeFound: "",
+    timeLost: "",
     timeSubmitted: "",
     location: "",
     submit: "",
   });
+
+  const dateLostHandler = (date) => {
+    setselectedDate(date);
+    setData({ ...data, timeLost: date });
+  };
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -41,20 +47,21 @@ export default function RequestLost() {
     var controller = new AbortController();
     const signal = controller.signal;
     const jsonData = {
-      name: data.name,
-      category: data.category,
+      //name: data.name,
+      type: data.category,
       colour: data.colour,
       images: data.images,
       description: data.description,
-      timeFound: data.timeFound,
+      timeLost: data.timeLost,
       timeSubmitted: data.name,
-      location: data.location,
+      locationLost: data.location,
       brand: data.brand,
       size: data.size,
+      //host -- user
     };
 
     console.log(jsonData);
-    return fetch("http://localhost:3000/user/register", {
+    return fetch("http://localhost:3000/item/lostRequest", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -141,10 +148,10 @@ export default function RequestLost() {
                 </div>
 
                 <div className="mb-3">
-                  <label>Date when item was found</label>
+                  <label>Date when item was Lost</label>
                   <DatePicker
                     selected={selectedDate}
-                    onChange={(date) => setselectedDate(date)}
+                    onChange={(date) => dateLostHandler(date)}
                     maxDate={data.timeSubmitted}
                     required
                     isClearable
@@ -238,6 +245,8 @@ export default function RequestLost() {
                     class="form-control"
                     id="customFile"
                     accept="image/*"
+                    multiple
+                    size={3000000} // 3000 kb = 3 mb
                   />
                 </div>
                 <div className="mb-3">
