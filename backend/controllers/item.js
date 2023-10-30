@@ -5,7 +5,6 @@ const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { errorHandler } = require('../utils/errorHandler');
 
 
-// Register a new user
 module.exports.createLostRequest = async (req, res, next) => {
   const { type, brand, size, colour, locationLost, description } = req.body;
   let imageUrls = [];
@@ -30,7 +29,38 @@ module.exports.createLostRequest = async (req, res, next) => {
     // Save to database
     await lostItem.save();
 
-    res.status(200).json({ message: 'Uploaded file', urlLocations: imageUrls });
+    res.status(200).json({ message: 'Created lost item successfully', urlLocations: imageUrls });
+  } catch (err) {
+    errorHandler(err, res);
+    next(err);
+  }
+};
+
+module.exports.createFoundRequest = async (req, res, next) => {
+  const { type, brand, size, colour, locationFound, description } = req.body;
+  let imageUrls = [];
+
+  try {
+    if (req.files && req.files.length > 0) {
+      const uploadPromises = req.files.map(file => uploadToS3('found-items', file));
+      imageUrls = await Promise.all(uploadPromises);
+    }
+
+    const foundItem = new FoundItem({
+      type,
+      brand,
+      size,
+      colour,
+      locationFound,
+      imageUrls,
+      host: req.user._id,
+      description
+    });
+
+    // Save to database
+    await foundItem.save();
+
+    res.status(200).json({ message: 'Created found item successfully', urlLocations: imageUrls });
   } catch (err) {
     errorHandler(err, res);
     next(err);

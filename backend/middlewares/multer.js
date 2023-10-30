@@ -1,7 +1,7 @@
 const multer = require('multer');
 
 const upload = multer({
-  limits: { fileSize: 3 * 1024 * 1024 } // Limit of 5MB
+  limits: { fileSize: 3 * 1024 * 1024 } // Limit of 3MB
 }).array('images', 5);
 
 function multerUpload(req, res, next) {
@@ -11,7 +11,6 @@ function multerUpload(req, res, next) {
       if (err.code === 'LIMIT_FILE_SIZE') {
         return res.status(400).json({ message: 'File too large. Please upload a file smaller than 5 MB.' });
       }
-
       return res.status(500).json({ message: `Multer error: ${err.message}` });
     } else if (err) {
       // Handle other errors

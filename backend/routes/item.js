@@ -19,6 +19,21 @@ router.route('/lostRequest')
     }
   )
 
+
+router.route('/foundRequest')
+  .post(
+    authenticate, 
+    multerUpload,
+    checkRequiredAttributes(["type", "brand", "size", "colour", "locationFound"]),
+    async (req, res) => {
+      try {
+        await ItemController.createFoundRequest(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Create Found Request Error: ${err}` })
+      }
+    }
+  )
+
 const errorHandler = (err) => { }
 
 module.exports = router;
