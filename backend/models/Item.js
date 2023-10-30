@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const LostItemSchema = new mongoose.Schema(
   {
+    itemName: {type: String, required: true},
     type: { type: String, required: true },
     brand: { type: String, required: true },
     size: { type: String, enum: ['S', 'M', 'L', 'XL'], required: true },
@@ -21,6 +22,7 @@ const LostItemSchema = new mongoose.Schema(
 
 const FoundItemSchema = new mongoose.Schema(
   {
+    itemName: {type: String, required: true},
     type: { type: String, required: true },
     brand: { type: String, required: true },
     size: { type: String, enum: ['S', 'M', 'L', 'XL'], required: true },
@@ -28,7 +30,7 @@ const FoundItemSchema = new mongoose.Schema(
     locationFound: { type: String, required: true },
     host: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true }, // could add default value of admin
 
-    // optinal fields:
+    // optional fields:
     imageUrls: [{ type: String, default: [] }],
     timeFound: { type: Date, default: Date.now },
     description: { type: String, default: '' },

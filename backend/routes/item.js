@@ -9,7 +9,7 @@ router.route('/lostRequest')
   .post(
     authenticate, 
     multerUpload,
-    checkRequiredAttributes(["type", "brand", "size", "colour", "locationLost"]),
+    checkRequiredAttributes(["itemName", "type", "brand", "size", "colour", "locationLost"]),
     async (req, res) => {
       try {
         await ItemController.createLostRequest(req, res, errorHandler);
@@ -24,7 +24,7 @@ router.route('/foundRequest')
   .post(
     authenticate, 
     multerUpload,
-    checkRequiredAttributes(["type", "brand", "size", "colour", "locationFound"]),
+    checkRequiredAttributes(["itemName", "type", "brand", "size", "colour", "locationFound"]),
     async (req, res) => {
       try {
         await ItemController.createFoundRequest(req, res, errorHandler);
