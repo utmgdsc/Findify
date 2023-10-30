@@ -34,6 +34,17 @@ router.route('/foundRequest')
     }
   )
 
+router.route('/getUserPosts')
+  .get(authenticate, 
+    async (req, res) => {
+    try {
+      const data = await ItemController.getUserPosts(req, res, errorHandler);
+      res.json({ userPosts: data })
+    } catch (err) {
+      res.json({ message: `Get User Posts Error: ${err}` })
+    }
+  })
+
 const errorHandler = (err) => { }
 
 module.exports = router;
@@ -64,16 +75,7 @@ module.exports = router;
 //     }
 //   })
 
-// router.route('/getUserPosts')
-//   .get(authenticate, checkRequiredAttributes(['userId']), async (req, res) => { // ? should required attr be userId or user token?
-//     try {
-//       // data should be object with structure { lostRequests: List<LostRequestObj>, foundReports: List<FoundReportObj> }
-//       const data = await ItemController.getUserPosts(req, res, errorHandler);
-//       res.json({ userPosts: data })
-//     } catch (err) {
-//       res.json({ message: `Get User Posts Error: ${err}` })
-//     }
-//   })
+
 
 // router.route('/getItemInfo')
 //   .get(authenticate, checkRequiredAttributes(['itemId'], async (req, res) => {

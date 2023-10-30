@@ -67,6 +67,22 @@ module.exports.createFoundRequest = async (req, res, next) => {
   }
 };
 
+module.exports.getUserPosts = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+
+    // Fetch Lost Items
+    const lostItems = await LostItem.find({ host: userId }).select("-__v");
+
+    // Fetch Found Items
+    const foundItems = await FoundItem.find({ host: userId }).select("-__v");
+
+    return { lostItems, foundItems };
+  } catch (error) {
+    console.error("Error fetching user's items:", error);
+    res.status(500).json({ message: 'Error fetching user requests' });
+  }
+};
 
 async function uploadToS3(folder, file) {
   const fileName = `${folder}/${uuidv4()}-${file.originalname}`;
