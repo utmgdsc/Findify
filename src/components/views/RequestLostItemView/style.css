@@ -1,0 +1,19 @@
+body {
+    margin:0;
+    padding:0;
+    background-color: cornflowerblue;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+   }
+
+#requestlostitem-card {
+  margin: auto;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  padding: 25px 50px;
+  border-radius: 25px;
+  align-items: left;
+  aspect-ratio: 100/29;
+}
