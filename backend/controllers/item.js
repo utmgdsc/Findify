@@ -6,7 +6,7 @@ const { errorHandler } = require('../utils/errorHandler');
 
 
 module.exports.createLostRequest = async (req, res, next) => {
-  const { type, brand, size, colour, locationLost, description } = req.body;
+  const { type, brand, size, colour, locationLost, description, itemName } = req.body;
   let imageUrls = [];
 
   try {
@@ -16,6 +16,7 @@ module.exports.createLostRequest = async (req, res, next) => {
     }
 
     const lostItem = new LostItem({
+      itemName,
       type,
       brand,
       size,
@@ -37,7 +38,7 @@ module.exports.createLostRequest = async (req, res, next) => {
 };
 
 module.exports.createFoundRequest = async (req, res, next) => {
-  const { type, brand, size, colour, locationFound, description } = req.body;
+  const { type, brand, size, colour, locationFound, description, itemName } = req.body;
   let imageUrls = [];
 
   try {
@@ -47,6 +48,7 @@ module.exports.createFoundRequest = async (req, res, next) => {
     }
 
     const foundItem = new FoundItem({
+      itemName,
       type,
       brand,
       size,

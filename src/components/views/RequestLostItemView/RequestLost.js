@@ -15,7 +15,7 @@ export default function RequestLost() {
     name: "",
     category: "",
     colour: "",
-    images: "",
+    images: [],
     description: "",
     timeLost: "",
     timeSubmitted: new Date(),
@@ -41,6 +41,19 @@ export default function RequestLost() {
     setData({ ...data, timeLost: date });
   };
 
+  const imagehandler = (event) => {
+    let imageurls = [];
+
+    for (let i = 0; i < event.target.files.length; i++) {
+      if (event.target.files[i].size < 3000000)
+        imageurls.push(URL.createObjectURL(event.target.files[i]));
+      else setData({ ...data, images: "Warning: A file is larger than 3mb." });
+    }
+
+    setData({ ...data, images: event.target.value });
+    console.log(data);
+  };
+
   const submitHandler = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -50,7 +63,7 @@ export default function RequestLost() {
       //name: data.name,
       type: data.category,
       colour: data.colour,
-      images: data.images,
+      //images: data.images,
       description: data.description,
       timeLost: data.timeLost,
       timeSubmitted: data.name,
@@ -105,7 +118,7 @@ export default function RequestLost() {
         <div className="col-12 col-md-9 col-lg-7 col-xl-6">
           <div className="card rounded-3" id="requestlostitem-card">
             <div className="card-body p-4">
-              <form noValidate onSubmit={submitHandler}>
+              <form noValidate validated={validated} onSubmit={submitHandler}>
                 <h3 className="text-center">Request a Lost Item</h3>
                 <div className="mb-3">
                   <label>Item Name</label>
@@ -126,24 +139,24 @@ export default function RequestLost() {
                   <select
                     required
                     class="form-select form-select-sm"
-                    aria-label=".form-select-sm example"
+                    aria-label=".form-select-sm"
                     onChange={(e) =>
                       setData({ ...data, location: e.target.value })
                     }
                   >
                     <option selected>Please select an option</option>
-                    <option value="1">CC</option>
-                    <option value="2">DH</option>
-                    <option value="3">DW</option>
-                    <option value="4">KN</option>
-                    <option value="5">IB</option>
-                    <option value="6">MN</option>
-                    <option value="7">BG</option>
-                    <option value="8">HB</option>
-                    <option value="9">DV</option>
-                    <option value="10">Residence</option>
-                    <option value="11">Miway</option>
-                    <option value="12">Other</option>
+                    <option value="CC">CC</option>
+                    <option value="DH">DH</option>
+                    <option value="DW">DW</option>
+                    <option value="KN">KN</option>
+                    <option value="IB">IB</option>
+                    <option value="MN">MN</option>
+                    <option value="BG">BG</option>
+                    <option value="HB">HB</option>
+                    <option value="DV">DV</option>
+                    <option value="Residence">Residence</option>
+                    <option value="Miway">Miway</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
 
@@ -163,19 +176,19 @@ export default function RequestLost() {
                   <select
                     required
                     class="form-select form-select-sm"
-                    aria-label=".form-select-sm example"
+                    aria-label=".form-select-sm"
                     onChange={(e) =>
                       setData({ ...data, category: e.target.value })
                     }
                   >
                     <option selected>Please select an option</option>
-                    <option value="1">Electronic</option>
-                    <option value="2">Clothing</option>
-                    <option value="3">Bag</option>
-                    <option value="4">Keys</option>
-                    <option value="5">T-Card</option>
-                    <option value="6">Books</option>
-                    <option value="7">Other</option>
+                    <option value="Electronic">Electronic</option>
+                    <option value="Clothing">Clothing</option>
+                    <option value="Bag">Bag</option>
+                    <option value="Keys">Keys</option>
+                    <option value="T-Card">T-Card</option>
+                    <option value="Books">Books</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
                 <div className="mb-3">
@@ -189,18 +202,18 @@ export default function RequestLost() {
                     }
                   >
                     <option selected>Please select an option</option>
-                    <option value="1">Black</option>
-                    <option value="2">White</option>
-                    <option value="3">Grey</option>
-                    <option value="4">Blue</option>
-                    <option value="5">Red</option>
-                    <option value="6">Green</option>
-                    <option value="7">Purple</option>
-                    <option value="8">Pink</option>
-                    <option value="9">Yellow</option>
-                    <option value="10">Orange</option>
-                    <option value="11">Brown</option>
-                    <option value="12">Other</option>
+                    <option value="Black">Black</option>
+                    <option value="White">White</option>
+                    <option value="Grey">Grey</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Red">Red</option>
+                    <option value="Green">Green</option>
+                    <option value="Purple">Purple</option>
+                    <option value="Pink">Pink</option>
+                    <option value="Yellow">Yellow</option>
+                    <option value="Orange">Orange</option>
+                    <option value="Brown">Brown</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
                 <div className="mb-3">
@@ -227,12 +240,12 @@ export default function RequestLost() {
                     onChange={(e) => setData({ ...data, size: e.target.value })}
                   >
                     <option selected>Please select an option</option>
-                    <option value="1">XXS</option>
-                    <option value="2">XS</option>
-                    <option value="3">S</option>
-                    <option value="4">M</option>
-                    <option value="5">L</option>
-                    <option value="6">XL</option>
+                    <option value="XXS">XXS</option>
+                    <option value="XS">XS</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
                   </select>
                 </div>
 
@@ -246,7 +259,7 @@ export default function RequestLost() {
                     id="customFile"
                     accept="image/*"
                     multiple
-                    size={3000000} // 3000 kb = 3 mb
+                    onChange={imagehandler}
                   />
                 </div>
                 <div className="mb-3">
