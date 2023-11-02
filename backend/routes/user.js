@@ -30,12 +30,11 @@ router
     }
   );
 
-<<<<<<< HEAD
 router
   .route("/login")
   .post(checkRequiredAttributes(["email", "password"]), async (req, res) => {
     try {
-      UserController.login(req, res, errorHandler);
+      await UserController.login(req, res, errorHandler);
     } catch (err) {
       res.json({ message: `Login User Error: ${err}` });
     }
@@ -45,39 +44,16 @@ router
   .route("/sendOTP")
   .post(checkRequiredAttributes(["email"]), async (req, res) => {
     try {
-      UserController.sendOTP(req, res, errorHandler);
+      await UserController.sendOTP(req, res, errorHandler);
     } catch (err) {
       res.json({ message: `Failed to send OTP: ${err}` });
     }
   });
-=======
-router.route('/login')
-  .post(checkRequiredAttributes(["email", "password"]),
-    async (req, res) => {
-      try {
-        await UserController.login(req, res, errorHandler);
-      } catch (err) {
-        res.json({ message: `Login User Error: ${err}` })
-      }
-    })
-
-router.route('/sendOTP')
-  .post(checkRequiredAttributes(["email"]),
-    async (req, res) => {
-      try {
-        await UserController.sendOTP(req, res, errorHandler);
-      } catch (err) {
-        res.json({ message: `Failed to send OTP: ${err}` })
-      }
-    })
->>>>>>> 54c478cafe2a9203e505088fe0bcb76931ce1ed0
 
 router
   .route("/edit")
   // TODO: add checkRequiredAttributes middleware
-  .post(authenticate,
-    checkRequiredAttributes(["email"]),
-    async (req, res) => {
+  .post(authenticate, checkRequiredAttributes(["email"]), async (req, res) => {
     try {
       await UserController.edit(req, res, errorHandler);
     } catch (err) {
@@ -85,12 +61,6 @@ router
     }
   });
 
-<<<<<<< HEAD
-const errorHandler = (err) => {
-  // console.error(err)
-};
-=======
-const errorHandler = (err) => {}
->>>>>>> 54c478cafe2a9203e505088fe0bcb76931ce1ed0
+const errorHandler = (err) => {};
 
 module.exports = router;

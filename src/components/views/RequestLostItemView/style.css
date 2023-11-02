@@ -1,7 +1,7 @@
-body {
+.body-request-lost {
     margin:0;
     padding:0;
-    background-color: cornflowerblue;
+    background-color: rgb(83, 86, 215) !important;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
@@ -16,4 +16,9 @@ body {
   border-radius: 25px;
   align-items: left;
   aspect-ratio: 100/29;
+}
+
+.other-input {
+  width: 60%;
+  border:0.02px grey solid;
 }
