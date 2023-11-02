@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import NavBar from "../../common/NavBar";
 import "./style.css";
 
 export default function RequestLost() {
@@ -173,224 +174,231 @@ export default function RequestLost() {
   };
 
   return (
-    <div className="body-request-lost">
-      <div className="container h-40">
-        <div className="row d-flex justify-content-center align-items-center h-100">
-          <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-            <div className="card rounded-3" id="requestlostitem-card">
-              <div className="card-body p-4">
-                <form noValidate validated={validated} onSubmit={submitHandler}>
-                  <h3 className="text-center">Request a Lost Item</h3>
-                  <div className="mb-3">
-                    <label>Item Name</label>
-                    <input
-                      required
-                      type="text"
-                      className="form-control"
-                      placeholder="Item name"
-                      onChange={(e) =>
-                        setData({ ...data, name: e.target.value })
-                      }
-                    />
-                    <span style={{ fontSize: 12, color: "red" }}>
-                      Example: Iphone 13 Pro, Blue Jansport Bagpack
-                    </span>
-                  </div>
-
-                  <div className="mb-3">
-                    <label>Location Lost</label>
-                    <select
-                      required
-                      class="form-select form-select-sm"
-                      aria-label=".form-select-sm"
-                      onChange={(e) => locationhandler(e)}
-                    >
-                      <option selected>Please select an option</option>
-                      <option value="CC">CC</option>
-                      <option value="DH">DH</option>
-                      <option value="DW">DW</option>
-                      <option value="KN">KN</option>
-                      <option value="IB">IB</option>
-                      <option value="MN">MN</option>
-                      <option value="BG">BG</option>
-                      <option value="HB">HB</option>
-                      <option value="DV">DV</option>
-                      <option value="Residence">Residence</option>
-                      <option value="Miway">Miway</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                  {others.otherLocation ? (
+    <>
+      <NavBar />
+      <div className="body-request-lost">
+        <div className="container h-40">
+          <div className="row d-flex justify-content-center align-items-center h-100">
+            <div className="col-12 col-md-9 col-lg-7 col-xl-6">
+              <div className="card rounded-3" id="requestlostitem-card">
+                <div className="card-body p-4">
+                  <form
+                    noValidate
+                    validated={validated}
+                    onSubmit={submitHandler}
+                  >
+                    <h3 className="text-center">Request a Lost Item</h3>
                     <div className="mb-3">
-                      <span style={{ fontSize: 12 }}>{errors.location}</span>
+                      <label>Item Name</label>
                       <input
                         required
                         type="text"
-                        className="other-input"
-                        size="sm"
-                        onChange={(e) => {
-                          setData({ ...data, location: e.target.value });
-                        }}
+                        className="form-control"
+                        placeholder="Item name"
+                        onChange={(e) =>
+                          setData({ ...data, name: e.target.value })
+                        }
+                      />
+                      <span style={{ fontSize: 12, color: "red" }}>
+                        Example: Iphone 13 Pro, Blue Jansport Bagpack
+                      </span>
+                    </div>
+
+                    <div className="mb-3">
+                      <label>Location Lost</label>
+                      <select
+                        required
+                        class="form-select form-select-sm"
+                        aria-label=".form-select-sm"
+                        onChange={(e) => locationhandler(e)}
+                      >
+                        <option selected>Please select an option</option>
+                        <option value="CC">CC</option>
+                        <option value="DH">DH</option>
+                        <option value="DW">DW</option>
+                        <option value="KN">KN</option>
+                        <option value="IB">IB</option>
+                        <option value="MN">MN</option>
+                        <option value="BG">BG</option>
+                        <option value="HB">HB</option>
+                        <option value="DV">DV</option>
+                        <option value="Residence">Residence</option>
+                        <option value="Miway">Miway</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    {others.otherLocation ? (
+                      <div className="mb-3">
+                        <span style={{ fontSize: 12 }}>{errors.location}</span>
+                        <input
+                          required
+                          type="text"
+                          className="other-input"
+                          size="sm"
+                          onChange={(e) => {
+                            setData({ ...data, location: e.target.value });
+                          }}
+                        />
+                      </div>
+                    ) : null}
+
+                    <div className="mb-3">
+                      <label>Date when item was Lost</label>
+                      <DatePicker
+                        selected={selectedDate}
+                        onChange={(date) => dateLostHandler(date)}
+                        maxDate={data.timeSubmitted}
+                        required
+                        isClearable
                       />
                     </div>
-                  ) : null}
 
-                  <div className="mb-3">
-                    <label>Date when item was Lost</label>
-                    <DatePicker
-                      selected={selectedDate}
-                      onChange={(date) => dateLostHandler(date)}
-                      maxDate={data.timeSubmitted}
-                      required
-                      isClearable
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label>Category</label>
-                    <select
-                      required
-                      class="form-select form-select-sm"
-                      aria-label=".form-select-sm"
-                      onChange={(e) => categoryhandler(e)}
-                    >
-                      <option selected>Please select an option</option>
-                      <option value="Electronic">Electronic</option>
-                      <option value="Clothing">Clothing</option>
-                      <option value="Bag">Bag</option>
-                      <option value="Keys">Keys</option>
-                      <option value="T-Card">T-Card</option>
-                      <option value="Books">Books</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-
-                  {others.otherCategory ? (
                     <div className="mb-3">
-                      <span style={{ fontSize: 12 }}>{errors.category}</span>
+                      <label>Category</label>
+                      <select
+                        required
+                        class="form-select form-select-sm"
+                        aria-label=".form-select-sm"
+                        onChange={(e) => categoryhandler(e)}
+                      >
+                        <option selected>Please select an option</option>
+                        <option value="Electronic">Electronic</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Bag">Bag</option>
+                        <option value="Keys">Keys</option>
+                        <option value="T-Card">T-Card</option>
+                        <option value="Books">Books</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+
+                    {others.otherCategory ? (
+                      <div className="mb-3">
+                        <span style={{ fontSize: 12 }}>{errors.category}</span>
+                        <input
+                          required
+                          type="text"
+                          className="other-input"
+                          size="sm"
+                          onChange={(e) => {
+                            setData({ ...data, category: e.target.value });
+                          }}
+                        />
+                      </div>
+                    ) : null}
+
+                    <div className="mb-3">
+                      <label>Colour of the item</label>
+                      <select
+                        required
+                        class="form-select form-select-sm"
+                        aria-label=".form-select-sm example"
+                        onChange={(e) => colorhandler(e)}
+                      >
+                        <option selected>Please select an option</option>
+                        <option value="Black">Black</option>
+                        <option value="White">White</option>
+                        <option value="Grey">Grey</option>
+                        <option value="Blue">Blue</option>
+                        <option value="Red">Red</option>
+                        <option value="Green">Green</option>
+                        <option value="Purple">Purple</option>
+                        <option value="Pink">Pink</option>
+                        <option value="Yellow">Yellow</option>
+                        <option value="Orange">Orange</option>
+                        <option value="Brown">Brown</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    {others.otherColour ? (
+                      <div className="mb-3">
+                        <span style={{ fontSize: 12 }}>{errors.colour}</span>
+                        <input
+                          required
+                          type="text"
+                          className="other-input"
+                          size="sm"
+                          onChange={(e) => {
+                            setData({ ...data, colour: e.target.value });
+                          }}
+                        />
+                      </div>
+                    ) : null}
+
+                    <div className="mb-3">
+                      <label>Brand</label>
                       <input
                         required
                         type="text"
-                        className="other-input"
-                        size="sm"
-                        onChange={(e) => {
-                          setData({ ...data, category: e.target.value });
-                        }}
+                        className="form-control"
+                        placeholder="Please add the brand name if known"
+                        onChange={(e) =>
+                          setData({ ...data, brand: e.target.value })
+                        }
                       />
+                      <span style={{ fontSize: 12, color: "red" }}>
+                        Please write N/A if not known
+                      </span>
                     </div>
-                  ) : null}
-
-                  <div className="mb-3">
-                    <label>Colour of the item</label>
-                    <select
-                      required
-                      class="form-select form-select-sm"
-                      aria-label=".form-select-sm example"
-                      onChange={(e) => colorhandler(e)}
-                    >
-                      <option selected>Please select an option</option>
-                      <option value="Black">Black</option>
-                      <option value="White">White</option>
-                      <option value="Grey">Grey</option>
-                      <option value="Blue">Blue</option>
-                      <option value="Red">Red</option>
-                      <option value="Green">Green</option>
-                      <option value="Purple">Purple</option>
-                      <option value="Pink">Pink</option>
-                      <option value="Yellow">Yellow</option>
-                      <option value="Orange">Orange</option>
-                      <option value="Brown">Brown</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                  {others.otherColour ? (
                     <div className="mb-3">
-                      <span style={{ fontSize: 12 }}>{errors.colour}</span>
-                      <input
+                      <label>Size of the item</label>
+                      <select
                         required
-                        type="text"
-                        className="other-input"
-                        size="sm"
-                        onChange={(e) => {
-                          setData({ ...data, colour: e.target.value });
-                        }}
+                        class="form-select form-select-sm"
+                        aria-label=".form-select-sm example"
+                        onChange={(e) =>
+                          setData({ ...data, size: e.target.value })
+                        }
+                      >
+                        <option selected>Please select an option</option>
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                      </select>
+                    </div>
+
+                    <div className="mb-3">
+                      <label class="form-label" for="customFile">
+                        Upload Images (Optional)
+                      </label>
+                      <input
+                        type="file"
+                        class="form-control"
+                        id="customFile"
+                        accept="image/*"
+                        multiple
+                        onChange={imagehandler}
                       />
                     </div>
-                  ) : null}
-
-                  <div className="mb-3">
-                    <label>Brand</label>
-                    <input
-                      required
-                      type="text"
-                      className="form-control"
-                      placeholder="Please add the brand name if known"
-                      onChange={(e) =>
-                        setData({ ...data, brand: e.target.value })
-                      }
-                    />
-                    <span style={{ fontSize: 12, color: "red" }}>
-                      Please write N/A if not known
-                    </span>
-                  </div>
-                  <div className="mb-3">
-                    <label>Size of the item</label>
-                    <select
-                      required
-                      class="form-select form-select-sm"
-                      aria-label=".form-select-sm example"
-                      onChange={(e) =>
-                        setData({ ...data, size: e.target.value })
-                      }
-                    >
-                      <option selected>Please select an option</option>
-                      <option value="XS">XS</option>
-                      <option value="S">S</option>
-                      <option value="M">M</option>
-                      <option value="L">L</option>
-                      <option value="XL">XL</option>
-                    </select>
-                  </div>
-
-                  <div className="mb-3">
-                    <label class="form-label" for="customFile">
-                      Upload Images (Optional)
-                    </label>
-                    <input
-                      type="file"
-                      class="form-control"
-                      id="customFile"
-                      accept="image/*"
-                      multiple
-                      onChange={imagehandler}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label>Additional Description</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Please add any other information"
-                      onChange={(e) =>
-                        setData({ ...data, description: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <button
-                      type="submit"
-                      className="signup-button mb-2 mt-2"
-                      disabled={disabled}
-                    >
-                      Submit Request
-                    </button>
-                  </div>
-                </form>
+                    <div className="mb-3">
+                      <label>Additional Description</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Please add any other information"
+                        onChange={(e) =>
+                          setData({ ...data, description: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <button
+                        type="submit"
+                        className="signup-button mb-2 mt-2"
+                        disabled={disabled}
+                      >
+                        Submit Request
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
