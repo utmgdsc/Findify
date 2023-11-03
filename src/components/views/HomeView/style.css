@@ -1,0 +1,44 @@
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif !important;
+    letter-spacing: 0.5px;
+    background-image: url(../../../assets/img/background.jpg) ;
+}
+#requestLostItem a {
+    line-height: 3;
+    font-size: 2rem;
+    color: rgb(29, 141, 227);
+    background-color:black;
+}
+#requestLostItem a:hover {
+    background-color: white;
+}
+#reportFoundItem a {
+    line-height: 3;
+    font-size: 2rem;
+    color: rgb(29, 141, 227);
+    background-color:black;
+}
+#reportFoundItem a:hover {
+    background-color: white;
+}
+.nav {
+    border-color: rgb(29, 141, 227) !important;
+}
+.nav-link.active {
+    border-color: rgb(29, 141, 227) rgb(29, 141, 227) white !important;
+}
+.nav-link {
+    color: rgb(29, 141, 227) !important;
+    font-weight: 700;
+}
+.nav-link:hover {
+    border-color: rgb(29, 141, 227) !important;
+}
+.no-result {
+    max-width: 20% !important;
+    height: auto !important;
+    margin-bottom: 20px;
+}
+p {
+    font-size: larger;
+}

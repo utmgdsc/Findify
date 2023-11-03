@@ -1,5 +1,6 @@
 .DS_Store
 */.DS_Store
+node_modules
 
 # Logs
 logs
@@ -131,5 +132,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+<<<<<<< HEAD
 
 .idea/
+=======
+>>>>>>> 21663079c1a9fede0572553c329c00b252add687

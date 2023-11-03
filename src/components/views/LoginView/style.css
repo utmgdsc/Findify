@@ -1,0 +1,34 @@
+body {
+    margin:0;
+    padding:0;
+    background-image: url("../../../assets/img/login_bg.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+   }
+
+#signup-card {
+  margin: auto;
+  margin-top: 10%;
+  padding: 25px 50px;
+  border-radius: 25px;
+  align-items: left;
+  aspect-ratio: 100/29;
+}
+
+.signup-button {
+  background-color:rgb(69, 171, 205);
+  width: 100%; 
+  height: 35px;
+  padding: 8;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  margin-top: 8px;
+}
+
+.signup-button:hover{
+  background:rgb(29, 141, 227);
+  color: white;
+}
