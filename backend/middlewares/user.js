@@ -23,7 +23,6 @@ module.exports.authenticate = async (req, res, next) => {
   }
 };
 
-// TODO: use this middleware in all routes
 module.exports.checkRequiredAttributes = (requiredAttributes) => {
   return (req, res, next) => {
     const requestBody = req.body;

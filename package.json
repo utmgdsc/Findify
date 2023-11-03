@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.438.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -16,13 +17,18 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.1.0",
     "mongoose": "^7.6.2",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-international-phone": "^3.1.2",
     "react-router-dom": "^6.16.0",
     "react-scripts": "5.0.1",
+<<<<<<< HEAD
     "validator": "^13.11.0",
+=======
+    "uuid": "^9.0.1",
+>>>>>>> 4794eab7d2342778d3e147362a84bea2816c1829
     "web-vitals": "^2.1.4"
   },
   "scripts": {
