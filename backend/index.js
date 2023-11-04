@@ -1,14 +1,8 @@
-<<<<<<< HEAD
 const express = require("express");
-const cors = require("cors");
 const connectDB = require("./db");
 const userRoutes = require("./routes/user");
-=======
-const express = require('express');
-const connectDB = require('./db');
-const userRoutes = require('./routes/user');
-const itemRoutes = require('./routes/item');
->>>>>>> 4794eab7d2342778d3e147362a84bea2816c1829
+const itemRoutes = require("./routes/item");
+const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,7 +25,7 @@ app.use(express.json());
 app.use("/user", userRoutes);
 
 // Define item routes
-app.use('/item', itemRoutes);
+app.use("/item", itemRoutes);
 
 // Start the server
 app.listen(PORT, () => {

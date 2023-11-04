@@ -4,40 +4,44 @@ import fetcher from "../../../fetchHelper";
 import "./style.css";
 import no_img from "../../../assets/img/no_img.png";
 import no_results from "../../../assets/img/no_results.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  let navigate = useNavigate();
   const [lostItems, setLostItems] = useState({ next: null, results: [] });
   const [foundItems, setFoundItems] = useState({ next: null, results: [] });
 
   useEffect(() => {
-    getLostItems(); // eslint-disable-next-line
-    getFoundItems(); // eslint-disable-next-line
+    getUserRequests(); // eslint-disable-next-line
   }, []);
 
-  const getLostItems = () => {
-    let url = `user/getLostItems/`;
+  const getUserRequests = () => {
+    let url = `item/getUserPosts/`;
     fetcher(url)
-      .then((response) => response.json())
-      .then((json) => {
-        setLostItems({
-          ...json,
-          results: [...json.results, ...lostItems.results],
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const getFoundItems = () => {
-    let url = `user/getFoundItems/`;
-    fetcher(url)
-      .then((response) => response.json())
-      .then((json) => {
-        setFoundItems({
-          ...json,
-          results: [...json.results, ...foundItems.results],
-        });
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json().then((json) => {
+            console.log(json.userPosts);
+            setLostItems({
+              ...json,
+              results: [...json.userPosts.lostItems, ...lostItems.results],
+            });
+            setFoundItems({
+              ...json,
+              results: [...json.userPosts.foundItems, ...lostItems.results],
+            });
+            console.log(lostItems);
+            console.log(foundItems);
+          });
+        } else {
+          // Check if user is logged in
+          if (localStorage.getItem("token") === null) {
+            alert(
+              "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
+            );
+            navigate("/login", { replace: true });
+          }
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -187,7 +191,7 @@ export default function Home() {
                             className="tab-pane fade in active show"
                           >
                             <div className="row">
-                              {lostItems
+                              {lostItems.results.length !== 0
                                 ? lostItems.results.map((item) =>
                                     createItemCard(item)
                                   )
@@ -196,7 +200,7 @@ export default function Home() {
                           </div>
                           <div id="found" className="tab-pane fade ">
                             <div className="row">
-                              {foundItems
+                              {foundItems.results.length !== 0
                                 ? foundItems.results.map((item) =>
                                     createItemCard(item)
                                   )
