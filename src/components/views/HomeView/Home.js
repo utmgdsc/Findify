@@ -12,7 +12,7 @@ export default function Home() {
     <>
       <NavBar />
       <div class="body-home">
-        <div class="container-fluid text-center">
+        <div class="container-fluid  text-center">
           <div class="row" style={{ height: 20 + "vh" }}>
             <div class="col" id="requestLostItem">
               <a

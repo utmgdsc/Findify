@@ -132,8 +132,5 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-<<<<<<< HEAD
-=======
 
 .idea/
->>>>>>> 54c478cafe2a9203e505088fe0bcb76931ce1ed0

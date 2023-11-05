@@ -6,6 +6,8 @@ import NavBar from "../../common/NavBar";
 import "./style.css";
 
 export default function RequestLost() {
+  const token = localStorage.getItem("token");
+
   let navigate = useNavigate();
   const [disabled, setDisabled] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -95,7 +97,7 @@ export default function RequestLost() {
         colour: "If other, please specify the colour.",
       });
     }
-    setData({ ...others, colour: e.target.value });
+    setData({ ...data, colour: e.target.value });
   };
 
   const categoryhandler = (e) => {
@@ -107,7 +109,7 @@ export default function RequestLost() {
         category: "If other, please specify the category.",
       });
     }
-    setData({ ...others, category: e.target.value });
+    setData({ ...data, category: e.target.value });
   };
 
   const submitHandler = async (event) => {
@@ -115,7 +117,6 @@ export default function RequestLost() {
     const form = event.currentTarget;
     var controller = new AbortController();
     const signal = controller.signal;
-    setDisabled(true);
     if (form.checkValidity() === false) {
       event.stopPropagation();
       setDisabled(false);
@@ -134,10 +135,13 @@ export default function RequestLost() {
       };
 
       console.log(jsonData);
+      console.log(token);
       return fetch("http://localhost:3000/item/lostRequest", {
         method: "POST",
         headers: {
+          Accept: "application/json",
           "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(jsonData),
         signal: signal,
@@ -149,7 +153,7 @@ export default function RequestLost() {
               setDisabled(false);
               setValidated(true);
               setErrors({ ...errors, submit: "" });
-              navigate("/login", { replace: true });
+              navigate("/home", { replace: true });
             });
           } else {
             // Handle other status codes
@@ -383,6 +387,9 @@ export default function RequestLost() {
                         }
                       />
                     </div>
+                    <span style={{ fontSize: 15, color: "red" }}>
+                      {errors.submit}
+                    </span>
                     <div>
                       <button
                         type="submit"

@@ -1,4 +1,4 @@
-body {
+.body-sign {
     margin:0;
     padding:0;
     background-image: url("../../../assets/img/login_bg.jpg");
@@ -6,6 +6,8 @@ body {
     background-attachment: fixed;
     background-position: center;
     background-size: cover;
+    flex: auto;
+    height: 60vw;
    }
 
 #signup-card {

@@ -1,16 +1,8 @@
-<<<<<<< HEAD
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const OtpPairs = require("../models/Otp");
 const { generateOTP, sendOTP } = require("../utils/otp");
-=======
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const OtpPairs = require('../models/Otp');
-const { generateOTP, sendOTP } = require('../utils/otp');
-const { errorHandler } = require('../utils/errorHandler');
->>>>>>> 54c478cafe2a9203e505088fe0bcb76931ce1ed0
+const { errorHandler } = require("../utils/errorHandler");
 
 // Register a new user
 module.exports.register = async (req, res, next) => {
@@ -71,11 +63,7 @@ module.exports.register = async (req, res, next) => {
       contactNumber,
     });
     await user.save();
-<<<<<<< HEAD
-    res.json({ message: "Registration Successful" });
-=======
-    res.status(200).json({ message: 'Registration Successful' });
->>>>>>> 54c478cafe2a9203e505088fe0bcb76931ce1ed0
+    res.status(200).json({ message: "Registration Successful" });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -97,15 +85,10 @@ module.exports.login = async (req, res, next) => {
       return res.status(401).json({ message: "Incorrect password" });
     }
 
-<<<<<<< HEAD
     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
       expiresIn: "1 hour",
     });
-    res.json({ token });
-=======
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1 hour' });
     res.status(200).json({ token });
->>>>>>> 54c478cafe2a9203e505088fe0bcb76931ce1ed0
   } catch (error) {
     next(error);
   }
@@ -114,29 +97,11 @@ module.exports.login = async (req, res, next) => {
 // Edit an existing user
 module.exports.edit = async (req, res, next) => {
   try {
-<<<<<<< HEAD
-    // TODO: Need to check if user is logged in
-    // Non-admin user can only edit their own profile
-    // Admin user can edit any user profile
-    // should not be able to edit username and email
-    // should not expect userId in the request body
-    const { userId, password, firstName, lastName, contactNumber } = req.body;
-    const filter = { _id: userId };
-
-    const data = { password, firstName, lastName, contactNumber };
-    const updatedUser = User.findOneAndUpdate(filter, data, (err, res) => {
-      if (err) return next(err);
-      res.json({ message: "Profile Update Successful" });
-      req.login(updatedUser, (err) => {
-        if (err) return next(err);
-      });
-    });
-=======
     const { email, password, firstName, lastName, contactNumber } = req.body;
 
     const user = req.user;
     if (!user.isAdmin && email !== user.email) {
-      throw new Error('Email does not match user!');
+      throw new Error("Email does not match user!");
     }
 
     user.password = password || user.password;
@@ -145,7 +110,6 @@ module.exports.edit = async (req, res, next) => {
     user.contactNumber = contactNumber || user.contactNumber;
     await user.save();
     res.status(200).json({ message: "User updated successfully" });
->>>>>>> 54c478cafe2a9203e505088fe0bcb76931ce1ed0
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -205,20 +169,3 @@ module.exports.sendOTP = async (req, res, next) => {
     next(err);
   }
 };
-<<<<<<< HEAD
-
-const handleMongoError = (err, res) => {
-  if (err.name === "MongoServerError" && err.code === 11000) {
-    // Handle duplicate key error (code 11000) for unique constraints
-    if (err.keyPattern && err.keyPattern.email) {
-      return res.status(400).json({ error: "Email is already registered" });
-    } else {
-      // Handle other unique constraints if needed
-      return res.status(400).json({ error: "Duplicate key error" });
-    }
-  } else if (err.name) {
-    return res.status(400).json({ error: err.message });
-  }
-};
-=======
->>>>>>> 54c478cafe2a9203e505088fe0bcb76931ce1ed0
