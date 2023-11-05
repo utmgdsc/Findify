@@ -1,8 +1,8 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const OtpPairs = require('../models/Otp');
-const { generateOTP, sendOTP } = require('../utils/otp');
-const { errorHandler } = require('../utils/errorHandler');
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+const OtpPairs = require("../models/Otp");
+const { generateOTP, sendOTP } = require("../utils/otp");
+const { errorHandler } = require("../utils/errorHandler");
 
 // Register a new user
 module.exports.register = async (req, res, next) => {

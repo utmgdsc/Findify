@@ -133,7 +133,14 @@ dist
 .yarn/install-state.gz
 .pnp.*
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 .idea/
 =======
 >>>>>>> 21663079c1a9fede0572553c329c00b252add687
+=======
+=======
+
+.idea/
+>>>>>>> 54c478cafe2a9203e505088fe0bcb76931ce1ed0
+>>>>>>> 3abe7b869a7262af6bc0929484f90ca7613f8151

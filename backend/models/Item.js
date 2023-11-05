@@ -5,17 +5,21 @@ const LostItemSchema = new mongoose.Schema(
     itemName: {type: String, required: true},
     type: { type: String, required: true },
     brand: { type: String, required: true },
-    size: { type: String, enum: ['S', 'M', 'L', 'XL'], required: true },
+    size: { type: String, enum: ["XS", "S", "M", "L", "XL"], required: true },
     colour: { type: String, required: true },
     locationLost: { type: String, required: true },
-    host: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true }, // could add default value of admin
+    host: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true }, // could add default value of admin
 
     // optional fields:
     imageUrls: [{ type: String, default: [] }],
     timeLost: { type: Date, default: Date.now },
-    description: { type: String, default: '' },
+    description: { type: String, default: "" },
     isActive: { type: Boolean, default: true },
-    matchedFoundItem: { type: mongoose.Schema.Types.ObjectId, ref: 'foundItem', default: null }
+    matchedFoundItem: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "foundItem",
+      default: null,
+    },
   },
   { timestamps: true }
 );

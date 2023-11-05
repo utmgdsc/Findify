@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   let navigate = useNavigate();
-  const [lostItems, setLostItems] = useState({ next: null, results: [] });
-  const [foundItems, setFoundItems] = useState({ next: null, results: [] });
+  const [lostItems, setLostItems] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
 
   useEffect(() => {
     getUserRequests(); // eslint-disable-next-line
@@ -22,14 +22,8 @@ export default function Home() {
         if (response.status === 200) {
           return response.json().then((json) => {
             console.log(json.userPosts);
-            setLostItems({
-              ...json,
-              results: [...json.userPosts.lostItems, ...lostItems.results],
-            });
-            setFoundItems({
-              ...json,
-              results: [...json.userPosts.foundItems, ...lostItems.results],
-            });
+            setLostItems([...json.userPosts.lostItems, ...lostItems]);
+            setFoundItems([...json.userPosts.lostItems, ...lostItems]);
             console.log(lostItems);
             console.log(foundItems);
           });
@@ -103,7 +97,7 @@ export default function Home() {
             </button>
           </div>
           <div className="card-body">
-            <h4 className="card-title">{item.title}</h4>
+            <h4 className="card-title">{item.itemName}</h4>
             <p className="card-title">Location: {item.locationFound}</p>
             <p className="card-text">Time: {item.timeFound}</p>
             <a
@@ -135,22 +129,22 @@ export default function Home() {
     <>
       <NavBar />
 
-      <div className="container-fluid mt-5 text-center">
+      <div className="body-home container-fluid text-center">
         <div className="row" style={{ height: 20 + "vh" }}>
           <div className="col" id="requestLostItem">
             <a
-              className="btn w-75 h-75 p-2"
+              className="btn w-75 h-75 p-2 mt-5"
               role="button"
-              href="/requestLostItem"
+              href="/requestlostitem"
             >
               Request lost item query
             </a>
           </div>
           <div className="col" id="reportFoundItem">
             <a
-              className="btn w-75 h-75 p-2"
+              className="btn w-75 h-75 p-2 mt-5"
               role="button"
-              href="/reportFoundItem"
+              href="/reportfounditem"
             >
               Report unidentified item found
             </a>
@@ -191,7 +185,7 @@ export default function Home() {
                             className="tab-pane fade in active show"
                           >
                             <div className="row">
-                              {lostItems.results.length !== 0
+                              {lostItems.length !== 0
                                 ? lostItems.results.map((item) =>
                                     createItemCard(item)
                                   )
@@ -200,7 +194,7 @@ export default function Home() {
                           </div>
                           <div id="found" className="tab-pane fade ">
                             <div className="row">
-                              {foundItems.results.length !== 0
+                              {foundItems.length !== 0
                                 ? foundItems.results.map((item) =>
                                     createItemCard(item)
                                   )
