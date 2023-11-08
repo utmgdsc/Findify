@@ -5,6 +5,17 @@ const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { errorHandler } = require('../utils/errorHandler');
 
 
+module.exports.getLostRequest = async (req, res, next) => {
+  try {
+    const lostRequestId = req.body.lostRequestId
+    const lostItem = await LostItem.findOne({ _id: lostRequestId });
+    return lostItem;
+  } catch (err) {
+    console.error("Error fetching lostItem details:", err);
+    res.status(500).json({ message: 'Error fetching lostItem details' });
+  }
+}
+
 module.exports.createLostRequest = async (req, res, next) => {
   const { type, brand, size, colour, locationLost, description, itemName } = req.body;
   let imageUrls = [];
@@ -36,6 +47,53 @@ module.exports.createLostRequest = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.editLostRequest = async (req, res, next) => {
+  const { lostRequestId } = req.body;
+  const user = req.user
+  const lostItem = LostItem.findOne({ _id: lostRequestId })
+  let imageUrls = [];
+
+  try {
+    if (lostItem.host !== user._id) {
+      throw new Error('403 Unauthorized: User does not own lost request');
+    }
+
+    if (req.files && req.files.length > 0) {
+      const uploadPromises = req.files.map(file => uploadToS3('found-items', file));
+      imageUrls = await Promise.all(uploadPromises);
+    }
+
+    const update = {
+      itemName: req.body.itemName ? req.body.itemName : lostItem.itemName,
+      type: req.body.type ? req.body.type : lostItem.type,
+      brand: req.body.brand ? req.body.brand : lostItem.brand,
+      size: req.body.size ? req.body.size : lostItem.size,
+      colour: req.body.color ? req.body.color : lostItem.colour,
+      locationFound: req.body.locationFound ? req.body.locationFound : lostItem.locationFound,
+      imageUrls: imageUrls ? imageUrls : lostItem.imageUrls,
+      description: req.body.description ? req.body.description : lostItem.description
+    };
+
+    // update in database
+    await LostItem.findOneAndUpdate({ _id: lostRequestId }, update)
+    res.status(200).json({ message: 'Editted lost item successfully', urlLocations: imageUrls });
+  } catch (err) {
+    errorHandler(err, res);
+    next(err);
+  }
+};
+
+module.exports.getFoundRequest = async (req, res, next) => {
+  try {
+    const foundRequestId = req.body.foundRequestId
+    const foundItem = await FoundItem.findOne({ _id: foundRequestId });
+    return foundItem;
+  } catch (err) {
+    console.error("Error fetching foundItem details:", err);
+    res.status(500).json({ message: 'Error fetching foundItem details' });
+  }
+}
 
 module.exports.createFoundRequest = async (req, res, next) => {
   const { type, brand, size, colour, locationFound, description, itemName } = req.body;
@@ -69,6 +127,42 @@ module.exports.createFoundRequest = async (req, res, next) => {
   }
 };
 
+module.exports.editFoundRequest = async (req, res, next) => {
+  const { foundRequestId } = req.body;
+  const user = req.user
+  const foundItem = FoundItem.findOne({ _id: foundRequestId })
+  let imageUrls = [];
+
+  try {
+    if (foundItem.host !== user._id) {
+      throw new Error('403 Unauthorized: User does not own found request');
+    }
+
+    if (req.files && req.files.length > 0) {
+      const uploadPromises = req.files.map(file => uploadToS3('found-items', file));
+      imageUrls = await Promise.all(uploadPromises);
+    }
+
+    const update = {
+      itemName: req.body.itemName ? req.body.itemName : foundItem.itemName,
+      type: req.body.type ? req.body.type : foundItem.type,
+      brand: req.body.brand ? req.body.brand : foundItem.brand,
+      size: req.body.size ? req.body.size : foundItem.size,
+      colour: req.body.color ? req.body.color : foundItem.colour,
+      locationFound: req.body.locationFound ? req.body.locationFound : foundItem.locationFound,
+      imageUrls: imageUrls ? imageUrls : foundItem.imageUrls,
+      description: req.body.description ? req.body.description : foundItem.description
+    };
+
+    // update in database
+    await FoundItem.findOneAndUpdate({ _id: foundRequestId }, update)
+    res.status(200).json({ message: 'Editted found item successfully', urlLocations: imageUrls });
+  } catch (err) {
+    errorHandler(err, res);
+    next(err);
+  }
+};
+
 module.exports.getUserPosts = async (req, res, next) => {
   try {
     const userId = req.user._id;
@@ -86,9 +180,9 @@ module.exports.getUserPosts = async (req, res, next) => {
   }
 };
 
-async function uploadToS3(folder, file) {
+async function uploadToS3 (folder, file) {
   const fileName = `${folder}/${uuidv4()}-${file.originalname}`;
-  
+
   const command = new PutObjectCommand({
     Bucket: process.env.S3_BUCKET_NAME,
     Key: fileName,
