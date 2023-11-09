@@ -14,7 +14,11 @@
     "datepicker": "^0.0.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+<<<<<<< HEAD
     "google-libphonenumber": "^3.2.33",
+=======
+    "fuse.js": "^7.0.0",
+>>>>>>> 3fe5340beeebfb8f51b99f4ff28a8c620c7593d6
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.1.0",
     "mongoose": "^7.6.2",
