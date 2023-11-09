@@ -22,8 +22,10 @@ export default function Home() {
         if (response.status === 200) {
           return response.json().then((json) => {
             console.log(json.userPosts);
+            console.log(json.userPosts.lostItems[0]);
             setLostItems([...json.userPosts.lostItems, ...lostItems]);
-            setFoundItems([...json.userPosts.lostItems, ...lostItems]);
+            setLostItems(json.userPosts.lostItems);
+            setFoundItems(json.userPosts.foundItems);
             console.log(lostItems);
             console.log(foundItems);
           });
@@ -43,10 +45,23 @@ export default function Home() {
   };
 
   const createItemCard = (item) => {
-    const itemDateCreated = new Date(item.dateCreated);
-    const daysAgo = Math.floor(
-      (new Date() - itemDateCreated) / (24 * 60 * 60 * 1000)
-    );
+    const timeLost = new Date(item.timeLost);
+    const daysAgo = Math.floor((new Date() - timeLost) / (24 * 60 * 60 * 1000));
+
+    // Extract date components
+    const year = timeLost.getFullYear();
+    const month = timeLost.getMonth() + 1; // Months are zero-based (0 = January, 11 = December)
+    const day = timeLost.getDate();
+
+    // Extract time components
+    const hours = timeLost.getHours();
+    const minutes = timeLost.getMinutes();
+    const seconds = timeLost.getSeconds();
+
+    // Create date and time strings
+    const dateStr = `${year}-${month}-${day}`;
+    const timeStr = `${hours}:${minutes}:${seconds}`;
+
     let card_status = "";
     if (item.isActive) card_status = "card";
     else card_status = "card opacity-25";
@@ -56,8 +71,8 @@ export default function Home() {
         <div className={card_status}>
           <div id="carouselExample" className="carousel slide">
             <div className="carousel-inner">
-              {item.image ? (
-                item.image.map((i, index) => {
+              {item.imageUrls.length !== 0 ? (
+                item.imageUrls.map((i, index) => {
                   let class_value = "";
                   if (index === 0) class_value = "carousel-item active";
                   else class_value = "carousel-item";
@@ -98,8 +113,9 @@ export default function Home() {
           </div>
           <div className="card-body">
             <h4 className="card-title">{item.itemName}</h4>
-            <p className="card-title">Location: {item.locationFound}</p>
-            <p className="card-text">Time: {item.timeFound}</p>
+            <p className="card-title">Location: {item.locationLost}</p>
+            <p className="card-title">Date: {dateStr}</p>
+
             <a
               className="btn btn-outline-success"
               role="button"
@@ -135,7 +151,7 @@ export default function Home() {
             <a
               className="btn w-75 h-75 p-2 mt-5"
               role="button"
-              href="/requestlostitem"
+              href="/requestLostItem"
             >
               Request lost item query
             </a>
@@ -144,7 +160,7 @@ export default function Home() {
             <a
               className="btn w-75 h-75 p-2 mt-5"
               role="button"
-              href="/reportfounditem"
+              href="/reportFoundItem"
             >
               Report unidentified item found
             </a>
@@ -186,18 +202,14 @@ export default function Home() {
                           >
                             <div className="row">
                               {lostItems.length !== 0
-                                ? lostItems.results.map((item) =>
-                                    createItemCard(item)
-                                  )
+                                ? lostItems.map((item) => createItemCard(item))
                                 : createNoResultsCard()}
                             </div>
                           </div>
                           <div id="found" className="tab-pane fade ">
                             <div className="row">
                               {foundItems.length !== 0
-                                ? foundItems.results.map((item) =>
-                                    createItemCard(item)
-                                  )
+                                ? foundItems.map((item) => createItemCard(item))
                                 : createNoResultsCard()}
                             </div>
                           </div>

@@ -134,6 +134,7 @@ dist
 .pnp.*
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 .idea/
 =======
@@ -144,3 +145,7 @@ dist
 .idea/
 >>>>>>> 54c478cafe2a9203e505088fe0bcb76931ce1ed0
 >>>>>>> 3abe7b869a7262af6bc0929484f90ca7613f8151
+=======
+
+.idea/
+>>>>>>> acb4b57a1775758840938be22e5eb43915ac1e4d

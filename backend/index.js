@@ -18,6 +18,8 @@ app.use(
 // Connect to MongoDB
 connectDB();
 
+app.use(cors());
+
 // Parse JSON request body
 app.use(express.json());
 

@@ -1,4 +1,4 @@
-body {
+.body-landing {
   margin:0;
   padding:0;
   background-image: url("../../../assets/img/login_bg.jpg");
@@ -6,12 +6,10 @@ body {
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
+  flex: auto;
+  height: 60vw;
  }
 
-.root {
-margin: auto;
-margin-top: 150px;
-}
 
 #card1 {
 padding: 25px 50px;

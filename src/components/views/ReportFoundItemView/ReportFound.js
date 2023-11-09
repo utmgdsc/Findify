@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import NavBar from "../../common/NavBar";
 import "./style.css";
 
-export default function RequestLost() {
+export default function ReportFound() {
   const token = localStorage.getItem("token");
 
   let navigate = useNavigate();
@@ -31,7 +31,7 @@ export default function RequestLost() {
     colour: "",
     images: "",
     description: "",
-    timeLost: "",
+    timeFound: "",
     timeSubmitted: "",
     location: "",
     submit: "",
@@ -45,7 +45,7 @@ export default function RequestLost() {
 
   const dateLostHandler = (date) => {
     setselectedDate(date);
-    setData({ ...data, timeLost: date });
+    setData({ ...data, timeFound: date });
   };
 
   const imagehandler = (e) => {
@@ -64,21 +64,21 @@ export default function RequestLost() {
 
   const locationhandler = (e) => {
     setOthers({ ...others, otherLocation: false });
-    if (e.target.value === "Other") {
+    if (e.target.value == "Other") {
       setOthers({ ...others, otherLocation: true });
       setErrors({
         ...errors,
         location: "If other, please specify the location.",
       });
     }
-    if (e.target.value === "Residence") {
+    if (e.target.value == "Residence") {
       setOthers({ ...others, otherLocation: true });
       setErrors({
         ...errors,
         location: "If residence, Please specify which residence.",
       });
     }
-    if (e.target.value === "Miway") {
+    if (e.target.value == "Miway") {
       setOthers({ ...others, otherLocation: true });
       setErrors({
         ...errors,
@@ -90,7 +90,7 @@ export default function RequestLost() {
 
   const colorhandler = (e) => {
     setOthers({ ...others, otherColour: false });
-    if (e.target.value === "Other") {
+    if (e.target.value == "Other") {
       setOthers({ ...others, otherColour: true });
       setErrors({
         ...errors,
@@ -102,7 +102,7 @@ export default function RequestLost() {
 
   const categoryhandler = (e) => {
     setOthers({ ...others, otherCategory: false });
-    if (e.target.value === "Other") {
+    if (e.target.value == "Other") {
       setOthers({ ...others, otherCategory: true });
       setErrors({
         ...errors,
@@ -113,7 +113,6 @@ export default function RequestLost() {
   };
 
   const submitHandler = async (event) => {
-    console.log(data);
     event.preventDefault();
     const form = event.currentTarget;
     var controller = new AbortController();
@@ -128,18 +127,16 @@ export default function RequestLost() {
         colour: data.colour,
         imageUrls: data.images,
         description: data.description,
-        timeLost: data.timeLost,
+        timeFound: data.timeLost,
         timeSubmitted: data.timeSubmitted,
         locationLost: data.location,
         brand: data.brand,
         size: data.size,
       };
 
-      console.log(data);
-
       console.log(jsonData);
       console.log(token);
-      return fetch("http://localhost:3000/item/lostRequest", {
+      return fetch("http://localhost:3000/item/createFoundRequest", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -156,7 +153,7 @@ export default function RequestLost() {
               setDisabled(false);
               setValidated(true);
               setErrors({ ...errors, submit: "" });
-              navigate("/lostitem", { replace: true });
+              navigate("/home", { replace: true });
             });
           } else {
             // Handle other status codes
@@ -194,7 +191,7 @@ export default function RequestLost() {
                     validated={validated}
                     onSubmit={submitHandler}
                   >
-                    <h3 className="text-center">Request a Lost Item</h3>
+                    <h3 className="text-center">Report a Found Item</h3>
                     <div className="mb-3">
                       <label>Item Name</label>
                       <input
@@ -202,9 +199,9 @@ export default function RequestLost() {
                         type="text"
                         className="form-control"
                         placeholder="Item name"
-                        onChange={(e) => {
-                          setData({ ...data, name: e.target.value });
-                        }}
+                        onChange={(e) =>
+                          setData({ ...data, name: e.target.value })
+                        }
                       />
                       <span style={{ fontSize: 12, color: "red" }}>
                         Example: Iphone 13 Pro, Blue Jansport Bagpack
@@ -212,10 +209,10 @@ export default function RequestLost() {
                     </div>
 
                     <div className="mb-3">
-                      <label>Location Lost</label>
+                      <label>Location Found</label>
                       <select
                         required
-                        className="form-select form-select-sm"
+                        class="form-select form-select-sm"
                         aria-label=".form-select-sm"
                         onChange={(e) => locationhandler(e)}
                       >
@@ -250,7 +247,7 @@ export default function RequestLost() {
                     ) : null}
 
                     <div className="mb-3">
-                      <label>Date when item was Lost</label>
+                      <label>Date when the item was found</label>
                       <DatePicker
                         selected={selectedDate}
                         onChange={(date) => dateLostHandler(date)}
@@ -264,7 +261,7 @@ export default function RequestLost() {
                       <label>Category</label>
                       <select
                         required
-                        className="form-select form-select-sm"
+                        class="form-select form-select-sm"
                         aria-label=".form-select-sm"
                         onChange={(e) => categoryhandler(e)}
                       >
@@ -298,7 +295,7 @@ export default function RequestLost() {
                       <label>Colour of the item</label>
                       <select
                         required
-                        className="form-select form-select-sm"
+                        class="form-select form-select-sm"
                         aria-label=".form-select-sm example"
                         onChange={(e) => colorhandler(e)}
                       >
@@ -351,7 +348,7 @@ export default function RequestLost() {
                       <label>Size of the item</label>
                       <select
                         required
-                        className="form-select form-select-sm"
+                        class="form-select form-select-sm"
                         aria-label=".form-select-sm example"
                         onChange={(e) =>
                           setData({ ...data, size: e.target.value })
@@ -367,12 +364,12 @@ export default function RequestLost() {
                     </div>
 
                     <div className="mb-3">
-                      <label className="form-label" for="customFile">
+                      <label class="form-label" for="customFile">
                         Upload Images (Optional)
                       </label>
                       <input
                         type="file"
-                        className="form-control"
+                        class="form-control"
                         id="customFile"
                         accept="image/*"
                         multiple
