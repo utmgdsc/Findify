@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 .body-sign {
+=======
+body {
+>>>>>>> 9005127b42abcc77431f4c1a61a0ed43b4ec9999
     margin:0;
     padding:0;
     background-image: url("../../../assets/img/login_bg.jpg");
@@ -6,8 +10,11 @@
     background-attachment: fixed;
     background-position: center;
     background-size: cover;
+<<<<<<< HEAD
     flex: auto;
     height: 60vw;
+=======
+>>>>>>> 9005127b42abcc77431f4c1a61a0ed43b4ec9999
    }
 
 #signup-card {

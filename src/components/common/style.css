@@ -1,5 +1,9 @@
 .nav {
+<<<<<<< HEAD
     background: transparent;
+=======
+    background: black;
+>>>>>>> 9005127b42abcc77431f4c1a61a0ed43b4ec9999
     color: rgb(29, 141, 227);
     display: flex;
     justify-content: space-between;

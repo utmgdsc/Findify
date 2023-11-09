@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const Landing = () => {
   return (
+<<<<<<< HEAD
     <div class="body-landing">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div className="col-12 col-md-9 col-lg-7 col-xl-6">
@@ -28,6 +29,27 @@ const Landing = () => {
               </Link>
             </div>
           </div>
+=======
+    <div class="root col-md-8 justify-content-center">
+      <div class="card" id="card1">
+        {/* <img id="Logo" class="" src={logo} alt="loading..."/> */}
+        <div id="Logo">Find.ify</div>
+        <p class="text-center">
+          Losing something is frustrating, but trying to find it by retracing
+          your steps and searching for hours, and taking multiple trips to the
+          lost & found to check for it is even more frustrating.
+        </p>
+        <p class="text-center typewriter">
+          Let's make this process simpler for you!
+        </p>
+        <div>
+          <Link to={"/login"}>
+            <button class="btn btn-md text-center">Log In</button>
+          </Link>
+          <Link to={"/signup"}>
+            <button class="btn btn-md text-center">Signup</button>
+          </Link>
+>>>>>>> 9005127b42abcc77431f4c1a61a0ed43b4ec9999
         </div>
       </div>
     </div>
