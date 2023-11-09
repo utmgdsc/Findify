@@ -80,6 +80,19 @@ router.route('/foundRequest')
     }
   )
 
+router.route('/getSimilarItems')
+  .get(
+    authenticate, 
+    checkRequiredAttributes(["lostItemId"]),
+    async (req, res) => {
+      try {
+        await ItemController.getSimilarItems(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Create Found Request Error: ${err}` })
+      }
+    }
+  )
+
 router.route('/getUserPosts')
   .get(authenticate,
     async (req, res) => {

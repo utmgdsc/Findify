@@ -3,7 +3,7 @@ const { LostItem, FoundItem, PotentialMatch } = require('../models/Item');
 const { s3 } = require('../utils/aws');
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { errorHandler } = require('../utils/errorHandler');
-
+const Fuse = require('fuse.js');
 
 module.exports.getLostRequest = async (req, res, next) => {
   try {
@@ -180,7 +180,62 @@ module.exports.getUserPosts = async (req, res, next) => {
   }
 };
 
-async function uploadToS3 (folder, file) {
+module.exports.getSimilarItems = async (req, res, next) => {
+  try {
+    const { lostItemId } = req.body;
+
+    // find the correspoining lost item
+    const lostItem = await LostItem.findById(lostItemId);
+
+    // if this item does not exist, return error
+    if (!lostItem) {
+      return res.status(404).json({ message: 'Lost item not found' });
+    }
+
+    if (!req.user._id.equals(lostItem.host._id)) {
+      return res.status(403).json({ message: 'Only the lost item host can fetch similar items' });
+    }
+    
+    const foundItems = await FoundItem.find(
+      // exclude the current user's found items
+      // host: { $ne: mongoose.Types.ObjectId(excludedHostId) }
+    ).select("-__v");
+
+    const fuseOptions = {
+      includeScore: true,
+      // You can add more fields here based on what you'd like to compare
+      findAllMatches: true,
+      keys: ['itemName', 'type', 'brand', 'colour', 'description'],
+      threshold: 0.8, // Adjust this threshold to your needs for fuzziness
+    };
+
+    const fuse = new Fuse(foundItems, fuseOptions);
+
+    // Create an array of existing property values
+    let searchTerms = [];
+    for (const key of fuseOptions.keys) {
+      lostItem[key] && searchTerms.push(lostItem[key].replace(/\s+/g, ' | '));
+    }
+
+    // Join the terms using the '|' to create a string for a fuzzy 'OR' type search
+    let searchString = searchTerms.join(' | ');
+
+    console.log(searchString);
+    // Perform a search using the constructed search string
+    const searchResults = fuse.search(searchString);
+
+    const topResults = searchResults
+      // .slice(0, 30) // Limit to the top 30 results
+      .map(result => ({ ...result.item._doc, score: result.score }));
+    
+    res.status(200).json(topResults);
+  } catch (error) {
+    console.error("Error fetching similar items:", error);
+    res.status(500).json({ message: 'Error fetching similar items' });
+  }
+}
+
+async function uploadToS3(folder, file) {
   const fileName = `${folder}/${uuidv4()}-${file.originalname}`;
 
   const command = new PutObjectCommand({

@@ -40,7 +40,6 @@ router.route('/sendOTP')
     })
 
 router.route('/edit')
-  // TODO: add checkRequiredAttributes middleware
   .post(authenticate,
     checkRequiredAttributes(["email"]),
     async (req, res) => {
