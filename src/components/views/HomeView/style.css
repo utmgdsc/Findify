@@ -1,36 +1,21 @@
-<<<<<<< HEAD
 .body-home {
     font-family: Georgia, 'Times New Roman', Times, serif !important;
     letter-spacing: 0.5px;
-    background-color: rgb(83, 86, 215) !important;
-=======
-body {
-    font-family: Georgia, 'Times New Roman', Times, serif !important;
-    letter-spacing: 0.5px;
-    background-image: url(../../../assets/img/background.jpg) ;
->>>>>>> 9005127b42abcc77431f4c1a61a0ed43b4ec9999
+    background-color: lightskyblue !important;
 }
 #requestLostItem a {
     line-height: 3;
     font-size: 2rem;
     color: rgb(29, 141, 227);
-<<<<<<< HEAD
     background-color:rgb(255, 251, 251);
 }
 #requestLostItem a:hover {
     font-size: 2.1rem;
-=======
-    background-color:black;
-}
-#requestLostItem a:hover {
-    background-color: white;
->>>>>>> 9005127b42abcc77431f4c1a61a0ed43b4ec9999
 }
 #reportFoundItem a {
     line-height: 3;
     font-size: 2rem;
     color: rgb(29, 141, 227);
-<<<<<<< HEAD
     background-color:rgb(255, 251, 251);
 }
 #reportFoundItem a:hover {
@@ -38,14 +23,6 @@ body {
 }
 #nav-home {
     background-color: white;
-=======
-    background-color:black;
-}
-#reportFoundItem a:hover {
-    background-color: white;
-}
-.nav {
->>>>>>> 9005127b42abcc77431f4c1a61a0ed43b4ec9999
     border-color: rgb(29, 141, 227) !important;
 }
 .nav-link.active {
@@ -59,11 +36,7 @@ body {
     border-color: rgb(29, 141, 227) !important;
 }
 .no-result {
-<<<<<<< HEAD
-    max-width: 20% !;
-=======
-    max-width: 20% !important;
->>>>>>> 9005127b42abcc77431f4c1a61a0ed43b4ec9999
+    max-width: 20%;
     height: auto !important;
     margin-bottom: 20px;
 }

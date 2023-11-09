@@ -88,7 +88,6 @@ export default function Login() {
   };
 
   return (
-<<<<<<< HEAD
     <div className="body-sign">
       <div className="auth-wrapper container h-40">
         <div className="row d-flex justify-content-center align-items-center h-100">
@@ -145,58 +144,6 @@ export default function Login() {
                     </div>
                   </form>
                 </div>
-=======
-    <div className="auth-wrapper container h-40">
-      <div className="row d-flex justify-content-center align-items-center h-100">
-        <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-          <div className="card rounded-3" id="signup-card">
-            <div className="card-body p-4">
-              <div className="auth-inner">
-                <form noValidate validated={validated} onSubmit={submitHandler}>
-                  <h3 className="text-center">Log In</h3>
-                  <div className="mb-3">
-                    <label>Email</label>
-                    <input
-                      required
-                      type="email"
-                      className="form-control"
-                      placeholder="Email"
-                      onChange={(e) => emailValid(e)}
-                    />
-                    <span style={{ fontSize: 15, color: "red" }}>
-                      {errors.email}
-                    </span>
-                  </div>
-
-                  <div className="mb-3">
-                    <label>Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Password"
-                      required
-                      onChange={(e) =>
-                        setData({ ...data, password: e.target.value })
-                      }
-                    />
-                    <span style={{ fontSize: 15, color: "red" }}>
-                      {errors.submit}
-                    </span>
-                    <div>
-                      <button
-                        type="submit"
-                        className="signup-button mb-2"
-                        disabled={disabled}
-                      >
-                        Log In
-                      </button>
-                    </div>
-                    <label className="forgot-password text-right">
-                      Not a user? <a href="/signup">Register</a>
-                    </label>
-                  </div>
-                </form>
->>>>>>> 9005127b42abcc77431f4c1a61a0ed43b4ec9999
               </div>
             </div>
           </div>

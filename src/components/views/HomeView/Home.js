@@ -1,206 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-import NavBar from "../../common/NavBar";
-import "./style.css";
-import blue_bag from "../../../assets/img/blue_bag.jpg";
-import keys from "../../../assets/img/keys.jpg";
-import wallet from "../../../assets/img/wallet.jpg";
-import airpods from "../../../assets/img/airpods.jpg";
-import no_results from "../../../assets/img/no_results.png";
-
-export default function Home() {
-  return (
-    <>
-      <NavBar />
-      <div class="body-home">
-        <div class="container-fluid  text-center">
-          <div class="row" style={{ height: 20 + "vh" }}>
-            <div class="col" id="requestLostItem">
-              <a
-                class="btn w-75 h-75 p-2"
-                role="button"
-                href="/requestLostItem"
-              >
-                Request lost item query
-              </a>
-            </div>
-            <div class="col" id="reportFoundItem">
-              <a
-                class="btn w-75 h-75 p-2"
-                role="button"
-                href="/reportFoundItem"
-              >
-                Report unidentified item found
-              </a>
-            </div>
-          </div>
-
-          <div class="row" style={{ height: 80 + "vh" }}>
-            <div class="col">
-              <div class="container py-5">
-                <div class="row">
-                  <div class="col-12 ">
-                    <div class="bg-white rounded p-2">
-                      <ul class="nav nav-tabs justify-content-center ">
-                        <li class="nav-item ">
-                          <a
-                            class="nav-link active"
-                            data-bs-toggle="tab"
-                            href="#lost"
-                          >
-                            Past lost item queries
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a
-                            class="nav-link"
-                            data-bs-toggle="tab"
-                            href="#found"
-                          >
-                            Past unidentified items reported
-                          </a>
-                        </li>
-                      </ul>
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="tab-content p-4 ">
-                            <div id="lost" class="tab-pane fade in active show">
-                              <div class="row">
-                                <div class="col-lg-3 col-md-6 col-sm-10 my-4">
-                                  <div class="card">
-                                    <img
-                                      src={blue_bag}
-                                      class="card-img-top"
-                                      alt=""
-                                      width="200px"
-                                      height="200px"
-                                    />
-                                    <div class="card-body">
-                                      <h4 class="card-title">Blue puma bag</h4>
-                                      <p class="card-title">
-                                        Location: CCT Starbucks
-                                      </p>
-                                      <p class="card-text">
-                                        Time: 12:00-2:00 pm
-                                      </p>
-                                      <a
-                                        class="btn btn-outline-success"
-                                        role="button"
-                                        href="/itemDetails/1"
-                                      >
-                                        Read More
-                                      </a>
-                                    </div>
-                                    <div class="card-footer text-body-secondary">
-                                      2 days ago
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-lg-3 col-md-6 col-sm-10 my-4">
-                                  <div class="card opacity-25">
-                                    <img
-                                      src={keys}
-                                      class="card-img-top"
-                                      alt=""
-                                      width="200px"
-                                      height="200px"
-                                    />
-                                    <div class="card-body">
-                                      <h4 class="card-title">House keys</h4>
-                                      <p class="card-title">
-                                        Location: IB bus stop
-                                      </p>
-                                      <p class="card-text">
-                                        Time: 9:00-11:00 am
-                                      </p>
-                                      <a
-                                        class="btn btn-outline-success"
-                                        role="button"
-                                        href="/itemDetails/2"
-                                      >
-                                        Read More
-                                      </a>
-                                    </div>
-                                    <div class="card-footer text-body-secondary">
-                                      1 week ago
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-lg-3 col-md-6 col-sm-10 my-4">
-                                  <div class="card">
-                                    <img
-                                      src={wallet}
-                                      class="card-img-top"
-                                      alt=""
-                                      width="200px"
-                                      height="200px"
-                                    />
-                                    <div class="card-body">
-                                      <h4 class="card-title">Wallet</h4>
-                                      <p class="card-title">Location: MN1270</p>
-                                      <p class="card-text">
-                                        Time: 10:00 am-12:00 pm
-                                      </p>
-                                      <a
-                                        class="btn btn-outline-success"
-                                        role="button"
-                                        href="/itemDetails/3"
-                                      >
-                                        Read More
-                                      </a>
-                                    </div>
-                                    <div class="card-footer text-body-secondary">
-                                      6 days ago
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-lg-3 col-md-6 col-sm-10 my-4">
-                                  <div class="card">
-                                    <img
-                                      src={airpods}
-                                      class="card-img-top"
-                                      alt=""
-                                      width="200px"
-                                      height="200px"
-                                    />
-                                    <div class="card-body">
-                                      <h4 class="card-title">Airpods</h4>
-                                      <p class="card-title">
-                                        Location: Deerfield cafeteria
-                                      </p>
-                                      <p class="card-text">
-                                        Time: 8:00-10:00 am
-                                      </p>
-                                      <a
-                                        class="btn btn-outline-success"
-                                        role="button"
-                                        href="/itemDetails/4"
-                                      >
-                                        Read More
-                                      </a>
-                                    </div>
-                                    <div class="card-footer text-body-secondary">
-                                      4 days ago
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div id="found" class="tab-pane fade ">
-                              <div class="row">
-                                <div class="col">
-                                  <img
-                                    src={no_results}
-                                    alt=""
-                                    class="card-img-top no-result"
-                                  />
-                                  <p>
-                                    Sorry! It looks like you have not made any
-                                    reports previously.
-                                  </p>
-                                </div>
-                              </div>
-=======
 import React, { useState, useEffect } from "react";
 import NavBar from "../../common/NavBar";
 import fetcher from "../../../fetchHelper";
@@ -211,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   let navigate = useNavigate();
-  const [lostItems, setLostItems] = useState({ next: null, results: [] });
-  const [foundItems, setFoundItems] = useState({ next: null, results: [] });
+  const [lostItems, setLostItems] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
 
   useEffect(() => {
     getUserRequests(); // eslint-disable-next-line
@@ -225,14 +22,10 @@ export default function Home() {
         if (response.status === 200) {
           return response.json().then((json) => {
             console.log(json.userPosts);
-            setLostItems({
-              ...json,
-              results: [...json.userPosts.lostItems, ...lostItems.results],
-            });
-            setFoundItems({
-              ...json,
-              results: [...json.userPosts.foundItems, ...lostItems.results],
-            });
+            console.log(json.userPosts.lostItems[0]);
+            setLostItems([...json.userPosts.lostItems, ...lostItems]);
+            setLostItems(json.userPosts.lostItems);
+            setFoundItems(json.userPosts.foundItems);
             console.log(lostItems);
             console.log(foundItems);
           });
@@ -252,10 +45,23 @@ export default function Home() {
   };
 
   const createItemCard = (item) => {
-    const itemDateCreated = new Date(item.dateCreated);
-    const daysAgo = Math.floor(
-      (new Date() - itemDateCreated) / (24 * 60 * 60 * 1000)
-    );
+    const timeLost = new Date(item.timeLost);
+    const daysAgo = Math.floor((new Date() - timeLost) / (24 * 60 * 60 * 1000));
+
+    // Extract date components
+    const year = timeLost.getFullYear();
+    const month = timeLost.getMonth() + 1; // Months are zero-based (0 = January, 11 = December)
+    const day = timeLost.getDate();
+
+    // Extract time components
+    const hours = timeLost.getHours();
+    const minutes = timeLost.getMinutes();
+    const seconds = timeLost.getSeconds();
+
+    // Create date and time strings
+    const dateStr = `${year}-${month}-${day}`;
+    const timeStr = `${hours}:${minutes}:${seconds}`;
+
     let card_status = "";
     if (item.isActive) card_status = "card";
     else card_status = "card opacity-25";
@@ -265,8 +71,8 @@ export default function Home() {
         <div className={card_status}>
           <div id="carouselExample" className="carousel slide">
             <div className="carousel-inner">
-              {item.image ? (
-                item.image.map((i, index) => {
+              {item.imageUrls.length !== 0 ? (
+                item.imageUrls.map((i, index) => {
                   let class_value = "";
                   if (index === 0) class_value = "carousel-item active";
                   else class_value = "carousel-item";
@@ -306,9 +112,10 @@ export default function Home() {
             </button>
           </div>
           <div className="card-body">
-            <h4 className="card-title">{item.title}</h4>
-            <p className="card-title">Location: {item.locationFound}</p>
-            <p className="card-text">Time: {item.timeFound}</p>
+            <h4 className="card-title">{item.itemName}</h4>
+            <p className="card-title">Location: {item.locationLost}</p>
+            <p className="card-title">Date: {dateStr}</p>
+
             <a
               className="btn btn-outline-success"
               role="button"
@@ -338,11 +145,11 @@ export default function Home() {
     <>
       <NavBar />
 
-      <div className="container-fluid mt-5 text-center">
+      <div className="body-home container-fluid text-center">
         <div className="row" style={{ height: 20 + "vh" }}>
           <div className="col" id="requestLostItem">
             <a
-              className="btn w-75 h-75 p-2"
+              className="btn w-75 h-75 p-2 mt-5"
               role="button"
               href="/requestLostItem"
             >
@@ -351,7 +158,7 @@ export default function Home() {
           </div>
           <div className="col" id="reportFoundItem">
             <a
-              className="btn w-75 h-75 p-2"
+              className="btn w-75 h-75 p-2 mt-5"
               role="button"
               href="/reportFoundItem"
             >
@@ -394,21 +201,16 @@ export default function Home() {
                             className="tab-pane fade in active show"
                           >
                             <div className="row">
-                              {lostItems.results.length !== 0
-                                ? lostItems.results.map((item) =>
-                                    createItemCard(item)
-                                  )
+                              {lostItems.length !== 0
+                                ? lostItems.map((item) => createItemCard(item))
                                 : createNoResultsCard()}
                             </div>
                           </div>
                           <div id="found" className="tab-pane fade ">
                             <div className="row">
-                              {foundItems.results.length !== 0
-                                ? foundItems.results.map((item) =>
-                                    createItemCard(item)
-                                  )
+                              {foundItems.length !== 0
+                                ? foundItems.map((item) => createItemCard(item))
                                 : createNoResultsCard()}
->>>>>>> 9005127b42abcc77431f4c1a61a0ed43b4ec9999
                             </div>
                           </div>
                         </div>

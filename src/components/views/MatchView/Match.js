@@ -3,8 +3,55 @@ import { useNavigate } from "react-router-dom";
 import "./style.css";
 
 export default function Match() {
+  let navigate = useNavigate();
+  const [itemdata, setitemData] = useState({
+    name: "",
+    category: "",
+    colour: "",
+    files: [],
+    description: "",
+    timeLost: "",
+    timeSubmitted: "",
+    location: "",
+    brand: "",
+    size: "",
+  });
+
+  useEffect(() => {
+    getItemDetails(); // eslint-disable-next-line
+  }, []);
+
+  const getItemDetails = () => {
+    let url = `item/getUserPosts/`;
+    fetcher(url)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json().then((json) => {
+            console.log(json.userPosts);
+            console.log(json.userPosts.lostItems[0]);
+            setLostItems([...json.userPosts.lostItems, ...lostItems]);
+            setLostItems(json.userPosts.lostItems);
+            setFoundItems(json.userPosts.foundItems);
+            console.log(lostItems);
+            console.log(foundItems);
+          });
+        } else {
+          // Check if user is logged in
+          if (localStorage.getItem("token") === null) {
+            alert(
+              "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
+            );
+            navigate("/login", { replace: true });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
-    <div class="userDetails">
+    <div class="body-match">
       <div class="container-xl px-4 mt-4">
         <div class="row">
           <div class="col-xl-4">
