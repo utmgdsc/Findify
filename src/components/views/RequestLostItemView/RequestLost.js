@@ -16,7 +16,7 @@ export default function RequestLost() {
     name: "",
     category: "",
     colour: "",
-    images: [],
+    files: [],
     description: "",
     timeLost: "",
     timeSubmitted: new Date(),
@@ -29,7 +29,7 @@ export default function RequestLost() {
     name: "",
     category: "",
     colour: "",
-    images: "",
+    files: "",
     description: "",
     timeLost: "",
     timeSubmitted: "",
@@ -55,10 +55,10 @@ export default function RequestLost() {
       console.log(e.target.files[i]);
       if (e.target.files[i].size < 3000000)
         imageurls.push(URL.createObjectURL(e.target.files[i]));
-      else setData({ ...data, images: "Warning: A file is larger than 3mb." });
+      else setData({ ...data, files: "Warning: A file is larger than 3mb." });
     }
     console.log(imageurls);
-    setData({ ...data, images: imageurls });
+    setData({ ...data, files: imageurls });
     console.log(data);
   };
 
@@ -125,7 +125,6 @@ export default function RequestLost() {
         itemName: data.name,
         type: data.category,
         colour: data.colour,
-        imageUrls: data.images,
         description: data.description,
         timeLost: data.timeLost,
         timeSubmitted: data.timeSubmitted,
@@ -143,6 +142,7 @@ export default function RequestLost() {
           "Content-Type": "application/json",
           authorization: `Bearer ${token}`,
         },
+        files: data.files,
         body: JSON.stringify(jsonData),
         signal: signal,
       })
