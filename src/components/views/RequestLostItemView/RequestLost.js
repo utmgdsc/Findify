@@ -54,7 +54,8 @@ export default function RequestLost() {
     for (let i = 0; i < e.target.files.length; i++) {
       console.log(e.target.files[i]);
       if (e.target.files[i].size < 3000000)
-        imageurls.push(URL.createObjectURL(e.target.files[i]));
+        //imageurls.push(URL.createObjectURL(e.target.files[i]));
+        imageurls.push(e.target.files[i]);
       else setData({ ...data, images: "Warning: A file is larger than 3mb." });
     }
     console.log(imageurls);
@@ -122,7 +123,7 @@ export default function RequestLost() {
       event.stopPropagation();
       setDisabled(false);
     } else {
-      const jsonData = {
+      /* const jsonData = {
         itemName: data.name,
         type: data.category,
         colour: data.colour,
@@ -133,20 +134,29 @@ export default function RequestLost() {
         locationLost: data.location,
         brand: data.brand,
         size: data.size,
-      };
+      }; */
+      const formData = new FormData();
+      formData.append("itemName", data.name);
+      formData.append("type", data.category);
+      formData.append("colour", data.colour);
+      formData.append("imageUrls", data.images);
+      formData.append("description", data.description);
+      formData.append("timeLost", data.timeLost);
+      formData.append("timeSubmitted", data.timeSubmitted);
+      formData.append("locationLost", data.location);
+      formData.append("brand", data.brand);
+      formData.append("size", data.size);
 
       console.log(data);
 
-      console.log(jsonData);
-      console.log(token);
+      console.log(formData.get("imageUrls"));
       return fetch("http://localhost:3000/item/lostRequest", {
         method: "POST",
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
           authorization: `Bearer ${token}`,
+          accept: "multipart/form-data",
         },
-        body: JSON.stringify(jsonData),
+        body: formData,
         signal: signal,
       })
         .then((response) => {

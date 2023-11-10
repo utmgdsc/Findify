@@ -52,7 +52,6 @@ router
 
 router
   .route("/edit")
-  // TODO: add checkRequiredAttributes middleware
   .post(authenticate, checkRequiredAttributes(["email"]), async (req, res) => {
     try {
       await UserController.edit(req, res, errorHandler);

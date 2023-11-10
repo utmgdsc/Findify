@@ -10,6 +10,17 @@ const router = express.Router();
 
 router
   .route("/lostRequest")
+  .get(
+    authenticate,
+    checkRequiredAttributes(["lostRequestId"]),
+    async (req, res) => {
+      try {
+        await ItemController.getLostRequest(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Get Lost Request Error: ${err}` });
+      }
+    }
+  )
   .post(
     authenticate,
     multerUpload,
@@ -28,10 +39,33 @@ router
         res.json({ message: `Create Lost Request Error: ${err}` });
       }
     }
+  )
+  .put(
+    authenticate,
+    multerUpload,
+    checkRequiredAttributes(["lostRequestId"]),
+    async (req, res) => {
+      try {
+        await ItemController.editLostRequest(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Edit Lost Request Error: ${err}` });
+      }
+    }
   );
 
 router
   .route("/foundRequest")
+  .get(
+    authenticate,
+    checkRequiredAttributes(["foundRequestId"]),
+    async (req, res) => {
+      try {
+        await ItemController.getFoundRequest(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Get Found Request Error: ${err}` });
+      }
+    }
+  )
   .post(
     authenticate,
     multerUpload,
@@ -45,6 +79,32 @@ router
     async (req, res) => {
       try {
         await ItemController.createFoundRequest(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Create Found Request Error: ${err}` });
+      }
+    }
+  )
+  .put(
+    authenticate,
+    multerUpload,
+    checkRequiredAttributes(["foundRequestId"]),
+    async (req, res) => {
+      try {
+        await ItemController.editFoundRequest(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Edit Found Request Error: ${err}` });
+      }
+    }
+  );
+
+router
+  .route("/getSimilarItems")
+  .get(
+    authenticate,
+    checkRequiredAttributes(["lostItemId"]),
+    async (req, res) => {
+      try {
+        await ItemController.getSimilarItems(req, res, errorHandler);
       } catch (err) {
         res.json({ message: `Create Found Request Error: ${err}` });
       }
@@ -63,32 +123,6 @@ router.route("/getUserPosts").get(authenticate, async (req, res) => {
 const errorHandler = (err) => {};
 
 module.exports = router;
-
-// router.route('/editLostRequest')
-//   .post(authenticate, checkRequiredAttributes([]), async (req, res) => {
-//     try {
-//       await ItemController.editLostRequest(req, res, errorHandler);
-//     } catch (err) {
-//       res.json({ message: `Edit Lost Request Error: ${err}` })
-//     }
-//   })
-
-// router.route('/createFoundReport')
-//   .post(authenticate, checkRequiredAttributes(["type", "brand", "size", "colour", "locationFound"]), async (req, res) => {
-//     try {
-//       await ItemController.createFoundReport(req, res, errorHandler);
-//     } catch (err) {
-//       res.json({ message: `Create Found Report Error: ${err}` })
-//     }
-//   })
-// router.route('/editFoundReport')
-//   .post(authenticate, checkRequiredAttributes([]), async (req, res) => {
-//     try {
-//       await ItemController.editFoundReport(req, res, errorHandler);
-//     } catch (err) {
-//       res.json({ message: `Edit Found Report Error: ${err}` })
-//     }
-//   })
 
 // router.route('/getItemInfo')
 //   .get(authenticate, checkRequiredAttributes(['itemId'], async (req, res) => {
