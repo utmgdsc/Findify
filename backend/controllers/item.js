@@ -17,7 +17,7 @@ module.exports.getLostRequest = async (req, res, next) => {
 }
 
 module.exports.createLostRequest = async (req, res, next) => {
-  const { type, brand, size, colour, locationLost, description, itemName } = req.body;
+  const { type, brand, size, colour, locationLost, description, itemName, timeLost } = req.body;
   let imageUrls = [];
 
   try {
@@ -35,7 +35,8 @@ module.exports.createLostRequest = async (req, res, next) => {
       locationLost,
       imageUrls,
       host: req.user._id,
-      description
+      description,
+      timeLost
     });
 
     // Save to database
@@ -72,7 +73,8 @@ module.exports.editLostRequest = async (req, res, next) => {
       colour: req.body.color ? req.body.color : lostItem.colour,
       locationFound: req.body.locationFound ? req.body.locationFound : lostItem.locationFound,
       imageUrls: imageUrls ? imageUrls : lostItem.imageUrls,
-      description: req.body.description ? req.body.description : lostItem.description
+      description: req.body.description ? req.body.description : lostItem.description,
+      timeLost: req.body.timeLost ? req.body.timeLost : lostItem.timeLost
     };
 
     // update in database
@@ -96,7 +98,7 @@ module.exports.getFoundRequest = async (req, res, next) => {
 }
 
 module.exports.createFoundRequest = async (req, res, next) => {
-  const { type, brand, size, colour, locationFound, description, itemName } = req.body;
+  const { type, brand, size, colour, locationFound, description, itemName, timeFound } = req.body;
   let imageUrls = [];
 
   try {
@@ -114,7 +116,8 @@ module.exports.createFoundRequest = async (req, res, next) => {
       locationFound,
       imageUrls,
       host: req.user._id,
-      description
+      description,
+      timeFound
     });
 
     // Save to database
@@ -151,7 +154,8 @@ module.exports.editFoundRequest = async (req, res, next) => {
       colour: req.body.color ? req.body.color : foundItem.colour,
       locationFound: req.body.locationFound ? req.body.locationFound : foundItem.locationFound,
       imageUrls: imageUrls ? imageUrls : foundItem.imageUrls,
-      description: req.body.description ? req.body.description : foundItem.description
+      description: req.body.description ? req.body.description : foundItem.description,
+      timeFound: req.body.timeFound ? req.body.timeFound : foundItem.timeFound
     };
 
     // update in database
