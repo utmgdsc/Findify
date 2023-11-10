@@ -40,9 +40,9 @@ module.exports.createLostRequest = async (req, res, next) => {
     });
 
     // Save to database
-    await lostItem.save();
+    const savedLostItem = await lostItem.save();
 
-    res.status(200).json({ message: 'Created lost item successfully', urlLocations: imageUrls });
+    res.status(200).json({ message: 'Created lost item successfully', urlLocations: imageUrls, id: savedLostItem._id });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -121,9 +121,9 @@ module.exports.createFoundRequest = async (req, res, next) => {
     });
 
     // Save to database
-    await foundItem.save();
+    const savedFoundItem = await foundItem.save();
 
-    res.status(200).json({ message: 'Created found item successfully', urlLocations: imageUrls });
+    res.status(200).json({ message: 'Created found item successfully', urlLocations: imageUrls, id: savedFoundItem._id });
   } catch (err) {
     errorHandler(err, res);
     next(err);
