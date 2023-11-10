@@ -2,6 +2,7 @@
     font-family: Georgia, 'Times New Roman', Times, serif !important;
     letter-spacing: 0.5px;
     background-color: lightskyblue !important;
+    height: 100%;
 }
 #requestLostItem a {
     line-height: 3;

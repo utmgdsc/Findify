@@ -1,5 +1,5 @@
 import React from "react";
-import no_img from "../../../assets/img/no_img.png";
+import no_img from "../../assets/img/no_img.png";
 
 export default function ItemCard(props) {
   let id = props.id;
