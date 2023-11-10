@@ -108,24 +108,6 @@ const errorHandler = (err) => { }
 
 module.exports = router;
 
-// router.route('/getItemInfo')
-//   .get(authenticate, checkRequiredAttributes(['itemId'], async (req, res) => {
-//     try {
-//       await ItemController.getItemInfo(req, res, errorHandler);
-//     } catch (err) {
-//       res.json({ message: `Get Item ${req.body.itemId} Info Error: ${err}` })
-//     }
-//   }))
-
-// router.route('/getItemMatches')
-//   .get(authenticate, checkRequiredAttributes(['itemId'], async (req, res) => {
-//     try {
-//       await ItemController.getSimilarItems(req, res, errorHandler);
-//     } catch (err) {
-//       res.json({ message: `Get Item ${req.body.itemId} Matches Error: ${err}` })
-//     }
-//   }))
-
 // router.route('/claimItem')
 //   // userId refers to lostItem host ID: needs to match with current logged in user for authentication purposes
 //   .post(authenticate, checkRequiredAttributes(['userId', 'lostItmeId', 'foundItemId'], async (req, res) => { // ? should required attr be userId or user token?

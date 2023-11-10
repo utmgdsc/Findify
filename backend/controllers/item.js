@@ -72,7 +72,7 @@ module.exports.editLostRequest = async (req, res, next) => {
       brand: req.body.brand ? req.body.brand : lostItem.brand,
       size: req.body.size ? req.body.size : lostItem.size,
       colour: req.body.color ? req.body.color : lostItem.colour,
-      locationFound: req.body.locationFound ? req.body.locationFound : lostItem.locationFound,
+      locationLost: req.body.locationLost ? req.body.locationLost : lostItem.locationLost,
       imageUrls: (imageUrls.length > 0) ? imageUrls : lostItem.imageUrls,
       description: req.body.description ? req.body.description : lostItem.description,
       timeLost: req.body.timeLost ? req.body.timeLost : lostItem.timeLost
