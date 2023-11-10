@@ -55,15 +55,8 @@ export default function Match() {
 
   const getItemDetails = () => {
     console.log(id);
-    let url = `item/lostRequest/`;
-    const jsonData = {
-      lostRequestId: id,
-    };
-    fetcher(url, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(jsonData),
-    })
+    let url = `item/lostRequest/id:${id}`;
+    fetcher(url)
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {

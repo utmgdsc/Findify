@@ -5,10 +5,9 @@ const multerUpload = require("../middlewares/multer");
 
 const router = express.Router();
 
-router.route('/lostRequest')
+router.route('/lostRequest/:id')
   .get(
     authenticate,
-    checkRequiredAttributes(["lostRequestId"]),
     async (req, res) => {
       try {
         await ItemController.getLostRequest(req, res, errorHandler);
@@ -17,6 +16,8 @@ router.route('/lostRequest')
       }
     }
   )
+
+router.route('/lostRequest')
   .post(
     authenticate,
     multerUpload,
@@ -43,10 +44,9 @@ router.route('/lostRequest')
   )
 
 
-router.route('/foundRequest')
+router.route('/foundRequest/:id')
   .get(
     authenticate,
-    checkRequiredAttributes(["foundRequestId"]),
     async (req, res) => {
       try {
         await ItemController.getFoundRequest(req, res, errorHandler);
@@ -55,6 +55,8 @@ router.route('/foundRequest')
       }
     }
   )
+
+router.route('/foundRequest')
   .post(
     authenticate,
     multerUpload,
@@ -80,10 +82,9 @@ router.route('/foundRequest')
     }
   )
 
-router.route('/getSimilarItems')
+router.route('/getSimilarItems/:id')
   .get(
-    authenticate, 
-    checkRequiredAttributes(["lostItemId"]),
+    authenticate,
     async (req, res) => {
       try {
         await ItemController.getSimilarItems(req, res, errorHandler);
