@@ -44,12 +44,10 @@ module.exports.createLostRequest = async (req, res, next) => {
     // Save to database
     await lostItem.save();
 
-    res
-      .status(200)
-      .json({
-        message: "Created lost item successfully",
-        urlLocations: imageUrls,
-      });
+    res.status(200).json({
+      message: "Created lost item successfully",
+      urlLocations: imageUrls,
+    });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -63,7 +61,7 @@ module.exports.editLostRequest = async (req, res, next) => {
   let imageUrls = [];
 
   try {
-    if (lostItem.host !== user._id) {
+    if (!lostItem.host.equals(user._id)) {
       throw new Error("403 Unauthorized: User does not own lost request");
     }
 
@@ -91,12 +89,10 @@ module.exports.editLostRequest = async (req, res, next) => {
 
     // update in database
     await LostItem.findOneAndUpdate({ _id: lostRequestId }, update);
-    res
-      .status(200)
-      .json({
-        message: "Editted lost item successfully",
-        urlLocations: imageUrls,
-      });
+    res.status(200).json({
+      message: "Editted lost item successfully",
+      urlLocations: imageUrls,
+    });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -142,12 +138,10 @@ module.exports.createFoundRequest = async (req, res, next) => {
     // Save to database
     await foundItem.save();
 
-    res
-      .status(200)
-      .json({
-        message: "Created found item successfully",
-        urlLocations: imageUrls,
-      });
+    res.status(200).json({
+      message: "Created found item successfully",
+      urlLocations: imageUrls,
+    });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -161,7 +155,7 @@ module.exports.editFoundRequest = async (req, res, next) => {
   let imageUrls = [];
 
   try {
-    if (foundItem.host !== user._id) {
+    if (!foundItem.host.equals(user._id)) {
       throw new Error("403 Unauthorized: User does not own found request");
     }
 
@@ -189,12 +183,10 @@ module.exports.editFoundRequest = async (req, res, next) => {
 
     // update in database
     await FoundItem.findOneAndUpdate({ _id: foundRequestId }, update);
-    res
-      .status(200)
-      .json({
-        message: "Editted found item successfully",
-        urlLocations: imageUrls,
-      });
+    res.status(200).json({
+      message: "Editted found item successfully",
+      urlLocations: imageUrls,
+    });
   } catch (err) {
     errorHandler(err, res);
     next(err);
