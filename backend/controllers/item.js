@@ -52,11 +52,11 @@ module.exports.createLostRequest = async (req, res, next) => {
 module.exports.editLostRequest = async (req, res, next) => {
   const { lostRequestId } = req.body;
   const user = req.user
-  const lostItem = LostItem.findOne({ _id: lostRequestId })
+  const lostItem = await LostItem.findOne({ _id: lostRequestId })
   let imageUrls = [];
 
   try {
-    if (!lostItem.host.equals(user._id)) {
+    if (!lostItem.host._id.equals(user._id)) {
       throw new Error('401 Unauthorized: User does not own lost request');
     }
 
@@ -72,14 +72,14 @@ module.exports.editLostRequest = async (req, res, next) => {
       size: req.body.size ? req.body.size : lostItem.size,
       colour: req.body.color ? req.body.color : lostItem.colour,
       locationFound: req.body.locationFound ? req.body.locationFound : lostItem.locationFound,
-      imageUrls: imageUrls ? imageUrls : lostItem.imageUrls,
+      imageUrls: (imageUrls.length > 0) ? imageUrls : lostItem.imageUrls,
       description: req.body.description ? req.body.description : lostItem.description,
       timeLost: req.body.timeLost ? req.body.timeLost : lostItem.timeLost
     };
 
     // update in database
     await LostItem.findOneAndUpdate({ _id: lostRequestId }, update)
-    res.status(200).json({ message: 'Editted lost item successfully', urlLocations: imageUrls });
+    res.status(200).json({ message: 'Edited lost item successfully', urlLocations: update.imageUrls });
   } catch (err) {
     errorHandler(err, res);
     next(err);
