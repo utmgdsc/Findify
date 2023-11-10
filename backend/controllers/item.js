@@ -55,7 +55,7 @@ module.exports.editLostRequest = async (req, res, next) => {
   let imageUrls = [];
 
   try {
-    if (lostItem.host !== user._id) {
+    if (!lostItem.host.equals(user._id)) {
       throw new Error('403 Unauthorized: User does not own lost request');
     }
 
@@ -134,7 +134,7 @@ module.exports.editFoundRequest = async (req, res, next) => {
   let imageUrls = [];
 
   try {
-    if (foundItem.host !== user._id) {
+    if (!foundItem.host.equals(user._id)) {
       throw new Error('403 Unauthorized: User does not own found request');
     }
 
@@ -195,7 +195,7 @@ module.exports.getSimilarItems = async (req, res, next) => {
     if (!req.user._id.equals(lostItem.host._id)) {
       return res.status(403).json({ message: 'Only the lost item host can fetch similar items' });
     }
-    
+
     const foundItems = await FoundItem.find(
       // exclude the current user's found items
       // host: { $ne: mongoose.Types.ObjectId(excludedHostId) }
@@ -227,7 +227,7 @@ module.exports.getSimilarItems = async (req, res, next) => {
     const topResults = searchResults
       // .slice(0, 30) // Limit to the top 30 results
       .map(result => ({ ...result.item._doc, score: result.score }));
-    
+
     res.status(200).json(topResults);
   } catch (error) {
     console.error("Error fetching similar items:", error);
@@ -235,7 +235,7 @@ module.exports.getSimilarItems = async (req, res, next) => {
   }
 }
 
-async function uploadToS3(folder, file) {
+async function uploadToS3 (folder, file) {
   const fileName = `${folder}/${uuidv4()}-${file.originalname}`;
 
   const command = new PutObjectCommand({
