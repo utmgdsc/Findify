@@ -21,10 +21,6 @@
 #reportFoundItem a:hover {
     font-size: 2.1rem;
 }
-#nav-home {
-    background-color: white;
-    border-color: rgb(29, 141, 227) !important;
-}
 .nav-link.active {
     border-color: rgb(29, 141, 227) rgb(29, 141, 227) white !important;
 }

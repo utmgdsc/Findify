@@ -129,14 +129,14 @@ export default function ReportFound() {
         description: data.description,
         timeFound: data.timeLost,
         timeSubmitted: data.timeSubmitted,
-        locationLost: data.location,
+        locationFound: data.location,
         brand: data.brand,
         size: data.size,
       };
 
       console.log(jsonData);
       console.log(token);
-      return fetch("http://localhost:3000/item/createFoundRequest", {
+      return fetch("http://localhost:3000/item/foundRequest", {
         method: "POST",
         headers: {
           Accept: "application/json",

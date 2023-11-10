@@ -45,22 +45,18 @@ export default function Home() {
   };
 
   const createItemCard = (item) => {
-    const timeLost = new Date(item.timeLost);
-    const daysAgo = Math.floor((new Date() - timeLost) / (24 * 60 * 60 * 1000));
+    const time = item.timeLost
+      ? new Date(item.timeLost)
+      : new Date(item.timeFound);
+    const daysAgo = Math.floor((new Date() - time) / (24 * 60 * 60 * 1000));
 
     // Extract date components
-    const year = timeLost.getFullYear();
-    const month = timeLost.getMonth() + 1; // Months are zero-based (0 = January, 11 = December)
-    const day = timeLost.getDate();
-
-    // Extract time components
-    const hours = timeLost.getHours();
-    const minutes = timeLost.getMinutes();
-    const seconds = timeLost.getSeconds();
+    const year = time.getFullYear();
+    const month = time.getMonth() + 1; // Months are zero-based (0 = January, 11 = December)
+    const day = time.getDate();
 
     // Create date and time strings
     const dateStr = `${year}-${month}-${day}`;
-    const timeStr = `${hours}:${minutes}:${seconds}`;
 
     let card_status = "";
     if (item.isActive) card_status = "card";
@@ -113,13 +109,16 @@ export default function Home() {
           </div>
           <div className="card-body">
             <h4 className="card-title">{item.itemName}</h4>
-            <p className="card-title">Location: {item.locationLost}</p>
+            <p className="card-title">
+              Location:{" "}
+              {item.locationLost ? item.locationLost : item.locationFound}
+            </p>
             <p className="card-title">Date: {dateStr}</p>
 
             <a
               className="btn btn-outline-success"
               role="button"
-              href={`/itemDetails/${item.id}`}
+              href={`/itemDetails/${item._id}`}
             >
               Read More
             </a>
