@@ -41,3 +41,10 @@
         border-radius: 0.35rem;
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     }
+
+    .other-input-match {
+        margin-top: 6px !important;
+        margin-left: 6px !important;
+        width: 20% !important;
+        border:0.02px grey solid;
+      }
