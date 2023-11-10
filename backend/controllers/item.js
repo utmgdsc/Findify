@@ -7,7 +7,7 @@ const Fuse = require('fuse.js');
 
 module.exports.getLostRequest = async (req, res, next) => {
   try {
-    const lostRequestId = req.body.lostRequestId
+    const lostRequestId = req.params.id
     const lostItem = await LostItem.findOne({ _id: lostRequestId });
     return lostItem;
   } catch (err) {
@@ -57,7 +57,7 @@ module.exports.editLostRequest = async (req, res, next) => {
 
   try {
     if (!lostItem.host.equals(user._id)) {
-      throw new Error('403 Unauthorized: User does not own lost request');
+      throw new Error('401 Unauthorized: User does not own lost request');
     }
 
     if (req.files && req.files.length > 0) {
@@ -88,7 +88,7 @@ module.exports.editLostRequest = async (req, res, next) => {
 
 module.exports.getFoundRequest = async (req, res, next) => {
   try {
-    const foundRequestId = req.body.foundRequestId
+    const foundRequestId = req.params.id
     const foundItem = await FoundItem.findOne({ _id: foundRequestId });
     return foundItem;
   } catch (err) {
@@ -138,7 +138,7 @@ module.exports.editFoundRequest = async (req, res, next) => {
 
   try {
     if (!foundItem.host.equals(user._id)) {
-      throw new Error('403 Unauthorized: User does not own found request');
+      throw new Error('401 Unauthorized: User does not own found request');
     }
 
     if (req.files && req.files.length > 0) {
