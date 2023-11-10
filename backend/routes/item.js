@@ -8,19 +8,17 @@ const multerUpload = require("../middlewares/multer");
 
 const router = express.Router();
 
+router.route("/lostRequest/:id").get(authenticate, async (req, res) => {
+  try {
+    const data = await ItemController.getLostRequest(req, res, errorHandler);
+    res.json({ lostItem: data });
+  } catch (err) {
+    res.json({ message: `Get Lost Request Error: ${err}` });
+  }
+});
+
 router
   .route("/lostRequest")
-  .get(
-    authenticate,
-    checkRequiredAttributes(["lostRequestId"]),
-    async (req, res) => {
-      try {
-        await ItemController.getLostRequest(req, res, errorHandler);
-      } catch (err) {
-        res.json({ message: `Get Lost Request Error: ${err}` });
-      }
-    }
-  )
   .post(
     authenticate,
     multerUpload,
@@ -53,19 +51,17 @@ router
     }
   );
 
+router.route("/foundRequest/:id").get(authenticate, async (req, res) => {
+  try {
+    const data = await ItemController.getFoundRequest(req, res, errorHandler);
+    res.json({ foundItem: data });
+  } catch (err) {
+    res.json({ message: `Get Found Request Error: ${err}` });
+  }
+});
+
 router
   .route("/foundRequest")
-  .get(
-    authenticate,
-    checkRequiredAttributes(["foundRequestId"]),
-    async (req, res) => {
-      try {
-        await ItemController.getFoundRequest(req, res, errorHandler);
-      } catch (err) {
-        res.json({ message: `Get Found Request Error: ${err}` });
-      }
-    }
-  )
   .post(
     authenticate,
     multerUpload,
@@ -98,19 +94,13 @@ router
     }
   );
 
-router
-  .route("/getSimilarItems")
-  .get(
-    authenticate,
-    checkRequiredAttributes(["lostItemId"]),
-    async (req, res) => {
-      try {
-        await ItemController.getSimilarItems(req, res, errorHandler);
-      } catch (err) {
-        res.json({ message: `Create Found Request Error: ${err}` });
-      }
-    }
-  );
+router.route("/getSimilarItems/:id").get(authenticate, async (req, res) => {
+  try {
+    await ItemController.getSimilarItems(req, res, errorHandler);
+  } catch (err) {
+    res.json({ message: `Create Found Request Error: ${err}` });
+  }
+});
 
 router.route("/getUserPosts").get(authenticate, async (req, res) => {
   try {

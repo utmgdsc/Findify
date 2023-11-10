@@ -7,7 +7,7 @@ const Fuse = require("fuse.js");
 
 module.exports.getLostRequest = async (req, res, next) => {
   try {
-    const lostRequestId = req.body.lostRequestId;
+    const lostRequestId = req.params.id;
     const lostItem = await LostItem.findOne({ _id: lostRequestId });
     return lostItem;
   } catch (err) {
@@ -66,12 +66,12 @@ module.exports.createLostRequest = async (req, res, next) => {
 module.exports.editLostRequest = async (req, res, next) => {
   const { lostRequestId } = req.body;
   const user = req.user;
-  const lostItem = LostItem.findOne({ _id: lostRequestId });
+  const lostItem = await LostItem.findOne({ _id: lostRequestId });
   let imageUrls = [];
 
   try {
-    if (!lostItem.host.equals(user._id)) {
-      throw new Error("403 Unauthorized: User does not own lost request");
+    if (!lostItem.host._id.equals(user._id)) {
+      throw new Error("401 Unauthorized: User does not own lost request");
     }
 
     if (req.files && req.files.length > 0) {
@@ -90,7 +90,7 @@ module.exports.editLostRequest = async (req, res, next) => {
       locationFound: req.body.locationFound
         ? req.body.locationFound
         : lostItem.locationFound,
-      imageUrls: imageUrls ? imageUrls : lostItem.imageUrls,
+      imageUrls: imageUrls.length > 0 ? imageUrls : lostItem.imageUrls,
       description: req.body.description
         ? req.body.description
         : lostItem.description,
@@ -100,8 +100,8 @@ module.exports.editLostRequest = async (req, res, next) => {
     // update in database
     await LostItem.findOneAndUpdate({ _id: lostRequestId }, update);
     res.status(200).json({
-      message: "Editted lost item successfully",
-      urlLocations: imageUrls,
+      message: "Edited lost item successfully",
+      urlLocations: update.imageUrls,
     });
   } catch (err) {
     errorHandler(err, res);
@@ -111,7 +111,7 @@ module.exports.editLostRequest = async (req, res, next) => {
 
 module.exports.getFoundRequest = async (req, res, next) => {
   try {
-    const foundRequestId = req.body.foundRequestId;
+    const foundRequestId = req.params.id;
     const foundItem = await FoundItem.findOne({ _id: foundRequestId });
     return foundItem;
   } catch (err) {
@@ -175,7 +175,7 @@ module.exports.editFoundRequest = async (req, res, next) => {
 
   try {
     if (!foundItem.host.equals(user._id)) {
-      throw new Error("403 Unauthorized: User does not own found request");
+      throw new Error("401 Unauthorized: User does not own found request");
     }
 
     if (req.files && req.files.length > 0) {
@@ -232,7 +232,7 @@ module.exports.getUserPosts = async (req, res, next) => {
 
 module.exports.getSimilarItems = async (req, res, next) => {
   try {
-    const { lostItemId } = req.body;
+    const lostItemId = req.params.id;
 
     // find the correspoining lost item
     const lostItem = await LostItem.findById(lostItemId);
