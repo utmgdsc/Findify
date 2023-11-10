@@ -186,7 +186,7 @@ module.exports.getUserPosts = async (req, res, next) => {
 
 module.exports.getSimilarItems = async (req, res, next) => {
   try {
-    const { lostItemId } = req.body;
+    const lostItemId = req.params.id;
 
     // find the correspoining lost item
     const lostItem = await LostItem.findById(lostItemId);
