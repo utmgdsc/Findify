@@ -5,9 +5,9 @@ import SignUp from "../views/LoginView/SignUp";
 import Login from "../views/LoginView/Login";
 import Landing from "../views/LandingView/Landing";
 import RequestLost from "../views/RequestLostItemView/RequestLost";
-import LostItem from "../views/LostItemView/LostItem";
 import ReportFound from "../views/ReportFoundItemView/ReportFound";
 import Matches from "../views/MatchView/Matches";
+import Match from "../views/MatchView/itemDetail";
 
 export default function RouteHandler() {
   return (
@@ -18,8 +18,8 @@ export default function RouteHandler() {
       <Route path="/login" element={<Login />} />
       <Route path="/requestLostItem" element={<RequestLost />} />
       <Route path="/reportFoundItem" element={<ReportFound />} />
-      <Route path="/lostItem" element={<LostItem />} />
       <Route path="/matches/:id" element={<Matches />} />
+      <Route path="/lostitem/:id" element={<Match />} />
     </Routes>
   );
 }

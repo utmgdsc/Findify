@@ -63,7 +63,7 @@ export default function ItemCard(props) {
           <a
             className="btn btn-outline-success"
             role="button"
-            href={`/itemDetails/${id}`}
+            href={`/lostitem/${id}`}
           >
             Read More
           </a>

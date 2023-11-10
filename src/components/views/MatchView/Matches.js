@@ -55,7 +55,7 @@ export default function Matches() {
 
   return (
     <>
-      <div className="body-home container-fluid text-center">
+      <div className="container-fluid text-center">
         <div className="row" style={{ height: 80 + "vh" }}>
           <div className="col">
             <div className="container py-5">

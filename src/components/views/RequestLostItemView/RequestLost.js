@@ -357,6 +357,7 @@ export default function RequestLost() {
                         Please write N/A if not known
                       </span>
                     </div>
+
                     <div className="mb-3">
                       <label>Size of the item</label>
                       <select
