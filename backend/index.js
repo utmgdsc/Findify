@@ -2,11 +2,7 @@ const express = require("express");
 const connectDB = require("./db");
 const userRoutes = require("./routes/user");
 const itemRoutes = require("./routes/item");
-<<<<<<< HEAD
-var cors = require("cors");
-=======
 const cors = require("cors");
->>>>>>> 9005127b42abcc77431f4c1a61a0ed43b4ec9999
 
 const app = express();
 const PORT = process.env.PORT || 3000;

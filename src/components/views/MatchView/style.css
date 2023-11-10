@@ -1,13 +1,21 @@
-#body-match{
-    margin-top:20px;
-    background-color:#f2f6fc;
-    color:#69707a;
+.body-match{
+    margin:0;
+    padding:0;
+    min-height: 100%;
+    background-color: rgb(255, 255, 255) !important;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover !important;
     }
     .img-account-profile {
         height: 10rem;
     }
     .rounded-circle {
         border-radius: 50% !important;
+    }
+    .card .card-images{
+        margin-top: 15% !important;
     }
     .card {
         box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
@@ -45,6 +53,22 @@
     .other-input-match {
         margin-top: 6px !important;
         margin-left: 6px !important;
-        width: 20% !important;
+        width: 10% !important;
         border:0.02px grey solid;
+      }
+
+    .update-item-button {
+        background-color:rgb(69, 171, 205);
+        width: 20%; 
+        height: 35px;
+        padding: 8;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        margin-top: 8px;
+      }
+      
+      .update-item-button:hover{
+        background:rgb(29, 141, 227);
+        color: white;
       }

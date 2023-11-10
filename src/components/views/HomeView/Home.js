@@ -119,7 +119,7 @@ export default function Home() {
             <a
               className="btn btn-outline-success"
               role="button"
-              href={`/itemDetails/${item.id}`}
+              href={`/lostitem/${item._id}`}
             >
               Read More
             </a>
