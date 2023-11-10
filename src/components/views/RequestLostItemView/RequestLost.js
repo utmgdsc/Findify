@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NavBar from "../../common/NavBar";
+import { format } from "date-fns";
 import "./style.css";
 
 export default function RequestLost() {
@@ -44,8 +45,12 @@ export default function RequestLost() {
   });
 
   const dateLostHandler = (date) => {
+    console.log(date);
+    const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+    console.log(formattedDate);
     setselectedDate(date);
-    setData({ ...data, timeLost: date });
+    console.log(selectedDate);
+    setData({ ...data, timeLost: formattedDate });
   };
 
   const imagehandler = (e) => {

@@ -17,8 +17,16 @@ module.exports.getLostRequest = async (req, res, next) => {
 };
 
 module.exports.createLostRequest = async (req, res, next) => {
-  const { type, brand, size, colour, locationLost, description, itemName } =
-    req.body;
+  const {
+    type,
+    brand,
+    size,
+    colour,
+    locationLost,
+    description,
+    itemName,
+    timeLost,
+  } = req.body;
   let imageUrls = [];
 
   try {
@@ -39,6 +47,7 @@ module.exports.createLostRequest = async (req, res, next) => {
       imageUrls,
       host: req.user._id,
       description,
+      timeLost,
     });
 
     // Save to database
@@ -85,6 +94,7 @@ module.exports.editLostRequest = async (req, res, next) => {
       description: req.body.description
         ? req.body.description
         : lostItem.description,
+      timeLost: req.body.timeLost ? req.body.timeLost : lostItem.timeLost,
     };
 
     // update in database
@@ -111,8 +121,16 @@ module.exports.getFoundRequest = async (req, res, next) => {
 };
 
 module.exports.createFoundRequest = async (req, res, next) => {
-  const { type, brand, size, colour, locationFound, description, itemName } =
-    req.body;
+  const {
+    type,
+    brand,
+    size,
+    colour,
+    locationFound,
+    description,
+    itemName,
+    timeFound,
+  } = req.body;
   let imageUrls = [];
 
   try {
@@ -133,6 +151,7 @@ module.exports.createFoundRequest = async (req, res, next) => {
       imageUrls,
       host: req.user._id,
       description,
+      timeFound,
     });
 
     // Save to database
@@ -179,6 +198,7 @@ module.exports.editFoundRequest = async (req, res, next) => {
       description: req.body.description
         ? req.body.description
         : foundItem.description,
+      timeFound: req.body.timeFound ? req.body.timeFound : foundItem.timeFound,
     };
 
     // update in database
