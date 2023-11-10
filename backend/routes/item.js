@@ -10,7 +10,8 @@ router.route('/lostRequest/:id')
     authenticate,
     async (req, res) => {
       try {
-        await ItemController.getLostRequest(req, res, errorHandler);
+        const data = await ItemController.getLostRequest(req, res, errorHandler);
+        res.json({ lostItem: data });
       } catch (err) {
         res.json({ message: `Get Lost Request Error: ${err}` })
       }
@@ -49,7 +50,8 @@ router.route('/foundRequest/:id')
     authenticate,
     async (req, res) => {
       try {
-        await ItemController.getFoundRequest(req, res, errorHandler);
+        const data = await ItemController.getFoundRequest(req, res, errorHandler);
+        res.json({ foundItem: data });
       } catch (err) {
         res.json({ message: `Get Found Request Error: ${err}` })
       }

@@ -7,9 +7,11 @@ import fetcher from "../../../fetchHelper";
 import { useParams } from "react-router-dom";
 import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
+import { format } from "date-fns";
 
 export default function Match() {
   const { id } = useParams();
+  const [idtwo, setid] = useState("");
   const token = localStorage.getItem("token");
   let navigate = useNavigate();
   const [validated, setValidated] = useState(false);
@@ -19,11 +21,11 @@ export default function Match() {
   const [errorSubmit, setErrorSubmit] = useState("");
 
   const [itemdata, setitemData] = useState({
-    itemName: "Bob",
+    itemName: "",
     type: "",
     colour: "",
     files: "",
-    description: "yoyou",
+    description: "",
     timeLost: "",
     timeSubmitted: "",
     locationLost: "",
@@ -54,27 +56,29 @@ export default function Match() {
   }, []);
 
   const getItemDetails = () => {
-    console.log(id);
-    let url = `item/lostRequest/id:${id}`;
+    let url = `item/lostRequest/${id}`;
     fetcher(url)
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
             console.log(json.lostItem);
             setitemData({
+              ...itemdata,
               itemName: json.lostItem.itemName,
               type: json.lostItem.type,
               colour: json.lostItem.colour,
-              files: json.lostItem.files,
+              files: json.lostItem.imageUrls,
               description: json.lostItem.description,
-              timeLost: json.lostItem.timeLost,
-              timeSubmitted: json.lostItem.timeSubmitted,
+              // timeLost: format(json.lostItem.timeLost, "MMMM do yyyy"),
+              timeSubmitted: json.lostItem.createdAt,
               locationLost: json.lostItem.locationLost,
               brand: json.lostItem.brand,
               size: json.lostItem.size,
             });
-            setselectedDate(json.lostItem.timeLost);
+            setid(json.lostItem._id);
+            //setselectedDate(itemdata.timeLost);
             console.log(itemdata);
+            console.log();
           });
         } else {
           // Check if user is logged in
@@ -104,7 +108,7 @@ export default function Match() {
                   else class_value = "carousel-item";
                   return (
                     <div className={class_value}>
-                      <img src={i} alt="" width="800px" height="200px" />
+                      <img src={i} alt="" width="300px" height="200px" />
                     </div>
                   );
                 })
@@ -239,7 +243,7 @@ export default function Match() {
       setDisabled(false);
     } else {
       const jsonData = {
-        lostRequestId: { id },
+        lostRequestId: idtwo,
         itemName: itemdata.itemName,
         type: itemdata.category,
         colour: itemdata.colour,
@@ -267,6 +271,7 @@ export default function Match() {
         .then((response) => {
           if (response.status === 200) {
             return response.json().then((json) => {
+              console.log("got 200");
               console.log(json);
               setDisabled(false);
               setErrorSubmit("");
@@ -282,6 +287,7 @@ export default function Match() {
           }
         })
         .catch((err) => {
+          console.log("errored out");
           const errorObject = JSON.parse(err);
           setErrorSubmit(errorObject.message);
           console.log(err);
@@ -300,13 +306,13 @@ export default function Match() {
               <div class="card-header text-center">Item Details</div>
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-xl-4">
+                  <div class="col-xl-3">
                     <div class="card card-images">
                       <div class="card-header">Images</div>
                       {createImagesCard(itemdata.files)};
                     </div>
                   </div>
-                  <div class="col-xl-8">
+                  <div class=" col-xl-7">
                     <form
                       noValidate
                       validated={validated}
