@@ -144,7 +144,9 @@ export default function RequestLost() {
       formData.append("itemName", data.name);
       formData.append("type", data.category);
       formData.append("colour", data.colour);
-      formData.append("imageUrls", data.images);
+      data.images.forEach((file) => {
+        formData.append("images", file);
+      });
       formData.append("description", data.description);
       formData.append("timeLost", data.timeLost);
       formData.append("timeSubmitted", data.timeSubmitted);
@@ -154,7 +156,7 @@ export default function RequestLost() {
 
       console.log(data);
 
-      console.log(formData.get("imageUrls"));
+      console.log(formData.get("images[]"));
       return fetch("http://localhost:3000/item/lostRequest", {
         method: "POST",
         headers: {
@@ -171,7 +173,7 @@ export default function RequestLost() {
               setDisabled(false);
               setValidated(true);
               setErrors({ ...errors, submit: "" });
-              navigate("/lostitem", { replace: true });
+              navigate(`/lostitem/${json.id}`, { replace: true });
             });
           } else {
             // Handle other status codes

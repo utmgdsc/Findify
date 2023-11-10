@@ -22,7 +22,7 @@ export default function Matches() {
         if (response.status === 200) {
           return response.json().then((json) => {
             console.log(json);
-            setMatches([...json.matches, ...matches]);
+            setMatches([...json, ...matches]);
             console.log(matches);
           });
         } else {
