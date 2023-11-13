@@ -7,6 +7,7 @@ import fetcher from "../../../fetchHelper";
 import { useParams } from "react-router-dom";
 import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
+import Matches from "./Matches";
 import { format } from "date-fns";
 
 export default function Match() {
@@ -298,259 +299,262 @@ export default function Match() {
   };
 
   return (
-    <div class="body-match">
+    <>
       <NavBar />
-      <div class="container-xl px-4 mt-4">
-        <div class="row">
-          <div class="col">
-            <div class="card mb-4">
-              <div class="card-header text-center">Item Details</div>
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-xl-3">
-                    <div class="card card-images">
-                      <div class="card-header">Images</div>
-                      {createImagesCard(itemdata.files)};
+      <div class="body-match">
+        <div class="container-xl px-4">
+          <div class="row">
+            <div class="col">
+              <div class="card mb-4 mt-4">
+                <div class="card-header text-center">Item Details</div>
+                <div class="card-body ">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <div class="card card-images">
+                        <div class="card-header">Images</div>
+                        {createImagesCard(itemdata.files)};
+                      </div>
                     </div>
-                  </div>
-                  <div class=" col-xl-7">
-                    <form
-                      noValidate
-                      validated={validated}
-                      onSubmit={submitHandler}
-                    >
-                      <div class="mb-3">
-                        <label class="small mb-1" for="inputUsername">
-                          Item Name
-                        </label>
-                        <input
-                          class="form-control"
-                          id="inputUsername"
-                          type="text"
-                          value={itemdata.itemName}
-                          onChange={(e) => itemNameHandler(e)}
-                        />
-                      </div>
-                      <div class="row gx-3 mb-3">
-                        <div className="col-md-6">
-                          <label class="small mb-1" for="inputCategory">
-                            Category
-                          </label>
-                          <select
-                            id="inputCategory"
-                            class="form-select form-select-sm"
-                            aria-label=".form-select-sm"
-                            onChange={(e) => categoryhandler(e)}
-                          >
-                            <option selected>{itemdata.type}</option>
-                            <option value="Electronic">Electronic</option>
-                            <option value="Clothing">Clothing</option>
-                            <option value="Bag">Bag</option>
-                            <option value="Keys">Keys</option>
-                            <option value="T-Card">T-Card</option>
-                            <option value="Books">Books</option>
-                            <option value="Other">Other</option>
-                          </select>
-                        </div>
-
-                        {others.otherCategory ? (
-                          <div className="mb-3">
-                            <span style={{ fontSize: 12 }}>
-                              {others.otherCategoryText}
-                            </span>
-                            <input
-                              required
-                              type="text"
-                              className="other-input-match"
-                              size="sm"
-                              onChange={(e) => {
-                                setitemData({
-                                  ...itemdata,
-                                  category: e.target.value,
-                                });
-                              }}
-                            />
-                          </div>
-                        ) : null}
-
-                        <div className="col-md-6">
-                          <label class="small mb-1" for="inputlocation">
-                            Location Lost
-                          </label>
-                          <select
-                            class="form-select form-select-sm"
-                            id="inputlocation"
-                            aria-label=".form-select-sm"
-                            onChange={(e) => locationhandler(e)}
-                          >
-                            <option selected>{itemdata.locationLost}</option>
-                            <option value="CC">CC</option>
-                            <option value="DH">DH</option>
-                            <option value="DW">DW</option>
-                            <option value="KN">KN</option>
-                            <option value="IB">IB</option>
-                            <option value="MN">MN</option>
-                            <option value="BG">BG</option>
-                            <option value="HB">HB</option>
-                            <option value="DV">DV</option>
-                            <option value="Residence">Residence</option>
-                            <option value="Miway">Miway</option>
-                            <option value="Other">Other</option>
-                          </select>
-                        </div>
-                        {others.otherLocation ? (
-                          <div className="mb-3">
-                            <span style={{ fontSize: 12 }}>
-                              {others.otherLocationText}
-                            </span>
-                            <input
-                              required
-                              type="text"
-                              className="other-input-match"
-                              size="sm"
-                              onChange={(e) => {
-                                setitemData({
-                                  ...itemdata,
-                                  location: e.target.value,
-                                });
-                              }}
-                            />
-                          </div>
-                        ) : null}
-                      </div>
-                      <div class="row gx-3 mb-3">
-                        <div className="col-md-6">
-                          <label class="small mb-1">
-                            Date when item was Lost
-                          </label>
-                          <DatePicker
-                            selected={selectedDate}
-                            class="form-control"
-                            onChange={(date) => dateLostHandler(date)}
-                            maxDate={new Date()}
-                          />
-                        </div>
-
-                        <div class="col-md-6">
-                          <label class="small mb-1" for="inputBrand">
-                            Brand
-                          </label>
-                          <input
-                            class="form-control"
-                            id="inputBrand"
-                            value={itemdata.brand}
-                            onChange={(e) => brandhandler(e)}
-                          />
-                        </div>
-                      </div>
-                      <div class="row gx-3 mb-3">
-                        <div className="col-md-6">
-                          <label class="small mb-1" for="inputColour">
-                            Colour of the item
-                          </label>
-                          <select
-                            class="form-select form-select-sm"
-                            aria-label=".form-select-sm example"
-                            onChange={(e) => colorhandler(e)}
-                          >
-                            <option selected>{itemdata.colour}</option>
-                            <option value="Black">Black</option>
-                            <option value="White">White</option>
-                            <option value="Grey">Grey</option>
-                            <option value="Blue">Blue</option>
-                            <option value="Red">Red</option>
-                            <option value="Green">Green</option>
-                            <option value="Purple">Purple</option>
-                            <option value="Pink">Pink</option>
-                            <option value="Yellow">Yellow</option>
-                            <option value="Orange">Orange</option>
-                            <option value="Brown">Brown</option>
-                            <option value="Other">Other</option>
-                          </select>
-                        </div>
-                        {others.otherColour ? (
-                          <div className="mb-3">
-                            <span style={{ fontSize: 12 }}>
-                              {others.otherColourText}
-                            </span>
-                            <input
-                              required
-                              type="text"
-                              className="other-input-match"
-                              size="sm"
-                              onChange={(e) => {
-                                setitemData({
-                                  ...itemdata,
-                                  colour: e.target.value,
-                                });
-                              }}
-                            />
-                          </div>
-                        ) : null}
-
-                        <div className="col-md-6">
-                          <label class="small mb-1" for="inputSize">
-                            Size of the item
-                          </label>
-                          <select
-                            id="inputSize"
-                            class="form-select form-select-sm"
-                            aria-label=".form-select-sm example"
-                            onChange={(e) => sizehandler(e)}
-                          >
-                            <option selected>{itemdata.size}</option>
-                            <option value="XS">XS</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="row gx-3 mb-3">
+                    <div class="col-xl-8">
+                      <form
+                        noValidate
+                        validated={validated}
+                        onSubmit={submitHandler}
+                      >
                         <div class="mb-3">
-                          <label class="small mb-1" for="inputDescription">
-                            Additional Description
+                          <label class="small mb-1" for="inputUsername">
+                            Item Name
                           </label>
                           <input
                             class="form-control"
-                            id="inputDescription"
+                            id="inputUsername"
                             type="text"
-                            value={itemdata.description}
-                            onChange={(e) => descriptionHandler(e)}
+                            value={itemdata.itemName}
+                            onChange={(e) => itemNameHandler(e)}
                           />
                         </div>
-                      </div>
+                        <div class="row gx-3 mb-3">
+                          <div className="col-md-6">
+                            <label class="small mb-1" for="inputCategory">
+                              Category
+                            </label>
+                            <select
+                              id="inputCategory"
+                              class="form-select form-select-sm"
+                              aria-label=".form-select-sm"
+                              onChange={(e) => categoryhandler(e)}
+                            >
+                              <option selected>{itemdata.type}</option>
+                              <option value="Electronic">Electronic</option>
+                              <option value="Clothing">Clothing</option>
+                              <option value="Bag">Bag</option>
+                              <option value="Keys">Keys</option>
+                              <option value="T-Card">T-Card</option>
+                              <option value="Books">Books</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </div>
 
-                      <span style={{ fontSize: 15, color: "red" }}>
-                        {errorSubmit}
-                      </span>
+                          {others.otherCategory ? (
+                            <div className="mb-3">
+                              <span style={{ fontSize: 12 }}>
+                                {others.otherCategoryText}
+                              </span>
+                              <input
+                                required
+                                type="text"
+                                className="other-input-match"
+                                size="sm"
+                                onChange={(e) => {
+                                  setitemData({
+                                    ...itemdata,
+                                    category: e.target.value,
+                                  });
+                                }}
+                              />
+                            </div>
+                          ) : null}
 
-                      <div class="text-center">
-                        <button
-                          class="update-item-button mb-2 mt-2"
-                          type="submit"
-                          disabled={disabled}
-                        >
-                          Save changes
-                        </button>
-                      </div>
-                      <div>
-                        {showElement ? (
-                          <span style={{ fontSize: 12, color: "green" }}>
-                            Matches Updated Successfully
-                          </span>
-                        ) : null}
-                      </div>
-                    </form>
+                          <div className="col-md-6">
+                            <label class="small mb-1" for="inputlocation">
+                              Location Lost
+                            </label>
+                            <select
+                              class="form-select form-select-sm"
+                              id="inputlocation"
+                              aria-label=".form-select-sm"
+                              onChange={(e) => locationhandler(e)}
+                            >
+                              <option selected>{itemdata.locationLost}</option>
+                              <option value="CC">CC</option>
+                              <option value="DH">DH</option>
+                              <option value="DW">DW</option>
+                              <option value="KN">KN</option>
+                              <option value="IB">IB</option>
+                              <option value="MN">MN</option>
+                              <option value="BG">BG</option>
+                              <option value="HB">HB</option>
+                              <option value="DV">DV</option>
+                              <option value="Residence">Residence</option>
+                              <option value="Miway">Miway</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </div>
+                          {others.otherLocation ? (
+                            <div className="mb-3">
+                              <span style={{ fontSize: 12 }}>
+                                {others.otherLocationText}
+                              </span>
+                              <input
+                                required
+                                type="text"
+                                className="other-input-match"
+                                size="sm"
+                                onChange={(e) => {
+                                  setitemData({
+                                    ...itemdata,
+                                    location: e.target.value,
+                                  });
+                                }}
+                              />
+                            </div>
+                          ) : null}
+                        </div>
+                        <div class="row gx-3 mb-3">
+                          <div className="col-md-6">
+                            <label class="small mb-1">
+                              Date when item was Lost
+                            </label>
+                            <DatePicker
+                              selected={selectedDate}
+                              class="form-control"
+                              onChange={(date) => dateLostHandler(date)}
+                              maxDate={new Date()}
+                            />
+                          </div>
+
+                          <div class="col-md-6">
+                            <label class="small mb-1" for="inputBrand">
+                              Brand
+                            </label>
+                            <input
+                              class="form-control"
+                              id="inputBrand"
+                              value={itemdata.brand}
+                              onChange={(e) => brandhandler(e)}
+                            />
+                          </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                          <div className="col-md-6">
+                            <label class="small mb-1" for="inputColour">
+                              Colour of the item
+                            </label>
+                            <select
+                              class="form-select form-select-sm"
+                              aria-label=".form-select-sm example"
+                              onChange={(e) => colorhandler(e)}
+                            >
+                              <option selected>{itemdata.colour}</option>
+                              <option value="Black">Black</option>
+                              <option value="White">White</option>
+                              <option value="Grey">Grey</option>
+                              <option value="Blue">Blue</option>
+                              <option value="Red">Red</option>
+                              <option value="Green">Green</option>
+                              <option value="Purple">Purple</option>
+                              <option value="Pink">Pink</option>
+                              <option value="Yellow">Yellow</option>
+                              <option value="Orange">Orange</option>
+                              <option value="Brown">Brown</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </div>
+                          {others.otherColour ? (
+                            <div className="mb-3">
+                              <span style={{ fontSize: 12 }}>
+                                {others.otherColourText}
+                              </span>
+                              <input
+                                required
+                                type="text"
+                                className="other-input-match"
+                                size="sm"
+                                onChange={(e) => {
+                                  setitemData({
+                                    ...itemdata,
+                                    colour: e.target.value,
+                                  });
+                                }}
+                              />
+                            </div>
+                          ) : null}
+
+                          <div className="col-md-6">
+                            <label class="small mb-1" for="inputSize">
+                              Size of the item
+                            </label>
+                            <select
+                              id="inputSize"
+                              class="form-select form-select-sm"
+                              aria-label=".form-select-sm example"
+                              onChange={(e) => sizehandler(e)}
+                            >
+                              <option selected>{itemdata.size}</option>
+                              <option value="XS">XS</option>
+                              <option value="S">S</option>
+                              <option value="M">M</option>
+                              <option value="L">L</option>
+                              <option value="XL">XL</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+                          <div class="mb-3">
+                            <label class="small mb-1" for="inputDescription">
+                              Additional Description
+                            </label>
+                            <input
+                              class="form-control"
+                              id="inputDescription"
+                              type="text"
+                              value={itemdata.description}
+                              onChange={(e) => descriptionHandler(e)}
+                            />
+                          </div>
+                        </div>
+
+                        <span style={{ fontSize: 15, color: "red" }}>
+                          {errorSubmit}
+                        </span>
+
+                        <div class="text-center">
+                          <button
+                            class="update-item-button mb-2 mt-2"
+                            type="submit"
+                            disabled={disabled}
+                          >
+                            Save changes
+                          </button>
+                        </div>
+                        <div>
+                          {showElement ? (
+                            <span style={{ fontSize: 12, color: "green" }}>
+                              Matches Updated Successfully
+                            </span>
+                          ) : null}
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <Matches />
       </div>
-    </div>
+    </>
   );
 }

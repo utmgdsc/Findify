@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NavBar from "../../common/NavBar";
+import { format } from "date-fns";
 import "./style.css";
 
 export default function RequestLost() {
@@ -16,7 +17,7 @@ export default function RequestLost() {
     name: "",
     category: "",
     colour: "",
-    files: [],
+    images: [],
     description: "",
     timeLost: "",
     timeSubmitted: new Date(),
@@ -29,7 +30,7 @@ export default function RequestLost() {
     name: "",
     category: "",
     colour: "",
-    files: "",
+    images: "",
     description: "",
     timeLost: "",
     timeSubmitted: "",
@@ -44,8 +45,12 @@ export default function RequestLost() {
   });
 
   const dateLostHandler = (date) => {
+    console.log(date);
+    const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+    console.log(formattedDate);
     setselectedDate(date);
-    setData({ ...data, timeLost: date });
+    console.log(selectedDate);
+    setData({ ...data, timeLost: formattedDate });
   };
 
   const imagehandler = (e) => {
@@ -59,7 +64,7 @@ export default function RequestLost() {
       else setData({ ...data, images: "Warning: A file is larger than 3mb." });
     }
     console.log(imageurls);
-    setData({ ...data, files: imageurls });
+    setData({ ...data, images: imageurls });
     console.log(data);
   };
 
@@ -127,6 +132,7 @@ export default function RequestLost() {
         itemName: data.name,
         type: data.category,
         colour: data.colour,
+        imageUrls: data.images,
         description: data.description,
         timeLost: data.timeLost,
         timeSubmitted: data.timeSubmitted,
@@ -138,7 +144,9 @@ export default function RequestLost() {
       formData.append("itemName", data.name);
       formData.append("type", data.category);
       formData.append("colour", data.colour);
-      formData.append("imageUrls", data.images);
+      data.images.forEach((file) => {
+        formData.append("images", file);
+      });
       formData.append("description", data.description);
       formData.append("timeLost", data.timeLost);
       formData.append("timeSubmitted", data.timeSubmitted);
@@ -148,7 +156,7 @@ export default function RequestLost() {
 
       console.log(data);
 
-      console.log(formData.get("imageUrls"));
+      console.log(formData.get("images[]"));
       return fetch("http://localhost:3000/item/lostRequest", {
         method: "POST",
         headers: {
@@ -165,7 +173,7 @@ export default function RequestLost() {
               setDisabled(false);
               setValidated(true);
               setErrors({ ...errors, submit: "" });
-              navigate("/lostitem", { replace: true });
+              navigate(`/lostitem/${json.id}`, { replace: true });
             });
           } else {
             // Handle other status codes

@@ -22,7 +22,7 @@ export default function Matches() {
         if (response.status === 200) {
           return response.json().then((json) => {
             console.log(json);
-            setMatches([...json.matches, ...matches]);
+            setMatches([...json, ...matches]);
             console.log(matches);
           });
         } else {
@@ -55,7 +55,7 @@ export default function Matches() {
 
   return (
     <>
-      <div className="body-home container-fluid text-center">
+      <div className="container-fluid text-center">
         <div className="row" style={{ height: 80 + "vh" }}>
           <div className="col">
             <div className="container py-5">

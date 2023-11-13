@@ -3,7 +3,7 @@ import no_img from "../../assets/img/no_img.png";
 
 export default function ItemCard(props) {
   let id = props.id;
-  let name = props.itemName;
+  let name = props.name;
   let dateStr = props.dateStr;
   let card_status = props.card_status;
   let imageUrls = props.imageUrls;

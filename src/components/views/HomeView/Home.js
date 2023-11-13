@@ -87,7 +87,6 @@ export default function Home() {
   return (
     <>
       <NavBar />
-
       <div className="body-home container-fluid text-center">
         <div className="row" style={{ height: 20 + "vh" }}>
           <div className="col" id="requestLostItem">
