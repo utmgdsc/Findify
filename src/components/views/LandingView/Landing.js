@@ -4,13 +4,8 @@ import { Link } from "react-router-dom";
 
 const Landing = () => {
   return (
-<<<<<<< HEAD
-    <div class="body-landing">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-=======
     <div className="body-landing">
       <div className="row d-flex justify-content-center align-items-center h-100">
->>>>>>> 95c72d6dd171cf5374036722c9467269f8be6525
         <div className="col-12 col-md-9 col-lg-7 col-xl-6">
           <div className="card rounded-3" id="card1">
             {/* <img id="Logo" class="" src={logo} alt="loading..."/> */}

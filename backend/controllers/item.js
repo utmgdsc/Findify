@@ -54,20 +54,11 @@ module.exports.createLostRequest = async (req, res, next) => {
     // Save to database
     const item = await lostItem.save();
 
-<<<<<<< HEAD
-    res
-      .status(200)
-      .json({
-        message: `Created lost item successfully ID: ${item._id}`,
-        urlLocations: imageUrls,
-      });
-=======
     res.status(200).json({
-      message: "Created lost item successfully",
+      message: `Created lost item successfully ID: ${item._id}`,
       urlLocations: imageUrls,
       id: savedLostItem._id,
     });
->>>>>>> 95c72d6dd171cf5374036722c9467269f8be6525
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -110,12 +101,10 @@ module.exports.editLostRequest = async (req, res, next) => {
 
     // update in database
     await LostItem.findOneAndUpdate({ _id: lostRequestId }, update);
-    res
-      .status(200)
-      .json({
-        message: "Edited lost item successfully",
-        urlLocations: update.imageUrls,
-      });
+    res.status(200).json({
+      message: "Edited lost item successfully",
+      urlLocations: update.imageUrls,
+    });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -170,20 +159,11 @@ module.exports.createFoundRequest = async (req, res, next) => {
     // Save to database
     const item = await foundItem.save();
 
-<<<<<<< HEAD
-    res
-      .status(200)
-      .json({
-        message: `Created found item successfully ID: ${item._id}`,
-        urlLocations: imageUrls,
-      });
-=======
     res.status(200).json({
       message: "Created found item successfully",
       urlLocations: imageUrls,
       id: savedFoundItem._id,
     });
->>>>>>> 95c72d6dd171cf5374036722c9467269f8be6525
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -226,12 +206,10 @@ module.exports.editFoundRequest = async (req, res, next) => {
 
     // update in database
     await FoundItem.findOneAndUpdate({ _id: foundRequestId }, update);
-    res
-      .status(200)
-      .json({
-        message: "Editted found item successfully",
-        urlLocations: imageUrls,
-      });
+    res.status(200).json({
+      message: "Editted found item successfully",
+      urlLocations: imageUrls,
+    });
   } catch (err) {
     errorHandler(err, res);
     next(err);
