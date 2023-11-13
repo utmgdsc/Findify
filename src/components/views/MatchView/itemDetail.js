@@ -275,7 +275,7 @@ export default function Match() {
               console.log(json);
               setDisabled(false);
               setErrorSubmit("");
-              SuccessfulMatches();
+              //SuccessfulMatches();
             });
           } else {
             // Handle other status codes
@@ -288,6 +288,7 @@ export default function Match() {
         })
         .catch((err) => {
           console.log("errored out");
+          console.log(err);
           const errorObject = JSON.parse(err);
           setErrorSubmit(errorObject.message);
           console.log(err);
