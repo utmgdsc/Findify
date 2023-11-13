@@ -64,21 +64,21 @@ export default function ReportFound() {
 
   const locationhandler = (e) => {
     setOthers({ ...others, otherLocation: false });
-    if (e.target.value == "Other") {
+    if (e.target.value === "Other") {
       setOthers({ ...others, otherLocation: true });
       setErrors({
         ...errors,
         location: "If other, please specify the location.",
       });
     }
-    if (e.target.value == "Residence") {
+    if (e.target.value === "Residence") {
       setOthers({ ...others, otherLocation: true });
       setErrors({
         ...errors,
         location: "If residence, Please specify which residence.",
       });
     }
-    if (e.target.value == "Miway") {
+    if (e.target.value === "Miway") {
       setOthers({ ...others, otherLocation: true });
       setErrors({
         ...errors,
@@ -90,7 +90,7 @@ export default function ReportFound() {
 
   const colorhandler = (e) => {
     setOthers({ ...others, otherColour: false });
-    if (e.target.value == "Other") {
+    if (e.target.value === "Other") {
       setOthers({ ...others, otherColour: true });
       setErrors({
         ...errors,
@@ -102,7 +102,7 @@ export default function ReportFound() {
 
   const categoryhandler = (e) => {
     setOthers({ ...others, otherCategory: false });
-    if (e.target.value == "Other") {
+    if (e.target.value === "Other") {
       setOthers({ ...others, otherCategory: true });
       setErrors({
         ...errors,
@@ -129,14 +129,14 @@ export default function ReportFound() {
         description: data.description,
         timeFound: data.timeLost,
         timeSubmitted: data.timeSubmitted,
-        locationLost: data.location,
+        locationFound: data.location,
         brand: data.brand,
         size: data.size,
       };
 
       console.log(jsonData);
       console.log(token);
-      return fetch("http://localhost:3000/item/createFoundRequest", {
+      return fetch("http://localhost:3000/item/foundRequest", {
         method: "POST",
         headers: {
           Accept: "application/json",

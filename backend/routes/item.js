@@ -5,7 +5,12 @@ const multerUpload = require("../middlewares/multer");
 
 const router = express.Router();
 
+<<<<<<< HEAD
 router.route('/lostRequest/:id')
+=======
+router
+  .route("/lostRequest")
+>>>>>>> 329af38791cdca360d20935e786677731df9f208
   .get(
     authenticate,
     async (req, res) => {
@@ -13,12 +18,15 @@ router.route('/lostRequest/:id')
         const data = await ItemController.getLostRequest(req, res, errorHandler);
         res.json({ lostItem: data });
       } catch (err) {
-        res.json({ message: `Get Lost Request Error: ${err}` })
+        res.json({ message: `Get Lost Request Error: ${err}` });
       }
     }
   )
+<<<<<<< HEAD
 
 router.route('/lostRequest')
+=======
+>>>>>>> 329af38791cdca360d20935e786677731df9f208
   .post(
     authenticate,
     multerUpload,
@@ -39,13 +47,18 @@ router.route('/lostRequest')
       try {
         await ItemController.editLostRequest(req, res, errorHandler);
       } catch (err) {
-        res.json({ message: `Edit Lost Request Error: ${err}` })
+        res.json({ message: `Edit Lost Request Error: ${err}` });
       }
     }
-  )
+  );
 
+<<<<<<< HEAD
 
 router.route('/foundRequest/:id')
+=======
+router
+  .route("/foundRequest")
+>>>>>>> 329af38791cdca360d20935e786677731df9f208
   .get(
     authenticate,
     async (req, res) => {
@@ -53,12 +66,15 @@ router.route('/foundRequest/:id')
         const data = await ItemController.getFoundRequest(req, res, errorHandler);
         res.json({ foundItem: data });
       } catch (err) {
-        res.json({ message: `Get Found Request Error: ${err}` })
+        res.json({ message: `Get Found Request Error: ${err}` });
       }
     }
   )
+<<<<<<< HEAD
 
 router.route('/foundRequest')
+=======
+>>>>>>> 329af38791cdca360d20935e786677731df9f208
   .post(
     authenticate,
     multerUpload,
@@ -79,6 +95,7 @@ router.route('/foundRequest')
       try {
         await ItemController.editFoundRequest(req, res, errorHandler);
       } catch (err) {
+<<<<<<< HEAD
         res.json({ message: `Edit Found Request Error: ${err}` })
       }
     }
@@ -87,10 +104,23 @@ router.route('/foundRequest')
 router.route('/getSimilarItems/:id')
   .get(
     authenticate,
+=======
+        res.json({ message: `Edit Found Request Error: ${err}` });
+      }
+    }
+  );
+
+router
+  .route("/getSimilarItems")
+  .get(
+    authenticate,
+    checkRequiredAttributes(["lostItemId"]),
+>>>>>>> 329af38791cdca360d20935e786677731df9f208
     async (req, res) => {
       try {
         await ItemController.getSimilarItems(req, res, errorHandler);
       } catch (err) {
+<<<<<<< HEAD
         res.json({ message: `Create Found Request Error: ${err}` })
       }
     }
@@ -106,6 +136,21 @@ router.route('/getUserPosts')
         res.json({ message: `Get User Posts Error: ${err}` })
       }
     })
+=======
+        res.json({ message: `Create Found Request Error: ${err}` });
+      }
+    }
+  );
+
+router.route("/getUserPosts").get(authenticate, async (req, res) => {
+  try {
+    const data = await ItemController.getUserPosts(req, res, errorHandler);
+    res.json({ userPosts: data });
+  } catch (err) {
+    res.json({ message: `Get User Posts Error: ${err}` });
+  }
+});
+>>>>>>> 329af38791cdca360d20935e786677731df9f208
 
 const errorHandler = (err) => { }
 

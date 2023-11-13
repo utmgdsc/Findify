@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import NavBar from "../../common/NavBar";
 import fetcher from "../../../fetchHelper";
 import "./style.css";
-import no_img from "../../../assets/img/no_img.png";
 import no_results from "../../../assets/img/no_results.png";
 import { useNavigate } from "react-router-dom";
+import ItemCard from "../../common/ItemCard";
 
 export default function Home() {
   let navigate = useNavigate();
@@ -45,90 +45,33 @@ export default function Home() {
   };
 
   const createItemCard = (item) => {
-    const timeLost = new Date(item.timeLost);
-    const daysAgo = Math.floor((new Date() - timeLost) / (24 * 60 * 60 * 1000));
+    const time = item.timeLost
+      ? new Date(item.timeLost)
+      : new Date(item.timeFound);
+    const daysAgo = Math.floor((new Date() - time) / (24 * 60 * 60 * 1000));
 
     // Extract date components
-    const year = timeLost.getFullYear();
-    const month = timeLost.getMonth() + 1; // Months are zero-based (0 = January, 11 = December)
-    const day = timeLost.getDate();
-
-    // Extract time components
-    const hours = timeLost.getHours();
-    const minutes = timeLost.getMinutes();
-    const seconds = timeLost.getSeconds();
+    const year = time.getFullYear();
+    const month = time.getMonth() + 1; // Months are zero-based (0 = January, 11 = December)
+    const day = time.getDate();
 
     // Create date and time strings
     const dateStr = `${year}-${month}-${day}`;
-    const timeStr = `${hours}:${minutes}:${seconds}`;
 
     let card_status = "";
     if (item.isActive) card_status = "card";
     else card_status = "card opacity-25";
 
     return (
-      <div className="col-lg-3 col-md-6 col-sm-10 my-4">
-        <div className={card_status}>
-          <div id="carouselExample" className="carousel slide">
-            <div className="carousel-inner">
-              {item.imageUrls.length !== 0 ? (
-                item.imageUrls.map((i, index) => {
-                  let class_value = "";
-                  if (index === 0) class_value = "carousel-item active";
-                  else class_value = "carousel-item";
-                  return (
-                    <div className={class_value} key={item.id}>
-                      <img src={i} alt="" width="200px" height="200px" />
-                    </div>
-                  );
-                })
-              ) : (
-                <img src={no_img} alt="" width="200px" height="200px" />
-              )}
-            </div>
-            <button
-              className="carousel-control-prev"
-              type="button"
-              data-bs-target="#carouselExample"
-              data-bs-slide="prev"
-            >
-              <span
-                className="carousel-control-prev-icon"
-                aria-hidden="true"
-              ></span>
-              <span className="visually-hidden">Previous</span>
-            </button>
-            <button
-              className="carousel-control-next"
-              type="button"
-              data-bs-target="#carouselExample"
-              data-bs-slide="next"
-            >
-              <span
-                className="carousel-control-next-icon"
-                aria-hidden="true"
-              ></span>
-              <span className="visually-hidden">Next</span>
-            </button>
-          </div>
-          <div className="card-body">
-            <h4 className="card-title">{item.itemName}</h4>
-            <p className="card-title">Location: {item.locationLost}</p>
-            <p className="card-title">Date: {dateStr}</p>
-
-            <a
-              className="btn btn-outline-success"
-              role="button"
-              href={`/lostitem/${item._id}`}
-            >
-              Read More
-            </a>
-          </div>
-          <div className="card-footer text-body-secondary">
-            {daysAgo} days ago
-          </div>
-        </div>
-      </div>
+      <ItemCard
+        id={item._id}
+        name={item.itemName}
+        dateStr={dateStr}
+        card_status={card_status}
+        imageUrls={item.imageUrls}
+        location={item.locationLost ? item.locationLost : item.locationFound}
+        daysAgo={daysAgo}
+      />
     );
   };
 

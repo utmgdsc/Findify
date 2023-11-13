@@ -54,8 +54,9 @@ export default function RequestLost() {
     for (let i = 0; i < e.target.files.length; i++) {
       console.log(e.target.files[i]);
       if (e.target.files[i].size < 3000000)
-        imageurls.push(URL.createObjectURL(e.target.files[i]));
-      else setData({ ...data, files: "Warning: A file is larger than 3mb." });
+        //imageurls.push(URL.createObjectURL(e.target.files[i]));
+        imageurls.push(e.target.files[i]);
+      else setData({ ...data, images: "Warning: A file is larger than 3mb." });
     }
     console.log(imageurls);
     setData({ ...data, files: imageurls });
@@ -64,21 +65,21 @@ export default function RequestLost() {
 
   const locationhandler = (e) => {
     setOthers({ ...others, otherLocation: false });
-    if (e.target.value == "Other") {
+    if (e.target.value === "Other") {
       setOthers({ ...others, otherLocation: true });
       setErrors({
         ...errors,
         location: "If other, please specify the location.",
       });
     }
-    if (e.target.value == "Residence") {
+    if (e.target.value === "Residence") {
       setOthers({ ...others, otherLocation: true });
       setErrors({
         ...errors,
         location: "If residence, Please specify which residence.",
       });
     }
-    if (e.target.value == "Miway") {
+    if (e.target.value === "Miway") {
       setOthers({ ...others, otherLocation: true });
       setErrors({
         ...errors,
@@ -90,7 +91,7 @@ export default function RequestLost() {
 
   const colorhandler = (e) => {
     setOthers({ ...others, otherColour: false });
-    if (e.target.value == "Other") {
+    if (e.target.value === "Other") {
       setOthers({ ...others, otherColour: true });
       setErrors({
         ...errors,
@@ -102,7 +103,7 @@ export default function RequestLost() {
 
   const categoryhandler = (e) => {
     setOthers({ ...others, otherCategory: false });
-    if (e.target.value == "Other") {
+    if (e.target.value === "Other") {
       setOthers({ ...others, otherCategory: true });
       setErrors({
         ...errors,
@@ -113,6 +114,7 @@ export default function RequestLost() {
   };
 
   const submitHandler = async (event) => {
+    console.log(data);
     event.preventDefault();
     const form = event.currentTarget;
     var controller = new AbortController();
@@ -121,7 +123,7 @@ export default function RequestLost() {
       event.stopPropagation();
       setDisabled(false);
     } else {
-      const jsonData = {
+      /* const jsonData = {
         itemName: data.name,
         type: data.category,
         colour: data.colour,
@@ -131,19 +133,29 @@ export default function RequestLost() {
         locationLost: data.location,
         brand: data.brand,
         size: data.size,
-      };
+      }; */
+      const formData = new FormData();
+      formData.append("itemName", data.name);
+      formData.append("type", data.category);
+      formData.append("colour", data.colour);
+      formData.append("imageUrls", data.images);
+      formData.append("description", data.description);
+      formData.append("timeLost", data.timeLost);
+      formData.append("timeSubmitted", data.timeSubmitted);
+      formData.append("locationLost", data.location);
+      formData.append("brand", data.brand);
+      formData.append("size", data.size);
 
-      console.log(jsonData);
-      console.log(token);
+      console.log(data);
+
+      console.log(formData.get("imageUrls"));
       return fetch("http://localhost:3000/item/lostRequest", {
         method: "POST",
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
           authorization: `Bearer ${token}`,
+          accept: "multipart/form-data",
         },
-        files: data.files,
-        body: JSON.stringify(jsonData),
+        body: formData,
         signal: signal,
       })
         .then((response) => {
@@ -153,7 +165,7 @@ export default function RequestLost() {
               setDisabled(false);
               setValidated(true);
               setErrors({ ...errors, submit: "" });
-              navigate("/home", { replace: true });
+              navigate("/lostitem", { replace: true });
             });
           } else {
             // Handle other status codes
@@ -199,9 +211,9 @@ export default function RequestLost() {
                         type="text"
                         className="form-control"
                         placeholder="Item name"
-                        onChange={(e) =>
-                          setData({ ...data, name: e.target.value })
-                        }
+                        onChange={(e) => {
+                          setData({ ...data, name: e.target.value });
+                        }}
                       />
                       <span style={{ fontSize: 12, color: "red" }}>
                         Example: Iphone 13 Pro, Blue Jansport Bagpack
@@ -212,7 +224,7 @@ export default function RequestLost() {
                       <label>Location Lost</label>
                       <select
                         required
-                        class="form-select form-select-sm"
+                        className="form-select form-select-sm"
                         aria-label=".form-select-sm"
                         onChange={(e) => locationhandler(e)}
                       >
@@ -261,7 +273,7 @@ export default function RequestLost() {
                       <label>Category</label>
                       <select
                         required
-                        class="form-select form-select-sm"
+                        className="form-select form-select-sm"
                         aria-label=".form-select-sm"
                         onChange={(e) => categoryhandler(e)}
                       >
@@ -295,7 +307,7 @@ export default function RequestLost() {
                       <label>Colour of the item</label>
                       <select
                         required
-                        class="form-select form-select-sm"
+                        className="form-select form-select-sm"
                         aria-label=".form-select-sm example"
                         onChange={(e) => colorhandler(e)}
                       >
@@ -349,7 +361,7 @@ export default function RequestLost() {
                       <label>Size of the item</label>
                       <select
                         required
-                        class="form-select form-select-sm"
+                        className="form-select form-select-sm"
                         aria-label=".form-select-sm example"
                         onChange={(e) =>
                           setData({ ...data, size: e.target.value })
@@ -365,12 +377,12 @@ export default function RequestLost() {
                     </div>
 
                     <div className="mb-3">
-                      <label class="form-label" for="customFile">
+                      <label className="form-label" for="customFile">
                         Upload Images (Optional)
                       </label>
                       <input
                         type="file"
-                        class="form-control"
+                        className="form-control"
                         id="customFile"
                         accept="image/*"
                         multiple
