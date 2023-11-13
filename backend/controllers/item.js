@@ -102,10 +102,12 @@ module.exports.editLostRequest = async (req, res, next) => {
 
     // update in database
     await LostItem.findOneAndUpdate({ _id: lostRequestId }, update);
-    res.status(200).json({
-      message: "Edited lost item successfully",
-      urlLocations: update.imageUrls,
-    });
+    res
+      .status(200)
+      .json({
+        message: "Edited lost item successfully",
+        urlLocations: update.imageUrls,
+      });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -208,10 +210,12 @@ module.exports.editFoundRequest = async (req, res, next) => {
 
     // update in database
     await FoundItem.findOneAndUpdate({ _id: foundRequestId }, update);
-    res.status(200).json({
-      message: "Editted found item successfully",
-      urlLocations: imageUrls,
-    });
+    res
+      .status(200)
+      .json({
+        message: "Editted found item successfully",
+        urlLocations: imageUrls,
+      });
   } catch (err) {
     errorHandler(err, res);
     next(err);
