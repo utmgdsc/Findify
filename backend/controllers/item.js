@@ -4,12 +4,13 @@ const { s3 } = require("../utils/aws");
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { errorHandler } = require("../utils/errorHandler");
 const Fuse = require("fuse.js");
+const { default: mongoose } = require("mongoose");
 
 module.exports.getLostRequest = async (req, res, next) => {
   try {
     const lostRequestId = req.params.id;
-    const lostItem = await LostItem.findOne({ _id: lostRequestId });
-    return lostItem;
+    const lostItem = await LostItem.findById(lostRequestId);
+    res.json({ lostItem });
   } catch (err) {
     console.error("Error fetching lostItem details:", err);
     res.status(500).json({ message: "Error fetching lostItem details" });
@@ -51,12 +52,14 @@ module.exports.createLostRequest = async (req, res, next) => {
     });
 
     // Save to database
-    await lostItem.save();
+    const item = await lostItem.save();
 
-    res.status(200).json({
-      message: "Created lost item successfully",
-      urlLocations: imageUrls,
-    });
+    res
+      .status(200)
+      .json({
+        message: `Created lost item successfully ID: ${item._id}`,
+        urlLocations: imageUrls,
+      });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -66,7 +69,7 @@ module.exports.createLostRequest = async (req, res, next) => {
 module.exports.editLostRequest = async (req, res, next) => {
   const { lostRequestId } = req.body;
   const user = req.user;
-  const lostItem = await LostItem.findOne({ _id: lostRequestId });
+  const lostItem = await LostItem.findById(lostRequestId);
   let imageUrls = [];
 
   try {
@@ -87,9 +90,9 @@ module.exports.editLostRequest = async (req, res, next) => {
       brand: req.body.brand ? req.body.brand : lostItem.brand,
       size: req.body.size ? req.body.size : lostItem.size,
       colour: req.body.color ? req.body.color : lostItem.colour,
-      locationFound: req.body.locationFound
-        ? req.body.locationFound
-        : lostItem.locationFound,
+      locationLost: req.body.locationLost
+        ? req.body.locationLost
+        : lostItem.locationLost,
       imageUrls: imageUrls.length > 0 ? imageUrls : lostItem.imageUrls,
       description: req.body.description
         ? req.body.description
@@ -112,8 +115,8 @@ module.exports.editLostRequest = async (req, res, next) => {
 module.exports.getFoundRequest = async (req, res, next) => {
   try {
     const foundRequestId = req.params.id;
-    const foundItem = await FoundItem.findOne({ _id: foundRequestId });
-    return foundItem;
+    const foundItem = await FoundItem.findById(foundRequestId);
+    res.json({ foundItem });
   } catch (err) {
     console.error("Error fetching foundItem details:", err);
     res.status(500).json({ message: "Error fetching foundItem details" });
@@ -155,12 +158,14 @@ module.exports.createFoundRequest = async (req, res, next) => {
     });
 
     // Save to database
-    await foundItem.save();
+    const item = await foundItem.save();
 
-    res.status(200).json({
-      message: "Created found item successfully",
-      urlLocations: imageUrls,
-    });
+    res
+      .status(200)
+      .json({
+        message: `Created found item successfully ID: ${item._id}`,
+        urlLocations: imageUrls,
+      });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -170,7 +175,7 @@ module.exports.createFoundRequest = async (req, res, next) => {
 module.exports.editFoundRequest = async (req, res, next) => {
   const { foundRequestId } = req.body;
   const user = req.user;
-  const foundItem = FoundItem.findOne({ _id: foundRequestId });
+  const foundItem = FoundItem.findById(foundRequestId);
   let imageUrls = [];
 
   try {
@@ -222,8 +227,7 @@ module.exports.getUserPosts = async (req, res, next) => {
 
     // Fetch Found Items
     const foundItems = await FoundItem.find({ host: userId }).select("-__v");
-
-    return { lostItems, foundItems };
+    res.json({ userPosts: { lostItems, foundItems } });
   } catch (error) {
     console.error("Error fetching user's items:", error);
     res.status(500).json({ message: "Error fetching user requests" });

@@ -15,8 +15,7 @@ router
     authenticate,
     async (req, res) => {
       try {
-        const data = await ItemController.getLostRequest(req, res, errorHandler);
-        res.json({ lostItem: data });
+        await ItemController.getLostRequest(req, res, errorHandler);
       } catch (err) {
         res.json({ message: `Get Lost Request Error: ${err}` });
       }
@@ -63,8 +62,7 @@ router
     authenticate,
     async (req, res) => {
       try {
-        const data = await ItemController.getFoundRequest(req, res, errorHandler);
-        res.json({ foundItem: data });
+        await ItemController.getFoundRequest(req, res, errorHandler);
       } catch (err) {
         res.json({ message: `Get Found Request Error: ${err}` });
       }
@@ -130,8 +128,7 @@ router.route('/getUserPosts')
   .get(authenticate,
     async (req, res) => {
       try {
-        const data = await ItemController.getUserPosts(req, res, errorHandler);
-        res.json({ userPosts: data })
+        await ItemController.getUserPosts(req, res, errorHandler);
       } catch (err) {
         res.json({ message: `Get User Posts Error: ${err}` })
       }
@@ -155,24 +152,6 @@ router.route("/getUserPosts").get(authenticate, async (req, res) => {
 const errorHandler = (err) => { }
 
 module.exports = router;
-
-// router.route('/getItemInfo')
-//   .get(authenticate, checkRequiredAttributes(['itemId'], async (req, res) => {
-//     try {
-//       await ItemController.getItemInfo(req, res, errorHandler);
-//     } catch (err) {
-//       res.json({ message: `Get Item ${req.body.itemId} Info Error: ${err}` })
-//     }
-//   }))
-
-// router.route('/getItemMatches')
-//   .get(authenticate, checkRequiredAttributes(['itemId'], async (req, res) => {
-//     try {
-//       await ItemController.getSimilarItems(req, res, errorHandler);
-//     } catch (err) {
-//       res.json({ message: `Get Item ${req.body.itemId} Matches Error: ${err}` })
-//     }
-//   }))
 
 // router.route('/claimItem')
 //   // userId refers to lostItem host ID: needs to match with current logged in user for authentication purposes
