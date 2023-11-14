@@ -315,8 +315,426 @@ export default function Match() {
     }
   };
 
+  const viewItem = () => {
+    return (
+      <div class="row">
+        <div class="col-xl-4 text-center">
+          <div class="card col-md-9 mx-auto">
+            <div class="card-images">{createImagesCard(itemdata.files)}</div>
+          </div>
+        </div>
+        <div class="col-xl-8">
+          <form noValidate validated={validated} onSubmit={submitHandler}>
+            <div class="mb-3">
+              <label
+                class=" small mb-1 fw-bold control-label"
+                for="inputItemName"
+              >
+                Item name
+              </label>
+              <input
+                class="form-control"
+                id="inputItemName"
+                type="text"
+                value={itemdata.itemName}
+              />
+            </div>
+            <div class="row gx-3 mb-3">
+              <div className="col-md-6 ">
+                <label class="small mb-1 fw-bold" for="inputCategory">
+                  Category
+                </label>
+                <input
+                  class="form-control"
+                  id="inputCategory"
+                  type="text"
+                  value={itemdata.category}
+                />
+              </div>
+
+              <div className="col-md-6">
+                <label class="small mb-1 fw-bold" for="inputlocation">
+                  Location lost
+                </label>
+                <input
+                  class="form-control"
+                  id="inputLocation"
+                  type="text"
+                  value={itemdata.locationLost}
+                />
+              </div>
+            </div>
+            <div class="row gx-3 mb-3">
+              <div className="col-md-6">
+                <label class="small mb-1 fw-bold">
+                  Date when item was lost
+                </label>
+                <input
+                  class="form-control"
+                  id="inputCategory"
+                  type="text"
+                  value={itemdata.timeLost}
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="small mb-1 fw-bold" for="inputBrand">
+                  Brand
+                </label>
+                <input
+                  class="form-control"
+                  id="inputBrand"
+                  value={itemdata.brand}
+                />
+              </div>
+            </div>
+            <div class="row gx-3 mb-3">
+              <div className="col-md-6">
+                <label class="small mb-1 fw-bold" for="inputColour">
+                  Colour of the item
+                </label>
+                <input
+                  class="form-control"
+                  id="inputColour"
+                  type="text"
+                  value={itemdata.colour}
+                />
+              </div>
+
+              <div className="col-md-6">
+                <label class="small mb-1 fw-bold" for="inputSize">
+                  Size of the item
+                </label>
+                <input
+                  class="form-control"
+                  id="inputCategory"
+                  type="text"
+                  value={itemdata.size}
+                />
+              </div>
+            </div>
+
+            <div class="row gx-3 mb-3">
+              <div class="mb-3">
+                <label class="small mb-1 fw-bold" for="inputDescription">
+                  Additional description
+                </label>
+                <input
+                  class="form-control"
+                  id="inputDescription"
+                  type="text"
+                  value={itemdata.description}
+                />
+              </div>
+            </div>
+
+            <span style={{ fontSize: 15, color: "red" }}>{errorSubmit}</span>
+
+            <div>
+              <button
+                type="button"
+                class="btn btn-danger mb-2 mt-2"
+                style={{ "margin-right": "4px" }}
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+                onClick={deleteRequest}
+              >
+                Delete Request
+              </button>
+              <div
+                class="modal fade"
+                id="staticBackdrop"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabindex="-1"
+                aria-labelledby="staticBackdropLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="staticBackdropLabel">
+                        Are you sure you want to delete the request?
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      This action can not be reversed.
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-danger"
+                        onClick={deleteRequest()}
+                      >
+                        Yes, delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
+  const editItem = () => {
+    return (
+      <div class="row">
+        <div class="col-xl-4 text-center">
+          <div class="card col-md-9 mx-auto">
+            <div class="card-images">{createImagesCard(itemdata.files)}</div>
+          </div>
+        </div>
+        <div class="col-xl-8">
+          <form noValidate validated={validated} onSubmit={submitHandler}>
+            <div class="mb-3">
+              <label
+                class=" small mb-1 fw-bold control-label"
+                for="inputItemName"
+              >
+                Item name
+              </label>
+              <input
+                class="form-control"
+                id="inputItemName"
+                type="text"
+                value={itemdata.itemName}
+                onChange={(e) => itemNameHandler(e)}
+              />
+            </div>
+            <div class="row gx-3 mb-3">
+              <div className="col-md-6 ">
+                <label class="small mb-1 fw-bold" for="inputCategory">
+                  Category
+                </label>
+                <select
+                  id="inputCategory"
+                  class="form-select form-select-sm"
+                  aria-label=".form-select-sm"
+                  onChange={(e) => categoryhandler(e)}
+                >
+                  <option selected>{itemdata.type}</option>
+                  <option value="Electronic">Electronic</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="Bag">Bag</option>
+                  <option value="Keys">Keys</option>
+                  <option value="T-Card">T-Card</option>
+                  <option value="Books">Books</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              {others.otherCategory ? (
+                <div className="mb-3">
+                  <span style={{ fontSize: 12 }}>
+                    {others.otherCategoryText}
+                  </span>
+                  <input
+                    required
+                    type="text"
+                    className="other-input-match"
+                    size="sm"
+                    onChange={(e) => {
+                      setitemData({
+                        ...itemdata,
+                        category: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+              ) : null}
+
+              <div className="col-md-6">
+                <label class="small mb-1 fw-bold" for="inputlocation">
+                  Location lost
+                </label>
+                <select
+                  class="form-select form-select-sm"
+                  id="inputlocation"
+                  aria-label=".form-select-sm"
+                  onChange={(e) => locationhandler(e)}
+                >
+                  <option selected>{itemdata.locationLost}</option>
+                  <option value="CC">CC</option>
+                  <option value="DH">DH</option>
+                  <option value="DW">DW</option>
+                  <option value="KN">KN</option>
+                  <option value="IB">IB</option>
+                  <option value="MN">MN</option>
+                  <option value="BG">BG</option>
+                  <option value="HB">HB</option>
+                  <option value="DV">DV</option>
+                  <option value="Residence">Residence</option>
+                  <option value="Miway">Miway</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              {others.otherLocation ? (
+                <div className="mb-3">
+                  <span style={{ fontSize: 12 }}>
+                    {others.otherLocationText}
+                  </span>
+                  <input
+                    required
+                    type="text"
+                    className="other-input-match"
+                    size="sm"
+                    onChange={(e) => {
+                      setitemData({
+                        ...itemdata,
+                        location: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+              ) : null}
+            </div>
+            <div class="row gx-3 mb-3">
+              <div className="col-md-6">
+                <label class="small mb-1 fw-bold">
+                  Date when item was lost
+                </label>
+                <DatePicker
+                  selected={selectedDate}
+                  class="form-control"
+                  onChange={(date) => dateLostHandler(date)}
+                  maxDate={new Date()}
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="small mb-1 fw-bold" for="inputBrand">
+                  Brand
+                </label>
+                <input
+                  class="form-control"
+                  id="inputBrand"
+                  value={itemdata.brand}
+                  onChange={(e) => brandhandler(e)}
+                />
+              </div>
+            </div>
+            <div class="row gx-3 mb-3">
+              <div className="col-md-6">
+                <label class="small mb-1 fw-bold" for="inputColour">
+                  Colour of the item
+                </label>
+                <select
+                  class="form-select form-select-sm"
+                  aria-label=".form-select-sm example"
+                  onChange={(e) => colorhandler(e)}
+                >
+                  <option selected>{itemdata.colour}</option>
+                  <option value="Black">Black</option>
+                  <option value="White">White</option>
+                  <option value="Grey">Grey</option>
+                  <option value="Blue">Blue</option>
+                  <option value="Red">Red</option>
+                  <option value="Green">Green</option>
+                  <option value="Purple">Purple</option>
+                  <option value="Pink">Pink</option>
+                  <option value="Yellow">Yellow</option>
+                  <option value="Orange">Orange</option>
+                  <option value="Brown">Brown</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              {others.otherColour ? (
+                <div className="mb-3">
+                  <span style={{ fontSize: 12 }}>{others.otherColourText}</span>
+                  <input
+                    required
+                    type="text"
+                    className="other-input-match"
+                    size="sm"
+                    onChange={(e) => {
+                      setitemData({
+                        ...itemdata,
+                        colour: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+              ) : null}
+
+              <div className="col-md-6">
+                <label class="small mb-1 fw-bold" for="inputSize">
+                  Size of the item
+                </label>
+                <select
+                  id="inputSize"
+                  class="form-select form-select-sm"
+                  aria-label=".form-select-sm example"
+                  onChange={(e) => sizehandler(e)}
+                >
+                  <option selected>{itemdata.size}</option>
+                  <option value="XS">XS</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row gx-3 mb-3">
+              <div class="mb-3">
+                <label class="small mb-1 fw-bold" for="inputDescription">
+                  Additional description
+                </label>
+                <input
+                  class="form-control"
+                  id="inputDescription"
+                  type="text"
+                  value={itemdata.description}
+                  onChange={(e) => descriptionHandler(e)}
+                />
+              </div>
+            </div>
+
+            <span style={{ fontSize: 15, color: "red" }}>{errorSubmit}</span>
+
+            <div>
+              <button
+                type="submit"
+                disabled={disabled}
+                class="btn btn-primary mb-2 mt-2"
+                style={{ "margin-right": "4px" }}
+              >
+                Save Changes
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary mb-2 mt-2 "
+                style={{ "margin-right": "4px" }}
+                onClick={getItemDetails()}
+              >
+                Reset Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <>
+    <div>
       <NavBar />
       <div class="body-match">
         <div class="container-xl px-4">
@@ -325,316 +743,39 @@ export default function Match() {
               <div class="card mb-4 mt-4">
                 <div class="card-header text-center fw-bold">ITEM DETAILS</div>
                 <div class="card-body ">
-                  <div class="row">
-                    <div class="col-xl-4 text-center">
-                      <div class="card col-md-9 mx-auto">
-                        <div class="card-images">
-                          {createImagesCard(itemdata.files)}
+                  <div class="text-center">
+                    <button
+                      type="button"
+                      class="btn btn-primary mb-2 mt-2 active"
+                      data-bs-toggle="tab"
+                      href="#view"
+                      style={{ "margin-right": "12px" }}
+                    >
+                      View Item
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary mb-2 mt-2 "
+                      data-bs-toggle="tab"
+                      href="#edit"
+                    >
+                      Edit Item
+                    </button>
+                  </div>
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="tab-content p-4">
+                        <div id="view" className="tab-pane fade in active show">
+                          {viewItem()}
                         </div>
                       </div>
                     </div>
-                    <div class="col-xl-8">
-                      <form
-                        noValidate
-                        validated={validated}
-                        onSubmit={submitHandler}
-                      >
-                        <div class="mb-3">
-                          <label
-                            class=" small mb-1 fw-bold control-label"
-                            for="inputItemName"
-                          >
-                            Item name
-                          </label>
-                          <input
-                            class="form-control"
-                            id="inputItemName"
-                            type="text"
-                            value={itemdata.itemName}
-                            onChange={(e) => itemNameHandler(e)}
-                          />
+                    <div className="col-12">
+                      <div className="tab-content p-4">
+                        <div id="edit" className="tab-pane fade in active show">
+                          {editItem()}
                         </div>
-                        <div class="row gx-3 mb-3">
-                          <div className="col-md-6 ">
-                            <label
-                              class="small mb-1 fw-bold"
-                              for="inputCategory"
-                            >
-                              Category
-                            </label>
-                            <select
-                              id="inputCategory"
-                              class="form-select form-select-sm"
-                              aria-label=".form-select-sm"
-                              onChange={(e) => categoryhandler(e)}
-                            >
-                              <option selected>{itemdata.type}</option>
-                              <option value="Electronic">Electronic</option>
-                              <option value="Clothing">Clothing</option>
-                              <option value="Bag">Bag</option>
-                              <option value="Keys">Keys</option>
-                              <option value="T-Card">T-Card</option>
-                              <option value="Books">Books</option>
-                              <option value="Other">Other</option>
-                            </select>
-                          </div>
-
-                          {others.otherCategory ? (
-                            <div className="mb-3">
-                              <span style={{ fontSize: 12 }}>
-                                {others.otherCategoryText}
-                              </span>
-                              <input
-                                required
-                                type="text"
-                                className="other-input-match"
-                                size="sm"
-                                onChange={(e) => {
-                                  setitemData({
-                                    ...itemdata,
-                                    category: e.target.value,
-                                  });
-                                }}
-                              />
-                            </div>
-                          ) : null}
-
-                          <div className="col-md-6">
-                            <label
-                              class="small mb-1 fw-bold"
-                              for="inputlocation"
-                            >
-                              Location lost
-                            </label>
-                            <select
-                              class="form-select form-select-sm"
-                              id="inputlocation"
-                              aria-label=".form-select-sm"
-                              onChange={(e) => locationhandler(e)}
-                            >
-                              <option selected>{itemdata.locationLost}</option>
-                              <option value="CC">CC</option>
-                              <option value="DH">DH</option>
-                              <option value="DW">DW</option>
-                              <option value="KN">KN</option>
-                              <option value="IB">IB</option>
-                              <option value="MN">MN</option>
-                              <option value="BG">BG</option>
-                              <option value="HB">HB</option>
-                              <option value="DV">DV</option>
-                              <option value="Residence">Residence</option>
-                              <option value="Miway">Miway</option>
-                              <option value="Other">Other</option>
-                            </select>
-                          </div>
-                          {others.otherLocation ? (
-                            <div className="mb-3">
-                              <span style={{ fontSize: 12 }}>
-                                {others.otherLocationText}
-                              </span>
-                              <input
-                                required
-                                type="text"
-                                className="other-input-match"
-                                size="sm"
-                                onChange={(e) => {
-                                  setitemData({
-                                    ...itemdata,
-                                    location: e.target.value,
-                                  });
-                                }}
-                              />
-                            </div>
-                          ) : null}
-                        </div>
-                        <div class="row gx-3 mb-3">
-                          <div className="col-md-6">
-                            <label class="small mb-1 fw-bold">
-                              Date when item was lost
-                            </label>
-                            <DatePicker
-                              selected={selectedDate}
-                              class="form-control"
-                              onChange={(date) => dateLostHandler(date)}
-                              maxDate={new Date()}
-                            />
-                          </div>
-
-                          <div class="col-md-6">
-                            <label class="small mb-1 fw-bold" for="inputBrand">
-                              Brand
-                            </label>
-                            <input
-                              class="form-control"
-                              id="inputBrand"
-                              value={itemdata.brand}
-                              onChange={(e) => brandhandler(e)}
-                            />
-                          </div>
-                        </div>
-                        <div class="row gx-3 mb-3">
-                          <div className="col-md-6">
-                            <label class="small mb-1 fw-bold" for="inputColour">
-                              Colour of the item
-                            </label>
-                            <select
-                              class="form-select form-select-sm"
-                              aria-label=".form-select-sm example"
-                              onChange={(e) => colorhandler(e)}
-                            >
-                              <option selected>{itemdata.colour}</option>
-                              <option value="Black">Black</option>
-                              <option value="White">White</option>
-                              <option value="Grey">Grey</option>
-                              <option value="Blue">Blue</option>
-                              <option value="Red">Red</option>
-                              <option value="Green">Green</option>
-                              <option value="Purple">Purple</option>
-                              <option value="Pink">Pink</option>
-                              <option value="Yellow">Yellow</option>
-                              <option value="Orange">Orange</option>
-                              <option value="Brown">Brown</option>
-                              <option value="Other">Other</option>
-                            </select>
-                          </div>
-                          {others.otherColour ? (
-                            <div className="mb-3">
-                              <span style={{ fontSize: 12 }}>
-                                {others.otherColourText}
-                              </span>
-                              <input
-                                required
-                                type="text"
-                                className="other-input-match"
-                                size="sm"
-                                onChange={(e) => {
-                                  setitemData({
-                                    ...itemdata,
-                                    colour: e.target.value,
-                                  });
-                                }}
-                              />
-                            </div>
-                          ) : null}
-
-                          <div className="col-md-6">
-                            <label class="small mb-1 fw-bold" for="inputSize">
-                              Size of the item
-                            </label>
-                            <select
-                              id="inputSize"
-                              class="form-select form-select-sm"
-                              aria-label=".form-select-sm example"
-                              onChange={(e) => sizehandler(e)}
-                            >
-                              <option selected>{itemdata.size}</option>
-                              <option value="XS">XS</option>
-                              <option value="S">S</option>
-                              <option value="M">M</option>
-                              <option value="L">L</option>
-                              <option value="XL">XL</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div class="row gx-3 mb-3">
-                          <div class="mb-3">
-                            <label
-                              class="small mb-1 fw-bold"
-                              for="inputDescription"
-                            >
-                              Additional description
-                            </label>
-                            <input
-                              class="form-control"
-                              id="inputDescription"
-                              type="text"
-                              value={itemdata.description}
-                              onChange={(e) => descriptionHandler(e)}
-                            />
-                          </div>
-                        </div>
-
-                        <span style={{ fontSize: 15, color: "red" }}>
-                          {errorSubmit}
-                        </span>
-
-                        <div>
-                          <button
-                            type="submit"
-                            disabled={disabled}
-                            class="btn btn-primary mb-2 mt-2"
-                            style={{ "margin-right": "4px" }}
-                          >
-                            Save Changes
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-secondary mb-2 mt-2 "
-                            style={{ "margin-right": "4px" }}
-                            onClick={getItemDetails()}
-                          >
-                            Reset Changes
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-danger mb-2 mt-2"
-                            style={{ "margin-right": "4px" }}
-                            data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop"
-                            onClick={deleteRequest}
-                          >
-                            Delete Request
-                          </button>
-                          <div
-                            class="modal fade"
-                            id="staticBackdrop"
-                            data-bs-backdrop="static"
-                            data-bs-keyboard="false"
-                            tabindex="-1"
-                            aria-labelledby="staticBackdropLabel"
-                            aria-hidden="true"
-                          >
-                            <div class="modal-dialog">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5
-                                    class="modal-title"
-                                    id="staticBackdropLabel"
-                                  >
-                                    Are you sure you want to delete the request?
-                                  </h5>
-                                  <button
-                                    type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"
-                                  ></button>
-                                </div>
-                                <div class="modal-body">
-                                  This action can not be reversed.
-                                </div>
-                                <div class="modal-footer">
-                                  <button
-                                    type="button"
-                                    class="btn btn-secondary"
-                                    data-bs-dismiss="modal"
-                                  >
-                                    Cancel
-                                  </button>
-                                  <button
-                                    type="button"
-                                    class="btn btn-danger"
-                                    onClick={deleteRequest()}
-                                  >
-                                    Yes, delete
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </form>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -644,6 +785,6 @@ export default function Match() {
         </div>
         <Matches />
       </div>
-    </>
+    </div>
   );
 }
