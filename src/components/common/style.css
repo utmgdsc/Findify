@@ -1,6 +1,20 @@
+#Logo-navbar {
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border: 0px rgb(54, 200, 249) solid;
+  border-radius: 0.5em;
+  font-size: 1.5em;
+  font-weight: 900;
+  margin: 3px;
+  margin-bottom: 3px;
+  }
+
 .nav {
-    background: transparent;
-    color: rgb(29, 141, 227);
+    background: transparent !important;
+    color: rgb(0, 16, 122);
     display: flex;
     justify-content: space-between;
     align-items: stretch;
@@ -31,11 +45,10 @@
   }
   
   .nav li.active {
-    background-color: #0000002f;
+    background-color: #ffffff33;
   }
   
   .nav li:hover {
     font-weight: 700;
-    background-color: #000000;
   }
   

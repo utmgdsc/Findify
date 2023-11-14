@@ -1,16 +1,15 @@
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import "./style.css";
-import logo from "../../assets/img/findify_nav_logo.png";
 const TopNav = () => {
   return (
     <nav className="nav">
-      <img src={logo} width="100" height="40" alt="" />
+      <div id="Logo-navbar">Find.ify</div>
       <ul>
-        <CustomLink to="/Home">Home</CustomLink>
-        <CustomLink to="/Profile">Profile</CustomLink>
+        <CustomLink to="/Home">HOME</CustomLink>
+        <CustomLink to="/Profile">PROFILE</CustomLink>
 
         <CustomLink to="/" onClick={() => localStorage.removeItem("token")}>
-          Logout
+          LOGOUT
         </CustomLink>
       </ul>
     </nav>

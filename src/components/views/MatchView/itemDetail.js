@@ -18,7 +18,6 @@ export default function Match() {
   const [validated, setValidated] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [selectedDate, setselectedDate] = useState(null);
-  const [showElement, setShowElement] = useState(false);
   const [errorSubmit, setErrorSubmit] = useState("");
 
   const [itemdata, setitemData] = useState({
@@ -33,15 +32,6 @@ export default function Match() {
     brand: "",
     size: "",
   });
-
-  const SuccessfulMatches = () => {
-    setShowElement(true);
-    useEffect(() => {
-      setTimeout(function () {
-        setShowElement(false);
-      }, 3000);
-    }, []);
-  };
 
   const [others, setOthers] = useState({
     otherLocation: false,
@@ -96,6 +86,8 @@ export default function Match() {
       });
   };
 
+  const deleteRequest = (event) => {};
+
   const createImagesCard = (files) => {
     return (
       <div className="text-center">
@@ -143,16 +135,41 @@ export default function Match() {
             </button>
           </div>
           <div className="card-body">
-            <div class="small font-italic text-muted mb-4">
-              JPG or PNG no larger than 3 MB
+            <div className="mb-3">
+              <label className="form-label fw-bold" for="customFile">
+                Update Images
+              </label>
+              <input
+                type="file"
+                className="form-control"
+                id="customFile"
+                accept="image/*"
+                multiple
+                onChange={imagehandler}
+              />
             </div>
-            <button class="btn btn-primary" type="button">
-              Update Images
-            </button>
           </div>
         </div>
       </div>
     );
+  };
+
+  const imagehandler = (e) => {
+    let imageurls = [];
+    for (let i = 0; i < e.target.files.length; i++) {
+      console.log(e.target.files[i]);
+      if (e.target.files[i].size < 3000000)
+        //imageurls.push(URL.createObjectURL(e.target.files[i]));
+        imageurls.push(e.target.files[i]);
+      else
+        setitemData({
+          ...itemdata,
+          images: "Warning: A file is larger than 3mb.",
+        });
+    }
+    console.log(imageurls);
+    setitemData({ ...itemdata, images: imageurls });
+    console.log(itemdata);
   };
 
   const dateLostHandler = (date) => {
@@ -306,13 +323,14 @@ export default function Match() {
           <div class="row">
             <div class="col">
               <div class="card mb-4 mt-4">
-                <div class="card-header text-center">Item Details</div>
+                <div class="card-header text-center fw-bold">ITEM DETAILS</div>
                 <div class="card-body ">
                   <div class="row">
-                    <div class="col-xl-4">
-                      <div class="card card-images">
-                        <div class="card-header">Images</div>
-                        {createImagesCard(itemdata.files)};
+                    <div class="col-xl-4 text-center">
+                      <div class="card col-md-9 mx-auto">
+                        <div class="card-images">
+                          {createImagesCard(itemdata.files)}
+                        </div>
                       </div>
                     </div>
                     <div class="col-xl-8">
@@ -322,20 +340,26 @@ export default function Match() {
                         onSubmit={submitHandler}
                       >
                         <div class="mb-3">
-                          <label class="small mb-1" for="inputUsername">
-                            Item Name
+                          <label
+                            class=" small mb-1 fw-bold control-label"
+                            for="inputItemName"
+                          >
+                            Item name
                           </label>
                           <input
                             class="form-control"
-                            id="inputUsername"
+                            id="inputItemName"
                             type="text"
                             value={itemdata.itemName}
                             onChange={(e) => itemNameHandler(e)}
                           />
                         </div>
                         <div class="row gx-3 mb-3">
-                          <div className="col-md-6">
-                            <label class="small mb-1" for="inputCategory">
+                          <div className="col-md-6 ">
+                            <label
+                              class="small mb-1 fw-bold"
+                              for="inputCategory"
+                            >
                               Category
                             </label>
                             <select
@@ -376,8 +400,11 @@ export default function Match() {
                           ) : null}
 
                           <div className="col-md-6">
-                            <label class="small mb-1" for="inputlocation">
-                              Location Lost
+                            <label
+                              class="small mb-1 fw-bold"
+                              for="inputlocation"
+                            >
+                              Location lost
                             </label>
                             <select
                               class="form-select form-select-sm"
@@ -422,8 +449,8 @@ export default function Match() {
                         </div>
                         <div class="row gx-3 mb-3">
                           <div className="col-md-6">
-                            <label class="small mb-1">
-                              Date when item was Lost
+                            <label class="small mb-1 fw-bold">
+                              Date when item was lost
                             </label>
                             <DatePicker
                               selected={selectedDate}
@@ -434,7 +461,7 @@ export default function Match() {
                           </div>
 
                           <div class="col-md-6">
-                            <label class="small mb-1" for="inputBrand">
+                            <label class="small mb-1 fw-bold" for="inputBrand">
                               Brand
                             </label>
                             <input
@@ -447,7 +474,7 @@ export default function Match() {
                         </div>
                         <div class="row gx-3 mb-3">
                           <div className="col-md-6">
-                            <label class="small mb-1" for="inputColour">
+                            <label class="small mb-1 fw-bold" for="inputColour">
                               Colour of the item
                             </label>
                             <select
@@ -491,7 +518,7 @@ export default function Match() {
                           ) : null}
 
                           <div className="col-md-6">
-                            <label class="small mb-1" for="inputSize">
+                            <label class="small mb-1 fw-bold" for="inputSize">
                               Size of the item
                             </label>
                             <select
@@ -512,8 +539,11 @@ export default function Match() {
 
                         <div class="row gx-3 mb-3">
                           <div class="mb-3">
-                            <label class="small mb-1" for="inputDescription">
-                              Additional Description
+                            <label
+                              class="small mb-1 fw-bold"
+                              for="inputDescription"
+                            >
+                              Additional description
                             </label>
                             <input
                               class="form-control"
@@ -529,21 +559,80 @@ export default function Match() {
                           {errorSubmit}
                         </span>
 
-                        <div class="text-center">
+                        <div>
                           <button
-                            class="update-item-button mb-2 mt-2"
                             type="submit"
                             disabled={disabled}
+                            class="btn btn-primary mb-2 mt-2"
+                            style={{ "margin-right": "4px" }}
                           >
-                            Save changes
+                            Save Changes
                           </button>
-                        </div>
-                        <div>
-                          {showElement ? (
-                            <span style={{ fontSize: 12, color: "green" }}>
-                              Matches Updated Successfully
-                            </span>
-                          ) : null}
+                          <button
+                            type="button"
+                            class="btn btn-secondary mb-2 mt-2 "
+                            style={{ "margin-right": "4px" }}
+                            onClick={getItemDetails()}
+                          >
+                            Reset Changes
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-danger mb-2 mt-2"
+                            style={{ "margin-right": "4px" }}
+                            data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop"
+                            onClick={deleteRequest}
+                          >
+                            Delete Request
+                          </button>
+                          <div
+                            class="modal fade"
+                            id="staticBackdrop"
+                            data-bs-backdrop="static"
+                            data-bs-keyboard="false"
+                            tabindex="-1"
+                            aria-labelledby="staticBackdropLabel"
+                            aria-hidden="true"
+                          >
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5
+                                    class="modal-title"
+                                    id="staticBackdropLabel"
+                                  >
+                                    Are you sure you want to delete the request?
+                                  </h5>
+                                  <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                  ></button>
+                                </div>
+                                <div class="modal-body">
+                                  This action can not be reversed.
+                                </div>
+                                <div class="modal-footer">
+                                  <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                                  >
+                                    Cancel
+                                  </button>
+                                  <button
+                                    type="button"
+                                    class="btn btn-danger"
+                                    onClick={deleteRequest()}
+                                  >
+                                    Yes, delete
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </form>
                     </div>
