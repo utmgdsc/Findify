@@ -1,40 +1,32 @@
-const express = require("express");
-const {
-  authenticate,
-  checkRequiredAttributes,
-} = require("../middlewares/user");
-const ItemController = require("../controllers/item");
+const express = require('express');
+const { authenticate, checkRequiredAttributes } = require('../middlewares/user');
+const ItemController = require('../controllers/item');
 const multerUpload = require("../middlewares/multer");
 
 const router = express.Router();
 
-router.route("/lostRequest/:id").get(authenticate, async (req, res) => {
-  try {
-    const data = await ItemController.getLostRequest(req, res, errorHandler);
-    res.json({ lostItem: data });
-  } catch (err) {
-    res.json({ message: `Get Lost Request Error: ${err}` });
-  }
-});
+router.route('/lostRequest/:id')
+  .get(
+    authenticate,
+    async (req, res) => {
+      try {
+        await ItemController.getLostRequest(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Get Lost Request Error: ${err}` })
+      }
+    }
+  )
 
-router
-  .route("/lostRequest")
+router.route('/lostRequest')
   .post(
     authenticate,
     multerUpload,
-    checkRequiredAttributes([
-      "itemName",
-      "type",
-      "brand",
-      "size",
-      "colour",
-      "locationLost",
-    ]),
+    checkRequiredAttributes(["itemName", "type", "brand", "size", "colour", "locationLost"]),
     async (req, res) => {
       try {
         await ItemController.createLostRequest(req, res, errorHandler);
       } catch (err) {
-        res.json({ message: `Create Lost Request Error: ${err}` });
+        res.json({ message: `Create Lost Request Error: ${err}` })
       }
     }
   )
@@ -46,38 +38,34 @@ router
       try {
         await ItemController.editLostRequest(req, res, errorHandler);
       } catch (err) {
-        res.json({ message: `Edit Lost Request Error: ${err}` });
+        res.json({ message: `Edit Lost Request Error: ${err}` })
       }
     }
-  );
+  )
 
-router.route("/foundRequest/:id").get(authenticate, async (req, res) => {
-  try {
-    const data = await ItemController.getFoundRequest(req, res, errorHandler);
-    res.json({ foundItem: data });
-  } catch (err) {
-    res.json({ message: `Get Found Request Error: ${err}` });
-  }
-});
 
-router
-  .route("/foundRequest")
+router.route('/foundRequest/:id')
+  .get(
+    authenticate,
+    async (req, res) => {
+      try {
+        await ItemController.getFoundRequest(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Get Found Request Error: ${err}` })
+      }
+    }
+  )
+
+router.route('/foundRequest')
   .post(
     authenticate,
     multerUpload,
-    checkRequiredAttributes([
-      "itemName",
-      "type",
-      "brand",
-      "size",
-      "colour",
-      "locationFound",
-    ]),
+    checkRequiredAttributes(["itemName", "type", "brand", "size", "colour", "locationFound"]),
     async (req, res) => {
       try {
         await ItemController.createFoundRequest(req, res, errorHandler);
       } catch (err) {
-        res.json({ message: `Create Found Request Error: ${err}` });
+        res.json({ message: `Create Found Request Error: ${err}` })
       }
     }
   )
@@ -89,28 +77,34 @@ router
       try {
         await ItemController.editFoundRequest(req, res, errorHandler);
       } catch (err) {
-        res.json({ message: `Edit Found Request Error: ${err}` });
+        res.json({ message: `Edit Found Request Error: ${err}` })
       }
     }
-  );
+  )
 
-router.route("/getSimilarItems/:id").get(authenticate, async (req, res) => {
-  try {
-    await ItemController.getSimilarItems(req, res, errorHandler);
-  } catch (err) {
-    res.json({ message: `Create Found Request Error: ${err}` });
-  }
-});
+router.route('/getSimilarItems/:id')
+  .get(
+    authenticate,
+    async (req, res) => {
+      try {
+        await ItemController.getSimilarItems(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Create Found Request Error: ${err}` })
+      }
+    }
+  )
 
-router.route("/getUserPosts").get(authenticate, async (req, res) => {
-  try {
-    await ItemController.getUserPosts(req, res, errorHandler);
-  } catch (err) {
-    res.json({ message: `Get User Posts Error: ${err}` });
-  }
-});
+router.route('/getUserPosts')
+  .get(authenticate,
+    async (req, res) => {
+      try {
+        await ItemController.getUserPosts(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Get User Posts Error: ${err}` })
+      }
+    })
 
-const errorHandler = (err) => {};
+const errorHandler = (err) => { }
 
 module.exports = router;
 

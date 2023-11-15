@@ -7,6 +7,9 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Connect to MongoDB
+connectDB();
+
 app.use(
   cors({
     origin: "http://localhost:3001",
@@ -14,11 +17,6 @@ app.use(
     exposedHeaders: ["Authorization"], // Expose additional headers if needed
   })
 );
-
-// Connect to MongoDB
-connectDB();
-
-app.use(cors());
 
 // Parse JSON request body
 app.use(express.json());

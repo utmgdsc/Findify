@@ -338,6 +338,7 @@ export default function Match() {
                 id="inputItemName"
                 type="text"
                 value={itemdata.itemName}
+                disabled={true}
               />
             </div>
             <div class="row gx-3 mb-3">
@@ -350,6 +351,7 @@ export default function Match() {
                   id="inputCategory"
                   type="text"
                   value={itemdata.category}
+                  disabled={true}
                 />
               </div>
 
@@ -362,6 +364,7 @@ export default function Match() {
                   id="inputLocation"
                   type="text"
                   value={itemdata.locationLost}
+                  disabled={true}
                 />
               </div>
             </div>
@@ -375,6 +378,7 @@ export default function Match() {
                   id="inputCategory"
                   type="text"
                   value={itemdata.timeLost}
+                  disabled={true}
                 />
               </div>
 
@@ -386,6 +390,7 @@ export default function Match() {
                   class="form-control"
                   id="inputBrand"
                   value={itemdata.brand}
+                  disabled={true}
                 />
               </div>
             </div>
@@ -399,6 +404,7 @@ export default function Match() {
                   id="inputColour"
                   type="text"
                   value={itemdata.colour}
+                  disabled={true}
                 />
               </div>
 
@@ -411,6 +417,7 @@ export default function Match() {
                   id="inputCategory"
                   type="text"
                   value={itemdata.size}
+                  disabled={true}
                 />
               </div>
             </div>
@@ -425,6 +432,7 @@ export default function Match() {
                   id="inputDescription"
                   type="text"
                   value={itemdata.description}
+                  disabled={true}
                 />
               </div>
             </div>
@@ -731,7 +739,7 @@ export default function Match() {
                 type="button"
                 class="btn btn-secondary mb-2 mt-2 "
                 style={{ "margin-right": "4px" }}
-                onClick={getItemDetails()}
+                onClick={() => getItemDetails()}
               >
                 Reset Changes
               </button>
@@ -739,7 +747,7 @@ export default function Match() {
                 type="button"
                 class="btn btn-dark mb-2 mt-2 "
                 style={{ "margin-right": "4px" }}
-                onclick={() => setshowView(false)}
+                onClick={() => setshowView(true)}
               >
                 Cancel Changes
               </button>

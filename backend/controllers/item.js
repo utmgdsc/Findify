@@ -1,40 +1,29 @@
-const { v4: uuidv4 } = require("uuid");
-const { LostItem, FoundItem, PotentialMatch } = require("../models/Item");
-const { s3 } = require("../utils/aws");
+const { v4: uuidv4 } = require('uuid');
+const { LostItem, FoundItem, PotentialMatch } = require('../models/Item');
+const { s3 } = require('../utils/aws');
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
-const { errorHandler } = require("../utils/errorHandler");
-const Fuse = require("fuse.js");
-const { default: mongoose } = require("mongoose");
+const { errorHandler } = require('../utils/errorHandler');
+const Fuse = require('fuse.js');
+const { default: mongoose } = require('mongoose');
 
 module.exports.getLostRequest = async (req, res, next) => {
   try {
-    const lostRequestId = req.params.id;
+    const lostRequestId = req.params.id
     const lostItem = await LostItem.findById(lostRequestId);
     res.json({ lostItem });
   } catch (err) {
     console.error("Error fetching lostItem details:", err);
-    res.status(500).json({ message: "Error fetching lostItem details" });
+    res.status(500).json({ message: 'Error fetching lostItem details' });
   }
-};
+}
 
 module.exports.createLostRequest = async (req, res, next) => {
-  const {
-    type,
-    brand,
-    size,
-    colour,
-    locationLost,
-    description,
-    itemName,
-    timeLost,
-  } = req.body;
+  const { type, brand, size, colour, locationLost, description, itemName, timeLost } = req.body;
   let imageUrls = [];
 
   try {
     if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map((file) =>
-        uploadToS3("lost-items", file)
-      );
+      const uploadPromises = req.files.map(file => uploadToS3('lost-items', file));
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -48,17 +37,13 @@ module.exports.createLostRequest = async (req, res, next) => {
       imageUrls,
       host: req.user._id,
       description,
-      timeLost,
+      timeLost
     });
 
     // Save to database
     const item = await lostItem.save();
 
-    res.status(200).json({
-      message: `Created lost item successfully ID: ${item._id}`,
-      urlLocations: imageUrls,
-      id: savedLostItem._id,
-    });
+    res.status(200).json({ message: `Created lost item successfully ID: ${item._id}`, urlLocations: imageUrls });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -67,19 +52,17 @@ module.exports.createLostRequest = async (req, res, next) => {
 
 module.exports.editLostRequest = async (req, res, next) => {
   const { lostRequestId } = req.body;
-  const user = req.user;
-  const lostItem = await LostItem.findById(lostRequestId);
+  const user = req.user
+  const lostItem = await LostItem.findById(lostRequestId)
   let imageUrls = [];
 
   try {
     if (!lostItem.host._id.equals(user._id)) {
-      throw new Error("401 Unauthorized: User does not own lost request");
+      throw new Error('401 Unauthorized: User does not own lost request');
     }
 
     if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map((file) =>
-        uploadToS3("found-items", file)
-      );
+      const uploadPromises = req.files.map(file => uploadToS3('found-items', file));
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -89,22 +72,15 @@ module.exports.editLostRequest = async (req, res, next) => {
       brand: req.body.brand ? req.body.brand : lostItem.brand,
       size: req.body.size ? req.body.size : lostItem.size,
       colour: req.body.color ? req.body.color : lostItem.colour,
-      locationLost: req.body.locationLost
-        ? req.body.locationLost
-        : lostItem.locationLost,
-      imageUrls: imageUrls.length > 0 ? imageUrls : lostItem.imageUrls,
-      description: req.body.description
-        ? req.body.description
-        : lostItem.description,
-      timeLost: req.body.timeLost ? req.body.timeLost : lostItem.timeLost,
+      locationLost: req.body.locationLost ? req.body.locationLost : lostItem.locationLost,
+      imageUrls: (imageUrls.length > 0) ? imageUrls : lostItem.imageUrls,
+      description: req.body.description ? req.body.description : lostItem.description,
+      timeLost: req.body.timeLost ? req.body.timeLost : lostItem.timeLost
     };
 
     // update in database
-    await LostItem.findOneAndUpdate({ _id: lostRequestId }, update);
-    res.status(200).json({
-      message: "Edited lost item successfully",
-      urlLocations: update.imageUrls,
-    });
+    await LostItem.findOneAndUpdate({ _id: lostRequestId }, update)
+    res.status(200).json({ message: 'Edited lost item successfully', urlLocations: update.imageUrls });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -113,33 +89,22 @@ module.exports.editLostRequest = async (req, res, next) => {
 
 module.exports.getFoundRequest = async (req, res, next) => {
   try {
-    const foundRequestId = req.params.id;
+    const foundRequestId = req.params.id
     const foundItem = await FoundItem.findById(foundRequestId);
     res.json({ foundItem });
   } catch (err) {
     console.error("Error fetching foundItem details:", err);
-    res.status(500).json({ message: "Error fetching foundItem details" });
+    res.status(500).json({ message: 'Error fetching foundItem details' });
   }
-};
+}
 
 module.exports.createFoundRequest = async (req, res, next) => {
-  const {
-    type,
-    brand,
-    size,
-    colour,
-    locationFound,
-    description,
-    itemName,
-    timeFound,
-  } = req.body;
+  const { type, brand, size, colour, locationFound, description, itemName, timeFound } = req.body;
   let imageUrls = [];
 
   try {
     if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map((file) =>
-        uploadToS3("found-items", file)
-      );
+      const uploadPromises = req.files.map(file => uploadToS3('found-items', file));
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -153,17 +118,13 @@ module.exports.createFoundRequest = async (req, res, next) => {
       imageUrls,
       host: req.user._id,
       description,
-      timeFound,
+      timeFound
     });
 
     // Save to database
     const item = await foundItem.save();
 
-    res.status(200).json({
-      message: "Created found item successfully",
-      urlLocations: imageUrls,
-      id: savedFoundItem._id,
-    });
+    res.status(200).json({ message: `Created found item successfully ID: ${item._id}`, urlLocations: imageUrls });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -172,19 +133,17 @@ module.exports.createFoundRequest = async (req, res, next) => {
 
 module.exports.editFoundRequest = async (req, res, next) => {
   const { foundRequestId } = req.body;
-  const user = req.user;
-  const foundItem = FoundItem.findById(foundRequestId);
+  const user = req.user
+  const foundItem = FoundItem.findById(foundRequestId)
   let imageUrls = [];
 
   try {
     if (!foundItem.host.equals(user._id)) {
-      throw new Error("401 Unauthorized: User does not own found request");
+      throw new Error('401 Unauthorized: User does not own found request');
     }
 
     if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map((file) =>
-        uploadToS3("found-items", file)
-      );
+      const uploadPromises = req.files.map(file => uploadToS3('found-items', file));
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -194,22 +153,15 @@ module.exports.editFoundRequest = async (req, res, next) => {
       brand: req.body.brand ? req.body.brand : foundItem.brand,
       size: req.body.size ? req.body.size : foundItem.size,
       colour: req.body.color ? req.body.color : foundItem.colour,
-      locationFound: req.body.locationFound
-        ? req.body.locationFound
-        : foundItem.locationFound,
+      locationFound: req.body.locationFound ? req.body.locationFound : foundItem.locationFound,
       imageUrls: imageUrls ? imageUrls : foundItem.imageUrls,
-      description: req.body.description
-        ? req.body.description
-        : foundItem.description,
-      timeFound: req.body.timeFound ? req.body.timeFound : foundItem.timeFound,
+      description: req.body.description ? req.body.description : foundItem.description,
+      timeFound: req.body.timeFound ? req.body.timeFound : foundItem.timeFound
     };
 
     // update in database
-    await FoundItem.findOneAndUpdate({ _id: foundRequestId }, update);
-    res.status(200).json({
-      message: "Editted found item successfully",
-      urlLocations: imageUrls,
-    });
+    await FoundItem.findOneAndUpdate({ _id: foundRequestId }, update)
+    res.status(200).json({ message: 'Editted found item successfully', urlLocations: imageUrls });
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -225,10 +177,10 @@ module.exports.getUserPosts = async (req, res, next) => {
 
     // Fetch Found Items
     const foundItems = await FoundItem.find({ host: userId }).select("-__v");
-    res.json({ userPosts: { lostItems, foundItems } });
+    res.json({ userPosts: { lostItems, foundItems } })
   } catch (error) {
     console.error("Error fetching user's items:", error);
-    res.status(500).json({ message: "Error fetching user requests" });
+    res.status(500).json({ message: 'Error fetching user requests' });
   }
 };
 
@@ -241,27 +193,23 @@ module.exports.getSimilarItems = async (req, res, next) => {
 
     // if this item does not exist, return error
     if (!lostItem) {
-      return res.status(404).json({ message: "Lost item not found" });
+      return res.status(404).json({ message: 'Lost item not found' });
     }
 
     if (!req.user._id.equals(lostItem.host._id)) {
-      return res
-        .status(403)
-        .json({ message: "Only the lost item host can fetch similar items" });
+      return res.status(403).json({ message: 'Only the lost item host can fetch similar items' });
     }
 
-    const foundItems = await FoundItem
-      .find
+    const foundItems = await FoundItem.find(
       // exclude the current user's found items
       // host: { $ne: mongoose.Types.ObjectId(excludedHostId) }
-      ()
-      .select("-__v");
+    ).select("-__v");
 
     const fuseOptions = {
       includeScore: true,
       // You can add more fields here based on what you'd like to compare
       findAllMatches: true,
-      keys: ["itemName", "type", "brand", "colour", "description"],
+      keys: ['itemName', 'type', 'brand', 'colour', 'description'],
       threshold: 0.8, // Adjust this threshold to your needs for fuzziness
     };
 
@@ -270,11 +218,11 @@ module.exports.getSimilarItems = async (req, res, next) => {
     // Create an array of existing property values
     let searchTerms = [];
     for (const key of fuseOptions.keys) {
-      lostItem[key] && searchTerms.push(lostItem[key].replace(/\s+/g, " | "));
+      lostItem[key] && searchTerms.push(lostItem[key].replace(/\s+/g, ' | '));
     }
 
     // Join the terms using the '|' to create a string for a fuzzy 'OR' type search
-    let searchString = searchTerms.join(" | ");
+    let searchString = searchTerms.join(' | ');
 
     console.log(searchString);
     // Perform a search using the constructed search string
@@ -282,16 +230,16 @@ module.exports.getSimilarItems = async (req, res, next) => {
 
     const topResults = searchResults
       // .slice(0, 30) // Limit to the top 30 results
-      .map((result) => ({ ...result.item._doc, score: result.score }));
+      .map(result => ({ ...result.item._doc, score: result.score }));
 
     res.status(200).json(topResults);
   } catch (error) {
     console.error("Error fetching similar items:", error);
-    res.status(500).json({ message: "Error fetching similar items" });
+    res.status(500).json({ message: 'Error fetching similar items' });
   }
-};
+}
 
-async function uploadToS3(folder, file) {
+async function uploadToS3 (folder, file) {
   const fileName = `${folder}/${uuidv4()}-${file.originalname}`;
 
   const command = new PutObjectCommand({
@@ -299,16 +247,14 @@ async function uploadToS3(folder, file) {
     Key: fileName,
     Body: file.buffer,
     ContentType: file.mimetype,
-    ACL: "public-read",
+    ACL: 'public-read',
   });
 
   try {
     await s3.send(command);
-    return `https://${process.env.S3_BUCKET_NAME}.s3.${
-      process.env.S3_BUCKET_REGION
-    }.amazonaws.com/${encodeURIComponent(fileName)}`;
+    return `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${encodeURIComponent(fileName)}`;
   } catch (error) {
-    console.error("An error occurred while uploading the file:", error);
+    console.error('An error occurred while uploading the file:', error);
     throw error; // Re-throw the error to be handled by the caller
   }
 }
