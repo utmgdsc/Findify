@@ -1,42 +1,50 @@
 .body-home {
-    font-family: Georgia, 'Times New Roman', Times, serif !important;
-    letter-spacing: 0.5px;
-    background-color: lightskyblue !important;
-    height: 100%;
+  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, rgba(202, 201, 223, 0.75) 0%, rgba(40, 40, 159, 0.95) 0%, rgba(28, 92, 188, 0.75) 30%, rgba(0, 212, 255, 0.75) 100%);
+  height: 100%;
 }
+
 #requestLostItem a {
-    line-height: 3;
-    font-size: 2rem;
-    color: rgb(29, 141, 227);
-    background-color:rgb(255, 251, 251);
+  line-height: 3;
+  font-size: 2rem;
+  color: rgb(29, 141, 227);
+  background-color: rgb(255, 251, 251);
 }
+
 #requestLostItem a:hover {
-    font-size: 2.1rem;
+  font-size: 2.1rem;
 }
+
 #reportFoundItem a {
-    line-height: 3;
-    font-size: 2rem;
-    color: rgb(29, 141, 227);
-    background-color:rgb(255, 251, 251);
+  line-height: 3;
+  font-size: 2rem;
+  color: rgb(29, 141, 227);
+  background-color: rgb(255, 251, 251);
 }
+
 #reportFoundItem a:hover {
-    font-size: 2.1rem;
+  font-size: 2.1rem;
 }
+
 .nav-link.active {
-    border-color: rgb(29, 141, 227) rgb(29, 141, 227) white !important;
+  border-color: rgb(29, 141, 227) rgb(29, 141, 227) white !important;
 }
+
 .nav-link {
-    color: rgb(29, 141, 227) !important;
-    font-weight: 700;
+  color: rgb(29, 141, 227) !important;
+  font-weight: 700;
 }
+
 .nav-link:hover {
-    border-color: rgb(29, 141, 227) !important;
+  border-color: rgb(29, 141, 227) !important;
 }
+
 .no-result {
-    max-width: 20%;
-    height: auto !important;
-    margin-bottom: 20px;
+  max-width: 20%;
+  height: auto !important;
+  margin-bottom: 20px;
 }
+
 p {
-    font-size: larger;
+  font-size: larger;
 }
