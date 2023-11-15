@@ -19,6 +19,7 @@ export default function Match() {
   const [disabled, setDisabled] = useState(true);
   const [selectedDate, setselectedDate] = useState(null);
   const [errorSubmit, setErrorSubmit] = useState("");
+  const [showView, setshowView] = useState(true);
 
   const [itemdata, setitemData] = useState({
     itemName: "",
@@ -190,21 +191,21 @@ export default function Match() {
 
   const locationhandler = (e) => {
     setOthers({ ...others, otherLocation: false });
-    if (e.target.value == "Other") {
+    if (e.target.value === "Other") {
       setOthers({
         ...others,
         otherLocation: true,
         otherLocationText: "If other, please specify the location.",
       });
     }
-    if (e.target.value == "Residence") {
+    if (e.target.value === "Residence") {
       setOthers({
         ...others,
         otherLocation: true,
         otherLocationText: "If residence, Please specify which residence.",
       });
     }
-    if (e.target.value == "Miway") {
+    if (e.target.value === "Miway") {
       setOthers({
         ...others,
         otherLocation: true,
@@ -217,7 +218,7 @@ export default function Match() {
 
   const colorhandler = (e) => {
     setOthers({ ...others, otherColour: false });
-    if (e.target.value == "Other") {
+    if (e.target.value === "Other") {
       setOthers({
         ...others,
         otherColour: true,
@@ -230,7 +231,7 @@ export default function Match() {
 
   const categoryhandler = (e) => {
     setOthers({ ...others, otherCategory: false });
-    if (e.target.value == "Other") {
+    if (e.target.value === "Other") {
       setOthers({
         ...others,
         otherCategory: true,
@@ -440,6 +441,14 @@ export default function Match() {
                 onClick={deleteRequest}
               >
                 Delete Request
+              </button>
+              <button
+                type="button"
+                class="btn btn-success mb-2 mt-2"
+                style={{ "margin-right": "4px" }}
+                onClick={() => setshowView(false)}
+              >
+                Edit Request
               </button>
               <div
                 class="modal fade"
@@ -726,6 +735,14 @@ export default function Match() {
               >
                 Reset Changes
               </button>
+              <button
+                type="button"
+                class="btn btn-dark mb-2 mt-2 "
+                style={{ "margin-right": "4px" }}
+                onclick={() => setshowView(false)}
+              >
+                Cancel Changes
+              </button>
             </div>
           </form>
         </div>
@@ -734,57 +751,17 @@ export default function Match() {
   };
 
   return (
-    <div>
+    <div class="body-match">
       <NavBar />
-      <div class="body-match">
-        <div class="container-xl px-4">
-          <div class="row">
-            <div class="col">
-              <div class="card mb-4 mt-4">
-                <div class="card-header text-center fw-bold">ITEM DETAILS</div>
-                <div class="card-body ">
-                  <div class="text-center">
-                    <button
-                      type="button"
-                      class="btn btn-primary mb-2 mt-2 active"
-                      data-bs-toggle="tab"
-                      href="#view"
-                      style={{ "margin-right": "12px" }}
-                    >
-                      View Item
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-primary mb-2 mt-2 "
-                      data-bs-toggle="tab"
-                      href="#edit"
-                    >
-                      Edit Item
-                    </button>
-                  </div>
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="tab-content p-4">
-                        <div id="view" className="tab-pane fade in active show">
-                          {viewItem()}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="tab-content p-4">
-                        <div id="edit" className="tab-pane fade in active show">
-                          {editItem()}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div class="container-xl px-4">
+        <div class="card mb-4 mt-4">
+          <div class="card-header text-center fw-bold">ITEM DETAILS</div>
+          <div class="card-body justify-content-center">
+            <div>{showView ? viewItem() : editItem()}</div>
           </div>
         </div>
-        <Matches />
       </div>
+      <Matches />
     </div>
   );
 }
