@@ -1,5 +1,5 @@
 const express = require('express');
-const { checkRequiredAttributes, adminAuthenticate } = require('../middlewares/user');
+const { checkRequiredAttributes, authenticate, adminAuthenticate } = require('../middlewares/user');
 const AdminController = require('../controllers/admin');
 const multerUpload = require("../middlewares/multer");
 
@@ -35,6 +35,18 @@ router.route('/allPotentialMatches')
         await AdminController.getAllPotentialMatches(req, res, errorHandler);
       } catch (err) {
         res.json({ message: `Get All Potential Matches Error: ${err}` })
+      }
+    }
+  )
+
+router.route('/emailAdmin')
+  .post(
+    authenticate,
+    async (req, res) => {
+      try {
+        await AdminController.emailAdmin(req, res, errorHandler)
+      } catch (err) {
+        res.json({ message: `Email Admin Error: ${err}` })
       }
     }
   )
