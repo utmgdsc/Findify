@@ -10,6 +10,12 @@ module.exports.getLostRequest = async (req, res, next) => {
   try {
     const lostRequestId = req.params.id
     const lostItem = await LostItem.findById(lostRequestId);
+
+    if (!lostItem) {
+      // If lostItem does not exist, send a 404 Not Found response
+      return res.status(404).json({ message: 'Lost item not found' });
+    }
+
     res.json({ lostItem });
   } catch (err) {
     console.error("Error fetching lostItem details:", err);
