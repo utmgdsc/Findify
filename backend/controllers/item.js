@@ -199,7 +199,7 @@ module.exports.editFoundRequest = async (req, res, next) => {
 module.exports.deleteFoundRequest = async (req, res, next) => {
   const foundRequestId = req.params.id
   const user = req.user;
-  const foundItem = FoundItem.findById(foundRequestId);
+  const foundItem = await FoundItem.findById(foundRequestId);
 
   try {
     if (!foundItem.host.equals(user._id)) {
