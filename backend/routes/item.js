@@ -127,7 +127,7 @@ router.route('/getUserPosts')
 // matching related endpoints:
 router.route('/createPotentialMatch')
   .post(authenticate,
-    checkRequiredAttributes(["lostRequestId", "foundItemId"]),
+    checkRequiredAttributes(["foundItemId"]),
     async (req, res) => {
       try {
         await ItemController.createPotentialMatch(req, res, errorHandler);

@@ -287,29 +287,23 @@ module.exports.getSimilarItems = async (req, res, next) => {
 }
 
 module.exports.createPotentialMatch = async (req, res, next) => {
-  const { lostRequestId, foundItemId } = req.body;
+  const { foundItemId } = req.body;
   const user = req.user; // the logged-in user
 
   try {
-    const lostItem = await LostItem.findById(lostRequestId);
     const foundItem = await FoundItem.findById(foundItemId).populate("host").exec();
-
-    if (!lostItem || !foundItem) {
+    if (!foundItem) {
       throw new Error('404 Not Found: Lost or Found item not found');
-    }
-
-    if (!user.isAdmin && !lostItem.host.equals(user._id)) {
-      throw new Error('401 Unauthorized: User does not own lost request');
     }
 
     const hostEmail = foundItem.host.email;
 
     // Check if the match already exists
-    const existingMatch = await PotentialMatch.findOne({ lostId: lostRequestId, foundId: foundItemId });
+    const existingMatch = await PotentialMatch.findOne({ potentialOwner: user._id, foundId: foundItemId });
     if (!existingMatch) {
-      const newPotentialMatch = new PotentialMatch({ lostId: lostRequestId, foundId: foundItemId });
+      const newPotentialMatch = new PotentialMatch({ potentialOwner: user._id, foundId: foundItemId });
       await newPotentialMatch.save();
-      res.status(200).json({ message: 'Created potential match', hostEmail });
+      res.status(200).json({ message: 'Recorded potential match', hostEmail });
     } else {
       // intentionally send 200
       res.status(200).json({ message: 'Match already exists', hostEmail });
