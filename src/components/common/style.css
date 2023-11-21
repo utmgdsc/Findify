@@ -1,54 +1,56 @@
-#Logo-navbar {
-  width: 30px;
-  height: 30px;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  border: 0px rgb(54, 200, 249) solid;
-  border-radius: 0.5em;
-  font-size: 1.5em;
-  font-weight: 900;
-  margin: 3px;
-  margin-bottom: 3px;
-  }
+#NavBar {
+  background: white;
+  height: 55px;
+  width: 100%;
+  position: fixed;
+  border-bottom: 2px rgb(235, 235, 235) solid;
+}
 
-.nav {
-    background: transparent !important;
-    color: rgb(0, 16, 122);
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    gap: 2rem;
-    padding: 0 1rem;
-    border-bottom: rgb(29, 141, 227);
-    border-bottom: 1.5px solid rgb(29, 141, 227);
-  }
-  
-  
-  .nav ul {
-    padding: 0;
-    font-family:Georgia, 'Times New Roman', Times, serif;
-    letter-spacing: 0.5px;
-    margin: 0;
-    list-style: none;
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .nav a {
-    color: inherit;
-    text-decoration: none;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding: .25rem;
-  }
-  
-  .nav li.active {
-    background-color: #ffffff33;
-  }
-  
-  .nav li:hover {
-    font-weight: 700;
-  }
-  
+#Logo-navbar {
+  padding: 2.5px 10px;
+  color: white;
+  background: linear-gradient(90deg, rgba(202, 201, 223, 1) 0%, rgba(40, 40, 159, 1) 0%, rgba(28, 92, 188, 1) 30%, rgba(0, 212, 255, 1) 100%);
+  border-radius: 0.4em;
+  font-size: 1.25em;
+  font-weight: 900;
+}
+
+
+.nav ul {
+  padding: 0;
+  letter-spacing: 0.5px;
+  margin: 0;
+  list-style: none;
+  display: flex;
+}
+
+.nav a {
+  text-decoration: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links {
+  color: black;
+  display: flex;
+  font-weight: 700;
+  justify-content: center;
+  width: 90px;
+  height: 40px;
+  font-size: 18px;
+}
+
+.nav-links:hover {
+  background: rgb(240, 245, 255);
+  border-radius: 10px;
+}
+
+.nav-links.active {
+  background: rgb(240, 245, 255);
+  border-radius: 10px;
+  font-weight: 700;
+  color: rgba(28, 92, 188, 1);
+}
