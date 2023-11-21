@@ -96,7 +96,7 @@ module.exports.editLostRequest = async (req, res, next) => {
 module.exports.deleteLostRequest = async (req, res, next) => {
   const lostRequestId = req.params.id
   const user = req.user;
-  const lostItem = LostItem.findById(lostRequestId);
+  const lostItem = await LostItem.findById(lostRequestId);
 
   try {
     if (!lostItem.host.equals(user._id)) {
