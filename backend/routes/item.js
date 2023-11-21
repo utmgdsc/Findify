@@ -147,6 +147,19 @@ router.route('/lostAndFoundHandoff')
         res.json({ message: `Error handing off the item to the lostAndFound: ${err}` });
       }
     })
+
+router.route('/finalHandoff')
+  .post(authenticate,
+    checkRequiredAttributes(["foundItemId", "lostRequestId"]),
+    async (req, res) => {
+      try {
+        await ItemController.finalHandoff(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Error handing off the item to the lostAndFound: ${err}` });
+      }
+    })
+
+
 const errorHandler = (err) => { }
 
 module.exports = router;

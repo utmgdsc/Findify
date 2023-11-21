@@ -349,6 +349,60 @@ module.exports.lostAndFoundHandoff = async (req, res, next) => {
 };
 
 
+module.exports.finalHandoff = async (req, res, next) => {
+  const { foundItemId, lostRequestId } = req.body;
+  const user = req.user;
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const foundItem = await FoundItem.findById(foundItemId).session(session);
+    const lostItem = await LostItem.findById(lostRequestId).session(session);
+
+    if (!foundItem || !lostItem) {
+      throw new Error('404 Not Found: Item not found');
+    }
+
+    // Additional secuity checks if needed:
+    // if (!foundItem.isActive || !lostItem.isActive) {
+    //   throw new Error('400 Bad Request: One or both items are already inactive');
+    // }
+    // if (foundItem.matchedLostItem || lostItem.matchedFoundItem) {
+    //   throw new Error('400 Bad Request: Items are already matched with others');
+    // }
+
+    // Ensure only the current host of the found item can hand off the item
+    if (!user.isAdmin && !foundItem.host.equals(user._id)) {
+      throw new Error('401 Unauthorized: User does not own found item');
+    }
+
+    // Mark both items as inactive and store the final match
+    foundItem.isActive = false;
+    lostItem.isActive = false;
+    foundItem.matchedLostItem = lostRequestId;
+    lostItem.matchedFoundItem = foundItemId;
+    foundItem.host = lostItem.host;
+
+    await foundItem.save({ session });
+    await lostItem.save({ session });
+
+    // Log or notify about the handoff
+    console.log(`Handoff completed: Found item ${foundItemId} matched with lost item ${lostRequestId}`);
+
+    await session.commitTransaction();
+    res.status(200).json({ message: 'Handoff successful. Both items marked as inactive and matched.' });
+
+  } catch (err) {
+    await session.abortTransaction();
+    errorHandler(err, res);
+    next(err);
+  } finally {
+    session.endSession();
+  }
+};
+
+
 async function uploadToS3 (folder, file) {
   const fileName = `${folder}/${uuidv4()}-${file.originalname}`;
 
