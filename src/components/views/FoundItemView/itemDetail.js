@@ -7,10 +7,9 @@ import fetcher from "../../../fetchHelper";
 import { useParams } from "react-router-dom";
 import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
-import Matches from "./Matches";
 import { format } from "date-fns";
 
-export default function Match() {
+export default function FoundItem() {
   const { id } = useParams();
   const [idtwo, setid] = useState("");
   const token = localStorage.getItem("token");
@@ -27,9 +26,9 @@ export default function Match() {
     colour: "",
     files: "",
     description: "",
-    timeLost: "",
+    timeFound: "",
     timeSubmitted: "",
-    locationLost: "",
+    locationFound: "",
     brand: "",
     size: "",
   });
@@ -48,27 +47,27 @@ export default function Match() {
   }, []);
 
   const getItemDetails = () => {
-    let url = `item/lostRequest/${id}`;
+    let url = `item/foundRequest/${id}`;
     fetcher(url)
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
-            console.log(json.lostItem);
+            console.log(json.foundItem);
             setitemData({
               ...itemdata,
-              itemName: json.lostItem.itemName,
-              type: json.lostItem.type,
-              colour: json.lostItem.colour,
-              files: json.lostItem.imageUrls,
-              description: json.lostItem.description,
-              // timeLost: format(json.lostItem.timeLost, "MMMM do yyyy"),
-              timeSubmitted: json.lostItem.createdAt,
-              locationLost: json.lostItem.locationLost,
-              brand: json.lostItem.brand,
-              size: json.lostItem.size,
+              itemName: json.foundItem.itemName,
+              type: json.foundItem.type,
+              colour: json.foundItem.colour,
+              files: json.foundItem.imageUrls,
+              description: json.foundItem.description,
+              // timeFound: format(json.lostItem.timeFound, "MMMM do yyyy"),
+              timeSubmitted: json.foundItem.createdAt,
+              locationFound: json.foundItem.locationFound,
+              brand: json.foundItem.brand,
+              size: json.foundItem.size,
             });
-            setid(json.lostItem._id);
-            //setselectedDate(itemdata.timeLost);
+            setid(json.foundItem._id);
+            //setselectedDate(itemdata.timeFound);
             console.log(itemdata);
             console.log();
           });
@@ -88,13 +87,12 @@ export default function Match() {
   };
 
   const deleteRequest = () => {
-    let url = `item/lostRequest/${id}`;
+    let url = `item/foundRequest/${id}`;
     fetcher(url, {method: "DELETE"})
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
             navigate("/home", { replace: true });
-            //setselectedDate(itemdata.timeLost);
             console.log();
           });
         } else {
@@ -198,7 +196,7 @@ export default function Match() {
 
   const dateLostHandler = (date) => {
     setselectedDate(date);
-    setitemData({ ...itemdata, timeLost: date });
+    setitemData({ ...itemdata, timeFound: date });
     setDisabled(false);
   };
 
@@ -290,16 +288,16 @@ export default function Match() {
         type: itemdata.category,
         colour: itemdata.colour,
         description: itemdata.description,
-        timeLost: itemdata.timeLost,
+        timeFound: itemdata.timeFound,
         timeSubmitted: itemdata.timeSubmitted,
-        locationLost: itemdata.location,
+        locationFound: itemdata.location,
         brand: itemdata.brand,
         size: itemdata.size,
       };
 
       console.log(jsonData);
       console.log(token);
-      return fetch("http://localhost:3000/item/lostRequest", {
+      return fetch("http://localhost:3000/item/foundRequest", {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -318,7 +316,6 @@ export default function Match() {
               setDisabled(false);
               setErrorSubmit("");
               setshowView(true)
-              //SuccessfulMatches();
             });
           } else {
             // Handle other status codes
@@ -381,13 +378,13 @@ export default function Match() {
 
               <div className="col-md-6">
                 <label class="small mb-1 fw-bold" for="inputlocation">
-                  Location lost
+                  Location found
                 </label>
                 <input
                   class="form-control"
                   id="inputLocation"
                   type="text"
-                  value={itemdata.locationLost}
+                  value={itemdata.locationFound}
                   disabled={true}
                 />
               </div>
@@ -395,13 +392,13 @@ export default function Match() {
             <div class="row gx-3 mb-3">
               <div className="col-md-6">
                 <label class="small mb-1 fw-bold">
-                  Date when item was lost
+                  Date when item was found
                 </label>
                 <input
                   class="form-control"
                   id="inputCategory"
                   type="text"
-                  value={itemdata.timeLost}
+                  value={itemdata.timeFound}
                   disabled={true}
                 />
               </div>
@@ -609,7 +606,7 @@ export default function Match() {
                   aria-label=".form-select-sm"
                   onChange={(e) => locationhandler(e)}
                 >
-                  <option selected>{itemdata.locationLost}</option>
+                  <option selected>{itemdata.locationFound}</option>
                   <option value="CC">CC</option>
                   <option value="DH">DH</option>
                   <option value="DW">DW</option>
@@ -792,7 +789,6 @@ export default function Match() {
           </div>
         </div>
       </div>
-      <Matches />
     </div>
   );
 }

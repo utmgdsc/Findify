@@ -153,7 +153,7 @@ export default function ReportFound() {
               setDisabled(false);
               setValidated(true);
               setErrors({ ...errors, submit: "" });
-              navigate("/home", { replace: true });
+              navigate(`/founditem/${json.id}`, { replace: true });
             });
           } else {
             // Handle other status codes
@@ -193,7 +193,7 @@ export default function ReportFound() {
                   >
                     <h3 className="text-center">Report a Found Item</h3>
                     <div className="mb-3">
-                      <label>Item Name</label>
+                      <label>Item name*</label>
                       <input
                         required
                         type="text"
@@ -209,7 +209,7 @@ export default function ReportFound() {
                     </div>
 
                     <div className="mb-3">
-                      <label>Location Found</label>
+                      <label>Location found*</label>
                       <select
                         required
                         class="form-select form-select-sm"
@@ -247,7 +247,7 @@ export default function ReportFound() {
                     ) : null}
 
                     <div className="mb-3">
-                      <label>Date when the item was found</label>
+                      <label>Date when the item was found*</label>
                       <DatePicker
                         selected={selectedDate}
                         onChange={(date) => dateLostHandler(date)}
@@ -258,7 +258,7 @@ export default function ReportFound() {
                     </div>
 
                     <div className="mb-3">
-                      <label>Category</label>
+                      <label>Category*</label>
                       <select
                         required
                         class="form-select form-select-sm"
@@ -292,7 +292,7 @@ export default function ReportFound() {
                     ) : null}
 
                     <div className="mb-3">
-                      <label>Colour of the item</label>
+                      <label>Colour of the item*</label>
                       <select
                         required
                         class="form-select form-select-sm"
@@ -330,7 +330,7 @@ export default function ReportFound() {
                     ) : null}
 
                     <div className="mb-3">
-                      <label>Brand</label>
+                      <label>Brand*</label>
                       <input
                         required
                         type="text"
@@ -345,7 +345,7 @@ export default function ReportFound() {
                       </span>
                     </div>
                     <div className="mb-3">
-                      <label>Size of the item</label>
+                      <label>Size of the item*</label>
                       <select
                         required
                         class="form-select form-select-sm"
@@ -365,7 +365,7 @@ export default function ReportFound() {
 
                     <div className="mb-3">
                       <label class="form-label" for="customFile">
-                        Upload Images (Optional)
+                        Upload images (Optional)
                       </label>
                       <input
                         type="file"
@@ -377,7 +377,7 @@ export default function ReportFound() {
                       />
                     </div>
                     <div className="mb-3">
-                      <label>Additional Description</label>
+                      <label>Additional description (Optional)</label>
                       <input
                         type="text"
                         className="form-control"

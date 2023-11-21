@@ -6,16 +6,7 @@
 p {
     font-size: larger;
 }
-.body-match{
-    margin:0;
-    padding:0;
-    height: 100%;
-    background-color: #7EB2DD !important;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover !important;
-}
+
 .img-account-profile {
     height: 10rem;
 }

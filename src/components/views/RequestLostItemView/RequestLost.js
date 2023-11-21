@@ -213,7 +213,7 @@ export default function RequestLost() {
                   >
                     <h3 className="text-center">Request a Lost Item</h3>
                     <div className="mb-3">
-                      <label>Item Name</label>
+                      <label>Item name*</label>
                       <input
                         required
                         type="text"
@@ -229,7 +229,7 @@ export default function RequestLost() {
                     </div>
 
                     <div className="mb-3">
-                      <label>Location Lost</label>
+                      <label>Location lost*</label>
                       <select
                         required
                         className="form-select form-select-sm"
@@ -267,7 +267,7 @@ export default function RequestLost() {
                     ) : null}
 
                     <div className="mb-3">
-                      <label>Date when item was Lost</label>
+                      <label>Date when item was lost*</label>
                       <DatePicker
                         selected={selectedDate}
                         onChange={(date) => dateLostHandler(date)}
@@ -278,7 +278,7 @@ export default function RequestLost() {
                     </div>
 
                     <div className="mb-3">
-                      <label>Category</label>
+                      <label>Category*</label>
                       <select
                         required
                         className="form-select form-select-sm"
@@ -312,7 +312,7 @@ export default function RequestLost() {
                     ) : null}
 
                     <div className="mb-3">
-                      <label>Colour of the item</label>
+                      <label>Colour of the item*</label>
                       <select
                         required
                         className="form-select form-select-sm"
@@ -350,7 +350,7 @@ export default function RequestLost() {
                     ) : null}
 
                     <div className="mb-3">
-                      <label>Brand</label>
+                      <label>Brand*</label>
                       <input
                         required
                         type="text"
@@ -366,7 +366,7 @@ export default function RequestLost() {
                     </div>
 
                     <div className="mb-3">
-                      <label>Size of the item</label>
+                      <label>Size of the item*</label>
                       <select
                         required
                         className="form-select form-select-sm"
@@ -386,7 +386,7 @@ export default function RequestLost() {
 
                     <div className="mb-3">
                       <label className="form-label" for="customFile">
-                        Upload Images (Optional)
+                        Upload images (Optional)
                       </label>
                       <input
                         type="file"
@@ -398,7 +398,7 @@ export default function RequestLost() {
                       />
                     </div>
                     <div className="mb-3">
-                      <label>Additional Description</label>
+                      <label>Additional description (optional)</label>
                       <input
                         type="text"
                         className="form-control"
