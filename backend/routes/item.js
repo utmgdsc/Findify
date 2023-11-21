@@ -136,6 +136,17 @@ router.route('/createPotentialMatch')
       }
     })
 
+
+router.route('/lostAndFoundHandoff')
+  .post(authenticate,
+    checkRequiredAttributes(["foundItemId"]),
+    async (req, res) => {
+      try {
+        await ItemController.lostAndFoundHandoff(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Error handing off the item to the lostAndFound: ${err}` });
+      }
+    })
 const errorHandler = (err) => { }
 
 module.exports = router;

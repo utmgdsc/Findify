@@ -291,8 +291,8 @@ module.exports.createPotentialMatch = async (req, res, next) => {
   const user = req.user; // the logged-in user
 
   try {
-    const lostItem = await LostItem.findById(lostRequestId)
-    const foundItem = await FoundItem.findById(foundItemId).populate("host").exec();;
+    const lostItem = await LostItem.findById(lostRequestId);
+    const foundItem = await FoundItem.findById(foundItemId).populate("host").exec();
 
     if (!lostItem || !foundItem) {
       throw new Error('404 Not Found: Lost or Found item not found');
@@ -315,6 +315,39 @@ module.exports.createPotentialMatch = async (req, res, next) => {
       res.status(200).json({ message: 'Match already exists', hostEmail });
     }
     
+  } catch (err) {
+    errorHandler(err, res); 
+    next(err);
+  }
+};
+
+module.exports.lostAndFoundHandoff = async (req, res, next) => {
+  const { foundItemId } = req.body;
+  const user = req.user; // the logged-in user
+
+  try {
+    const foundItem = await FoundItem.findById(foundItemId);
+
+    if (!foundItem) {
+      throw new Error('404 Not Found: Found item not found (lol)');
+    }
+
+    // ensure only the current host can hand off the item
+    if (!user.isAdmin && !foundItem.host.equals(user._id)) {
+      throw new Error('401 Unauthorized: User does not own found request');
+    }
+
+    // set the host of the found item to be the lost and found
+    const lostAndFoundAdmin = await User.findOne({ isAdmin: true });
+    if (!lostAndFoundAdmin) {
+      throw new Error('Lost and Found Admin not found');
+    }
+
+    foundItem.host = lostAndFoundAdmin._id;
+    await foundItem.save();
+
+    res.status(200).json({ message: 'Item handed off to lost and found successfully.' });
+
   } catch (err) {
     errorHandler(err, res); 
     next(err);
