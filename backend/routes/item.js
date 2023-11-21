@@ -16,6 +16,16 @@ router.route('/lostRequest/:id')
       }
     }
   )
+  .delete(
+    authenticate,
+    async (req, res) => {
+      try {
+        await ItemController.deleteLostRequest(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Delete Lost Request Error: ${err}` });
+      }
+    }
+  )
 
 router.route('/lostRequest')
   .post(
