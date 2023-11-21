@@ -113,6 +113,12 @@ module.exports.getFoundRequest = async (req, res, next) => {
   try {
     const foundRequestId = req.params.id
     const foundItem = await FoundItem.findById(foundRequestId);
+
+    if (!foundItem) {
+      // If foundItem does not exist, send a 404 Not Found response
+      return res.status(404).json({ message: 'Found item not found' });
+    }
+
     res.json({ foundItem });
   } catch (err) {
     console.error("Error fetching foundItem details:", err);
