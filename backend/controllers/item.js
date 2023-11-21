@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const { LostItem, FoundItem, PotentialMatch } = require('../models/Item');
+const User = require('../models/User');
 const { s3 } = require('../utils/aws');
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { errorHandler } = require('../utils/errorHandler');
@@ -282,6 +283,42 @@ module.exports.getSimilarItems = async (req, res, next) => {
     res.status(500).json({ message: 'Error fetching similar items' });
   }
 }
+
+module.exports.createPotentialMatch = async (req, res, next) => {
+  const { lostRequestId, foundItemId } = req.body;
+  const user = req.user; // the logged-in user
+
+  try {
+    const lostItem = await LostItem.findById(lostRequestId)
+    const foundItem = await FoundItem.findById(foundItemId).populate("host").exec();;
+
+    if (!lostItem || !foundItem) {
+      throw new Error('404 Not Found: Lost or Found item not found');
+    }
+
+    if (!lostItem.host.equals(user._id)) {
+      throw new Error('401 Unauthorized: User does not own lost request');
+    }
+
+    const hostEmail = foundItem.host.email;
+
+    // Check if the match already exists
+    const existingMatch = await PotentialMatch.findOne({ lostId: lostRequestId, foundId: foundItemId });
+    if (!existingMatch) {
+      const newPotentialMatch = new PotentialMatch({ lostId: lostRequestId, foundId: foundItemId });
+      await newPotentialMatch.save();
+      res.status(200).json({ message: 'Created potential match', hostEmail });
+    } else {
+      // intentionally send 200
+      res.status(200).json({ message: 'Match already exists', hostEmail });
+    }
+    
+  } catch (err) {
+    errorHandler(err, res); 
+    next(err);
+  }
+};
+
 
 async function uploadToS3 (folder, file) {
   const fileName = `${folder}/${uuidv4()}-${file.originalname}`;

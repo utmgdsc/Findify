@@ -124,6 +124,18 @@ router.route('/getUserPosts')
       }
     })
 
+// matching related endpoints:
+router.route('/createPotentialMatch')
+  .post(authenticate,
+    checkRequiredAttributes(["lostRequestId", "foundItemId"]),
+    async (req, res) => {
+      try {
+        await ItemController.createPotentialMatch(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Error creating potential match: ${err}` })
+      }
+    })
+
 const errorHandler = (err) => { }
 
 module.exports = router;
