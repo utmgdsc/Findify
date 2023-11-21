@@ -87,6 +87,22 @@ module.exports.editLostRequest = async (req, res, next) => {
   }
 };
 
+module.exports.deleteLostRequest = async (req, res, next) => {
+  const lostRequestId = req.params.id
+  const user = req.user;
+  const lostItem = LostItem.findById(lostRequestId);
+
+  try {
+    if (!lostItem.host.equals(user._id)) {
+      throw new Error('401 Unauthorized: User does not own lost request')
+    }
+    await FoundItem.findByIdAndDelete(lostRequestId);
+  } catch (err) {
+    errorHandler(err, res);
+    next(err);
+  }
+}
+
 module.exports.getFoundRequest = async (req, res, next) => {
   try {
     const foundRequestId = req.params.id
@@ -167,6 +183,22 @@ module.exports.editFoundRequest = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.deleteFoundRequest = async (req, res, next) => {
+  const foundRequestId = req.params.id
+  const user = req.user;
+  const foundItem = FoundItem.findById(foundRequestId);
+
+  try {
+    if (!foundItem.host.equals(user._id)) {
+      throw new Error('401 Unauthorized: User does not own found request')
+    }
+    await FoundItem.findByIdAndDelete(foundRequestId);
+  } catch (err) {
+    errorHandler(err, res);
+    next(err);
+  }
+}
 
 module.exports.getUserPosts = async (req, res, next) => {
   try {

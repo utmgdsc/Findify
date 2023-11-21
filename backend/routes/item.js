@@ -55,6 +55,16 @@ router.route('/foundRequest/:id')
       }
     }
   )
+  .delete(
+    authenticate,
+    async (req, res) => {
+      try {
+        await ItemController.deleteFoundRequest(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Delete Found Request Error: ${err}` });
+      }
+    }
+  )
 
 router.route('/foundRequest')
   .post(
