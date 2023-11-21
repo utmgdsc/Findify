@@ -162,7 +162,7 @@ module.exports.createFoundRequest = async (req, res, next) => {
 module.exports.editFoundRequest = async (req, res, next) => {
   const { foundRequestId } = req.body;
   const user = req.user
-  const foundItem = FoundItem.findById(foundRequestId)
+  const foundItem = await FoundItem.findById(foundRequestId)
   let imageUrls = [];
 
   try {
