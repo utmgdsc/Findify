@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const { LostItem, FoundItem, PotentialMatch } = require('../models/Item');
+const User = require('../models/User');
 const { s3 } = require('../utils/aws');
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { errorHandler } = require('../utils/errorHandler');
@@ -10,6 +11,12 @@ module.exports.getLostRequest = async (req, res, next) => {
   try {
     const lostRequestId = req.params.id
     const lostItem = await LostItem.findById(lostRequestId);
+
+    if (!lostItem) {
+      // If lostItem does not exist, send a 404 Not Found response
+      return res.status(404).json({ message: 'Lost item not found' });
+    }
+
     res.json({ lostItem });
   } catch (err) {
     console.error("Error fetching lostItem details:", err);
@@ -52,12 +59,12 @@ module.exports.createLostRequest = async (req, res, next) => {
 
 module.exports.editLostRequest = async (req, res, next) => {
   const { lostRequestId } = req.body;
-  const user = req.user
-  const lostItem = await LostItem.findById(lostRequestId)
+  const user = req.user;
+  const lostItem = await LostItem.findById(lostRequestId);
   let imageUrls = [];
 
   try {
-    if (!lostItem.host._id.equals(user._id)) {
+    if (!user.isAdmin && !lostItem.host._id.equals(user._id)) {
       throw new Error('401 Unauthorized: User does not own lost request');
     }
 
@@ -88,12 +95,12 @@ module.exports.editLostRequest = async (req, res, next) => {
 };
 
 module.exports.deleteLostRequest = async (req, res, next) => {
-  const lostRequestId = req.params.id
+  const lostRequestId = req.params.id;
   const user = req.user;
-  const lostItem = LostItem.findById(lostRequestId);
+  const lostItem = await LostItem.findById(lostRequestId);
 
   try {
-    if (!lostItem.host.equals(user._id)) {
+    if (!user.isAdmin && !lostItem.host.equals(user._id)) {
       throw new Error('401 Unauthorized: User does not own lost request')
     }
     await FoundItem.findByIdAndDelete(lostRequestId);
@@ -107,6 +114,12 @@ module.exports.getFoundRequest = async (req, res, next) => {
   try {
     const foundRequestId = req.params.id
     const foundItem = await FoundItem.findById(foundRequestId);
+
+    if (!foundItem) {
+      // If foundItem does not exist, send a 404 Not Found response
+      return res.status(404).json({ message: 'Found item not found' });
+    }
+
     res.json({ foundItem });
   } catch (err) {
     console.error("Error fetching foundItem details:", err);
@@ -149,12 +162,12 @@ module.exports.createFoundRequest = async (req, res, next) => {
 
 module.exports.editFoundRequest = async (req, res, next) => {
   const { foundRequestId } = req.body;
-  const user = req.user
-  const foundItem = FoundItem.findById(foundRequestId)
+  const user = req.user;
+  const foundItem = await FoundItem.findById(foundRequestId);
   let imageUrls = [];
 
   try {
-    if (!foundItem.host.equals(user._id)) {
+    if (!user.isAdmin && !foundItem.host.equals(user._id)) {
       throw new Error('401 Unauthorized: User does not own found request');
     }
 
@@ -187,10 +200,10 @@ module.exports.editFoundRequest = async (req, res, next) => {
 module.exports.deleteFoundRequest = async (req, res, next) => {
   const foundRequestId = req.params.id
   const user = req.user;
-  const foundItem = FoundItem.findById(foundRequestId);
+  const foundItem = await FoundItem.findById(foundRequestId);
 
   try {
-    if (!foundItem.host.equals(user._id)) {
+    if (!user.isAdmin && !foundItem.host.equals(user._id)) {
       throw new Error('401 Unauthorized: User does not own found request')
     }
     await FoundItem.findByIdAndDelete(foundRequestId);
@@ -217,6 +230,8 @@ module.exports.getUserPosts = async (req, res, next) => {
 };
 
 module.exports.getSimilarItems = async (req, res, next) => {
+  const user = req.user;
+  
   try {
     const lostItemId = req.params.id;
 
@@ -228,7 +243,7 @@ module.exports.getSimilarItems = async (req, res, next) => {
       return res.status(404).json({ message: 'Lost item not found' });
     }
 
-    if (!req.user._id.equals(lostItem.host._id)) {
+    if (!user.isAdmin && !user._id.equals(lostItem.host._id)) {
       return res.status(403).json({ message: 'Only the lost item host can fetch similar items' });
     }
 
@@ -270,6 +285,123 @@ module.exports.getSimilarItems = async (req, res, next) => {
     res.status(500).json({ message: 'Error fetching similar items' });
   }
 }
+
+module.exports.createPotentialMatch = async (req, res, next) => {
+  const { foundItemId } = req.body;
+  const user = req.user; // the logged-in user
+
+  try {
+    const foundItem = await FoundItem.findById(foundItemId).populate("host").exec();
+    if (!foundItem) {
+      throw new Error('404 Not Found: Lost or Found item not found');
+    }
+
+    const hostEmail = foundItem.host.email;
+
+    // Check if the match already exists
+    const existingMatch = await PotentialMatch.findOne({ potentialOwner: user._id, foundId: foundItemId });
+    if (!existingMatch) {
+      const newPotentialMatch = new PotentialMatch({ potentialOwner: user._id, foundId: foundItemId });
+      await newPotentialMatch.save();
+      res.status(200).json({ message: 'Recorded potential match', hostEmail });
+    } else {
+      // intentionally send 200
+      res.status(200).json({ message: 'Match already exists', hostEmail });
+    }
+    
+  } catch (err) {
+    errorHandler(err, res); 
+    next(err);
+  }
+};
+
+module.exports.lostAndFoundHandoff = async (req, res, next) => {
+  const { foundItemId } = req.body;
+  const user = req.user; // the logged-in user
+
+  try {
+    const foundItem = await FoundItem.findById(foundItemId);
+
+    if (!foundItem) {
+      throw new Error('404 Not Found: Found item not found (lol)');
+    }
+
+    // ensure only the current host can hand off the item
+    if (!user.isAdmin && !foundItem.host.equals(user._id)) {
+      throw new Error('401 Unauthorized: User does not own found request');
+    }
+
+    // set the host of the found item to be the lost and found
+    const lostAndFoundAdmin = await User.findOne({ isAdmin: true });
+    if (!lostAndFoundAdmin) {
+      throw new Error('Lost and Found Admin not found');
+    }
+
+    foundItem.host = lostAndFoundAdmin._id;
+    await foundItem.save();
+
+    res.status(200).json({ message: 'Item handed off to lost and found successfully.' });
+
+  } catch (err) {
+    errorHandler(err, res); 
+    next(err);
+  }
+};
+
+
+module.exports.finalHandoff = async (req, res, next) => {
+  const { foundItemId, lostRequestId } = req.body;
+  const user = req.user;
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const foundItem = await FoundItem.findById(foundItemId).session(session);
+    const lostItem = await LostItem.findById(lostRequestId).session(session);
+
+    if (!foundItem || !lostItem) {
+      throw new Error('404 Not Found: Item not found');
+    }
+
+    // Additional secuity checks if needed:
+    // if (!foundItem.isActive || !lostItem.isActive) {
+    //   throw new Error('400 Bad Request: One or both items are already inactive');
+    // }
+    // if (foundItem.matchedLostItem || lostItem.matchedFoundItem) {
+    //   throw new Error('400 Bad Request: Items are already matched with others');
+    // }
+
+    // Ensure only the current host of the found item can hand off the item
+    if (!user.isAdmin && !foundItem.host.equals(user._id)) {
+      throw new Error('401 Unauthorized: User does not own found item');
+    }
+
+    // Mark both items as inactive and store the final match
+    foundItem.isActive = false;
+    lostItem.isActive = false;
+    foundItem.matchedLostItem = lostRequestId;
+    lostItem.matchedFoundItem = foundItemId;
+    foundItem.host = lostItem.host;
+
+    await foundItem.save({ session });
+    await lostItem.save({ session });
+
+    // Log or notify about the handoff
+    console.log(`Handoff completed: Found item ${foundItemId} matched with lost item ${lostRequestId}`);
+
+    await session.commitTransaction();
+    res.status(200).json({ message: 'Handoff successful. Both items marked as inactive and matched.' });
+
+  } catch (err) {
+    await session.abortTransaction();
+    errorHandler(err, res);
+    next(err);
+  } finally {
+    session.endSession();
+  }
+};
+
 
 async function uploadToS3 (folder, file) {
   const fileName = `${folder}/${uuidv4()}-${file.originalname}`;

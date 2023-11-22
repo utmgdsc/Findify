@@ -16,6 +16,16 @@ router.route('/lostRequest/:id')
       }
     }
   )
+  .delete(
+    authenticate,
+    async (req, res) => {
+      try {
+        await ItemController.deleteLostRequest(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Delete Lost Request Error: ${err}` });
+      }
+    }
+  )
 
 router.route('/lostRequest')
   .post(
@@ -113,6 +123,42 @@ router.route('/getUserPosts')
         res.json({ message: `Get User Posts Error: ${err}` })
       }
     })
+
+// matching related endpoints:
+router.route('/createPotentialMatch')
+  .post(authenticate,
+    checkRequiredAttributes(["foundItemId"]),
+    async (req, res) => {
+      try {
+        await ItemController.createPotentialMatch(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Error creating potential match: ${err}` })
+      }
+    })
+
+
+router.route('/lostAndFoundHandoff')
+  .post(authenticate,
+    checkRequiredAttributes(["foundItemId"]),
+    async (req, res) => {
+      try {
+        await ItemController.lostAndFoundHandoff(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Error handing off the item to the lostAndFound: ${err}` });
+      }
+    })
+
+router.route('/finalHandoff')
+  .post(authenticate,
+    checkRequiredAttributes(["foundItemId", "lostRequestId"]),
+    async (req, res) => {
+      try {
+        await ItemController.finalHandoff(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Error handing off the item to the lostAndFound: ${err}` });
+      }
+    })
+
 
 const errorHandler = (err) => { }
 

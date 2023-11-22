@@ -41,9 +41,10 @@ const FoundItemSchema = new mongoose.Schema(
 );
 
 const PotentialMatchSchema = new mongoose.Schema({
-  lostId: { type: mongoose.Schema.Types.ObjectId, ref: 'lostItem', required: true },
+  potentialOwner: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true },
   foundId: { type: mongoose.Schema.Types.ObjectId, ref: 'foundItem', required: true }
-});
+}, { timestamps: true }
+);
 
 const lostItemModel = mongoose.model('lostItem', LostItemSchema);
 const foundItemModel = mongoose.model('foundItem', FoundItemSchema);
