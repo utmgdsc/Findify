@@ -1,21 +1,20 @@
-.no-result {
-    max-width: 20%;
-    height: auto !important;
-    margin-bottom: 20px;
-}
-p {
-    font-size: larger;
-}
-.body-match{
+.body-claim{
     margin:0;
     padding:0;
-    height: 100%;
+    min-height: 100%;
     background-color: #7EB2DD !important;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
     background-size: cover !important;
 }
+.container-claim{
+    margin-top:100px;
+}
+p {
+    font-size: larger;
+}
+
 .img-account-profile {
     height: 10rem;
 }
@@ -56,15 +55,13 @@ p {
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.other-input-match {
+.item-may-be-mine-button {
 margin-top: 6px !important;
 margin-left: 6px !important;
-width: 10% !important;
-border:0.02px grey solid;
+width: 100% !important;
 }
 
       
-.update-item-button:hover{
-        background:rgb(29, 141, 227);
-        color: white;
+.item-may-be-mine-button:hover{
+        background:white;
 }
