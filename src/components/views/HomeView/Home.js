@@ -21,13 +21,9 @@ export default function Home() {
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
-            console.log(json.userPosts);
-            console.log(json.userPosts.lostItems[0]);
             setLostItems([...json.userPosts.lostItems, ...lostItems]);
             setLostItems(json.userPosts.lostItems);
             setFoundItems(json.userPosts.foundItems);
-            console.log(lostItems);
-            console.log(foundItems);
           });
         } else {
           // Check if user is logged in
@@ -79,7 +75,9 @@ export default function Home() {
     return (
       <div className="col">
         <img src={no_results} alt="" className="card-img-top no-result" />
-        <p>Sorry! It looks like you have not made any reports previously.</p>
+        <p className="no-resulst-text">
+          Sorry! It looks like you have not made any reports previously.
+        </p>
       </div>
     );
   };
@@ -87,47 +85,46 @@ export default function Home() {
   return (
     <>
       <NavBar />
-      <div className="body-home container-fluid text-center">
-        <div className="row" style={{ height: 20 + "vh" }}>
-          <div className="col" id="requestLostItem">
+      <div className="container surrounding-box text-center">
+        <div className="row buttons" style={{ height: 20 + "vh" }}>
+          <div className="col-6" id="requestLostItem">
             <a
-              className="btn w-75 h-75 p-2 mt-5"
+              className="btn btn-outline-info"
               role="button"
               href="/requestLostItem"
             >
-              Request lost item query
+              Request Lost Item Query
             </a>
           </div>
-          <div className="col" id="reportFoundItem">
+          <div className="col-6" id="reportFoundItem">
             <a
-              className="btn w-75 h-75 p-2 mt-5"
+              className="btn btn-outline-info"
               role="button"
               href="/reportFoundItem"
             >
-              Report unidentified item found
+              Report Unidentified Item Found
             </a>
           </div>
         </div>
-
-        <div className="row" style={{ height: 80 + "vh" }}>
+        <div className="row">
           <div className="col">
             <div className="container py-5">
               <div className="row">
                 <div className="col-12 ">
-                  <div className="bg-white rounded p-2">
-                    <ul className="nav nav-tabs justify-content-center ">
-                      <li className="nav-item ">
+                  <div className="item-list p-2">
+                    <ul className="nav nav-tabs item-tabs justify-content-center">
+                      <li className="nav-item items-link">
                         <a
-                          className="nav-link active"
+                          className="nav-link active p-2"
                           data-bs-toggle="tab"
                           href="#lost"
                         >
                           Past lost item queries
                         </a>
                       </li>
-                      <li className="nav-item">
+                      <li className="nav-item items-link">
                         <a
-                          className="nav-link"
+                          className="nav-link p-2"
                           data-bs-toggle="tab"
                           href="#found"
                         >

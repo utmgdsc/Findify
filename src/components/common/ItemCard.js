@@ -12,49 +12,59 @@ export default function ItemCard(props) {
 
   return (
     <div className="col-lg-3 col-md-6 col-sm-10 my-4">
-      <div className={card_status}>
-        <div id="carouselExample" className="carousel slide">
-          <div className="carousel-inner">
-            {imageUrls.length !== 0 ? (
-              imageUrls.map((i, index) => {
+      <div className={`${card_status} item-card`}>
+        {imageUrls.length > 1 ? (
+          <div id="carouselExample" className="carousel slide">
+            <div className="carousel-inner">
+              {imageUrls.map((i, index) => {
                 let class_value = "";
                 if (index === 0) class_value = "carousel-item active";
                 else class_value = "carousel-item";
                 return (
-                  <div className={class_value} key={i.id}>
-                    <img src={i} alt="" width="200px" height="200px" />
+                  <div className={class_value} key={index}>
+                    <img
+                      className="card-img-top item-img border"
+                      src={i}
+                      alt=""
+                    />
                   </div>
                 );
-              })
-            ) : (
-              <img src={no_img} alt="" width="200px" height="200px" />
-            )}
+              })}
+            </div>
+            <button
+              className="carousel-control-prev"
+              type="button"
+              data-bs-target="#carouselExample"
+              data-bs-slide="prev"
+            >
+              <span
+                className="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span className="visually-hidden">Previous</span>
+            </button>
+            <button
+              className="carousel-control-next"
+              type="button"
+              data-bs-target="#carouselExample"
+              data-bs-slide="next"
+            >
+              <span
+                className="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span className="visually-hidden">Next</span>
+            </button>
           </div>
-          <button
-            className="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExample"
-            data-bs-slide="prev"
-          >
-            <span
-              className="carousel-control-prev-icon"
-              aria-hidden="true"
-            ></span>
-            <span className="visually-hidden">Previous</span>
-          </button>
-          <button
-            className="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExample"
-            data-bs-slide="next"
-          >
-            <span
-              className="carousel-control-next-icon"
-              aria-hidden="true"
-            ></span>
-            <span className="visually-hidden">Next</span>
-          </button>
-        </div>
+        ) : imageUrls.length === 1 ? (
+          <img
+            className="card-img-top item-img border"
+            src={imageUrls[0]}
+            alt=""
+          />
+        ) : (
+          <img className="card-img-top item-img border" src={no_img} alt="" />
+        )}
         <div className="card-body">
           <h4 className="card-title">{name}</h4>
           <p className="card-title">Location: {location}</p>

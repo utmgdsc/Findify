@@ -1,50 +1,75 @@
-.body-home {
+body{
   letter-spacing: 0.5px;
   background: linear-gradient(90deg, rgba(202, 201, 223, 0.75) 0%, rgba(40, 40, 159, 0.95) 0%, rgba(28, 92, 188, 0.75) 30%, rgba(0, 212, 255, 0.75) 100%);
   height: 100%;
 }
 
+.surrounding-box {
+    background: whitesmoke;
+    border-radius: 2rem;
+    margin: 2em 0;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    overflow: hidden; 
+}
+
 #requestLostItem a {
   line-height: 3;
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: rgb(29, 141, 227);
   background-color: rgb(255, 251, 251);
+  margin-top: 2.2em;
+  margin-right: -20%;
+  width: 65%;
 }
 
 #requestLostItem a:hover {
-  font-size: 2.1rem;
+  font-size: 1.6rem;
 }
 
 #reportFoundItem a {
   line-height: 3;
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: rgb(29, 141, 227);
   background-color: rgb(255, 251, 251);
+  margin-top: 2.2em;
+  margin-left: -20%;
+  width: 65%;
 }
 
 #reportFoundItem a:hover {
-  font-size: 2.1rem;
+  font-size: 1.6rem;
 }
 
-.nav-link.active {
-  border-color: rgb(29, 141, 227) rgb(29, 141, 227) white !important;
+.item-list {
+    border-radius: 1.5em;
+    background: white;
+    max-height: 70vh;
+    overflow-y: auto;
+    margin-top: -30px;
 }
 
-.nav-link {
+.item-tabs {
+    top: 0;
+    z-index: 100;
+    font-size: large;
+}
+
+.items-link {
+    color: rgb(29, 141, 227) !important;
+    padding-left: 2%;
+}
+
+.items-link.active {
   color: rgb(29, 141, 227) !important;
-  font-weight: 700;
-}
 
-.nav-link:hover {
-  border-color: rgb(29, 141, 227) !important;
 }
 
 .no-result {
-  max-width: 20%;
-  height: auto !important;
+  width: 100px !important;
+  height: 150px !important;
   margin-bottom: 20px;
 }
 
-p {
-  font-size: larger;
+.no-results-text {
+  font-size: medium;
 }

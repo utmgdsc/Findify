@@ -20,6 +20,7 @@ export default function Match() {
   const [selectedDate, setselectedDate] = useState(null);
   const [errorSubmit, setErrorSubmit] = useState("");
   const [showView, setshowView] = useState(true);
+  const [formattedDate, setFormattedDate] = useState("");
 
   const [itemdata, setitemData] = useState({
     itemName: "",
@@ -27,7 +28,7 @@ export default function Match() {
     colour: "",
     files: "",
     description: "",
-    timeLost: "",
+    timeLost: new Date(),
     timeSubmitted: "",
     locationLost: "",
     brand: "",
@@ -48,6 +49,7 @@ export default function Match() {
   }, []);
 
   const getItemDetails = () => {
+    console.log("reached");
     let url = `item/lostRequest/${id}`;
     fetcher(url)
       .then((response) => {
@@ -61,16 +63,14 @@ export default function Match() {
               colour: json.lostItem.colour,
               files: json.lostItem.imageUrls,
               description: json.lostItem.description,
-              // timeLost: format(json.lostItem.timeLost, "MMMM do yyyy"),
+              timeLost: json.lostItem.timeLost,
               timeSubmitted: json.lostItem.createdAt,
               locationLost: json.lostItem.locationLost,
               brand: json.lostItem.brand,
               size: json.lostItem.size,
             });
             setid(json.lostItem._id);
-            //setselectedDate(itemdata.timeLost);
-            console.log(itemdata);
-            console.log();
+            setFormattedDate(json.lostItem.timeLost.slice(0, 10));
           });
         } else {
           // Check if user is logged in
@@ -89,13 +89,12 @@ export default function Match() {
 
   const deleteRequest = () => {
     let url = `item/lostRequest/${id}`;
-    fetcher(url, {method: "DELETE"})
+    fetcher(url, { method: "DELETE" })
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
             navigate("/home", { replace: true });
             //setselectedDate(itemdata.timeLost);
-            console.log();
           });
         } else {
           // Check if user is logged in
@@ -115,23 +114,24 @@ export default function Match() {
   const createImagesCard = (files) => {
     return (
       <div className="text-center">
-        <div>
+        {files.length > 1 ? (
           <div id="carouselExample" className="carousel slide">
             <div className="carousel-inner">
-              {files.length !== 0 ? (
-                files.map((i, index) => {
-                  let class_value = "";
-                  if (index === 0) class_value = "carousel-item active";
-                  else class_value = "carousel-item";
-                  return (
-                    <div className={class_value}>
-                      <img src={i} alt="" width="300px" height="200px" />
-                    </div>
-                  );
-                })
-              ) : (
-                <img src={no_img} alt="" width="200px" height="150px" />
-              )}
+              {files.map((i, index) => {
+                let class_value =
+                  index === 0 ? "carousel-item active" : "carousel-item";
+                return (
+                  <div className={class_value} key={index}>
+                    <img
+                      src={i}
+                      alt=""
+                      width="300px"
+                      height="200px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                );
+              })}
             </div>
             <button
               className="carousel-control-prev"
@@ -158,22 +158,44 @@ export default function Match() {
               <span className="visually-hidden">Next</span>
             </button>
           </div>
-          <div className="card-body">
-            <div className="mb-3">
-              <label className="form-label fw-bold" for="customFile">
-                Update Images
-              </label>
-              <input
-                type="file"
-                className="form-control"
-                id="customFile"
-                accept="image/*"
-                multiple
-                onChange={imagehandler}
+        ) : (
+          <div>
+            {files.length === 1 ? (
+              <img
+                src={files[0]}
+                alt=""
+                width="300px"
+                height="200px"
+                style={{ objectFit: "fill" }}
               />
-            </div>
+            ) : (
+              <img
+                src={no_img}
+                alt=""
+                width="200px"
+                height="150px"
+                style={{ objectFit: "cover" }}
+              />
+            )}
+            {showView ? null : (
+              <div className="card-body">
+                <div className="mb-3">
+                  <label className="form-label fw-bold" htmlFor="customFile">
+                    Update Images
+                  </label>
+                  <input
+                    type="file"
+                    className="form-control"
+                    id="customFile"
+                    accept="image/*"
+                    multiple
+                    onChange={imagehandler}
+                  />
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
     );
   };
@@ -181,19 +203,18 @@ export default function Match() {
   const imagehandler = (e) => {
     let imageurls = [];
     for (let i = 0; i < e.target.files.length; i++) {
-      console.log(e.target.files[i]);
       if (e.target.files[i].size < 3000000)
         //imageurls.push(URL.createObjectURL(e.target.files[i]));
         imageurls.push(e.target.files[i]);
       else
         setitemData({
           ...itemdata,
-          images: "Warning: A file is larger than 3mb.",
+          files: "Warning: A file is larger than 3mb.",
         });
     }
     console.log(imageurls);
-    setitemData({ ...itemdata, images: imageurls });
-    console.log(itemdata);
+    setitemData({ ...itemdata, files: imageurls });
+    setDisabled(false);
   };
 
   const dateLostHandler = (date) => {
@@ -253,6 +274,7 @@ export default function Match() {
   };
 
   const categoryhandler = (e) => {
+    console.log("category selected", e.target.value);
     setOthers({ ...others, otherCategory: false });
     if (e.target.value === "Other") {
       setOthers({
@@ -295,10 +317,10 @@ export default function Match() {
         locationLost: itemdata.location,
         brand: itemdata.brand,
         size: itemdata.size,
+        imageUrls: itemdata.files,
       };
 
       console.log(jsonData);
-      console.log(token);
       return fetch("http://localhost:3000/item/lostRequest", {
         method: "PUT",
         headers: {
@@ -313,11 +335,10 @@ export default function Match() {
         .then((response) => {
           if (response.status === 200) {
             return response.json().then((json) => {
-              console.log("got 200");
-              console.log(json);
               setDisabled(false);
               setErrorSubmit("");
-              setshowView(true)
+              setshowView(true);
+              //window.location.reload();
               //SuccessfulMatches();
             });
           } else {
@@ -330,8 +351,6 @@ export default function Match() {
           }
         })
         .catch((err) => {
-          console.log("errored out");
-          console.log(err);
           const errorObject = JSON.parse(err);
           setErrorSubmit(errorObject.message);
           console.log(err);
@@ -374,7 +393,7 @@ export default function Match() {
                   class="form-control"
                   id="inputCategory"
                   type="text"
-                  value={itemdata.category}
+                  value={itemdata.type}
                   disabled={true}
                 />
               </div>
@@ -401,7 +420,7 @@ export default function Match() {
                   class="form-control"
                   id="inputCategory"
                   type="text"
-                  value={itemdata.timeLost}
+                  value={formattedDate}
                   disabled={true}
                 />
               </div>
@@ -652,6 +671,7 @@ export default function Match() {
                 <DatePicker
                   selected={selectedDate}
                   class="form-control"
+                  value={itemdata.timeLost}
                   onChange={(date) => dateLostHandler(date)}
                   maxDate={new Date()}
                 />

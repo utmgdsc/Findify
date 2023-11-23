@@ -2,7 +2,7 @@
   background: white;
   height: 55px;
   width: 100%;
-  position: fixed;
+  position: relative;
   border-bottom: 2px rgb(235, 235, 235) solid;
 }
 
@@ -53,4 +53,20 @@
   border-radius: 10px;
   font-weight: 700;
   color: rgba(28, 92, 188, 1);
+}
+
+.item-card {
+  font-size: smaller;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.item-img {
+  width: 80px;
+  height: 100px;
+  object-fit:scale-down;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(330deg) brightness(100%) contrast(100%);
 }

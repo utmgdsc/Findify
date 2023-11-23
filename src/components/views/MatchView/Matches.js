@@ -44,8 +44,10 @@ export default function Matches() {
     return (
       <div className="col">
         <img src={no_results} alt="" className="card-img-top no-result" />
-        <p>Sorry! There seems to be no matching items right now.</p>
-        <p>
+        <p className="no-results-text">
+          Sorry! There seems to be no matching items right now.
+        </p>
+        <p className="no-results-text">
           We will email you if there are any new items reported that match your
           description
         </p>
@@ -64,7 +66,7 @@ export default function Matches() {
                   <div className="bg-white rounded p-2">
                     <div className="row">
                       <div className="col-12">
-                        <div className="row">
+                        <div className="row m-2">
                           {matches.length !== 0
                             ? matches.map((item) => {
                                 const time = item.timeLost
