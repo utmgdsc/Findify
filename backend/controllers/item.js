@@ -103,7 +103,8 @@ module.exports.deleteLostRequest = async (req, res, next) => {
     if (!user.isAdmin && !lostItem.host.equals(user._id)) {
       throw new Error('401 Unauthorized: User does not own lost request')
     }
-    await FoundItem.findByIdAndDelete(lostRequestId);
+    await LostItem.findByIdAndDelete(lostRequestId);
+    res.status(200).json({ message: "Deleted item"});
   } catch (err) {
     errorHandler(err, res);
     next(err);
@@ -207,6 +208,7 @@ module.exports.deleteFoundRequest = async (req, res, next) => {
       throw new Error('401 Unauthorized: User does not own found request')
     }
     await FoundItem.findByIdAndDelete(foundRequestId);
+    res.status(200).json({ message: "Deleted item"});
   } catch (err) {
     errorHandler(err, res);
     next(err);
