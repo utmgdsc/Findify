@@ -369,7 +369,7 @@ export default function FoundRequest() {
               setDisabled(false);
               setErrorSubmit("");
               setshowView(true);
-              //window.location.reload();
+              window.location.reload();
             });
           } else {
             // Handle other status codes
