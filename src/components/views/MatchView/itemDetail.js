@@ -62,7 +62,7 @@ export default function Match() {
               colour: json.lostItem.colour,
               files: json.lostItem.imageUrls,
               description: json.lostItem.description,
-              timeLost: json.lostItem.timeLost,
+              timeLost: json.lostItem.timeLost.substring(0, 10),
               timeSubmitted: json.lostItem.createdAt,
               locationLost: json.lostItem.locationLost,
               brand: json.lostItem.brand,
@@ -784,7 +784,9 @@ export default function Match() {
                 type="button"
                 class="btn btn-secondary mb-2 mt-2 "
                 style={{ "margin-right": "4px" }}
-                onClick={() => getItemDetails()}
+                onClick={() => {
+                  getItemDetails();
+                }}
               >
                 Reset Changes
               </button>
