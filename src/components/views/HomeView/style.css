@@ -15,16 +15,24 @@ body{
 #requestLostItem a, #reportFoundItem a {
   line-height: 3;
   font-size: 1.5rem;
-  color: rgb(255, 251, 251);
-  background-color: rgb(29, 141, 227);
+  color: rgb(29, 141, 227);
+  background-color: rgb(255, 251, 251);
   margin-top: 2.2em;
-  margin-right: -20%;
   width: 65%;
   border-radius: 1rem;
 }
 
+#requestLostItem a {
+  margin-right: -5em;
+}
+
+#reportFoundItem a {
+  margin-left: -10em;
+}
+
 #requestLostItem a:hover, #reportFoundItem a:hover {
-  font-size: 1.6rem;
+  color: rgb(255, 251, 251);
+  background-color: rgb(29, 141, 227);
 }
 
 .item-list {
