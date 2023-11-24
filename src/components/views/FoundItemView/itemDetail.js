@@ -9,7 +9,7 @@ import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
 import { format } from "date-fns";
 
-export default function FoundItem() {
+export default function FoundRequest() {
   const { id } = useParams();
   const [idtwo, setid] = useState("");
   const token = localStorage.getItem("token");
@@ -88,7 +88,7 @@ export default function FoundItem() {
 
   const deleteRequest = () => {
     let url = `item/foundRequest/${id}`;
-    fetcher(url, {method: "DELETE"})
+    fetcher(url, { method: "DELETE" })
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
@@ -315,7 +315,7 @@ export default function FoundItem() {
               console.log(json);
               setDisabled(false);
               setErrorSubmit("");
-              setshowView(true)
+              setshowView(true);
             });
           } else {
             // Handle other status codes

@@ -46,15 +46,46 @@ export default function Claim() {
               colour: json.lostItem.colour,
               files: json.lostItem.imageUrls,
               description: json.lostItem.description,
-              // timeLost: format(json.lostItem.timeLost, "MMMM do yyyy"),
+              timeLost: format(json.lostItem.timeLost, "MMMM do yyyy"),
               timeSubmitted: json.lostItem.createdAt,
               locationLost: json.lostItem.locationLost,
               brand: json.lostItem.brand,
               size: json.lostItem.size,
             });
             setid(json.lostItem._id);
-            //setselectedDate(itemdata.timeLost);
             console.log(itemdata);
+            console.log();
+          });
+        } else {
+          // Check if user is logged in
+          if (localStorage.getItem("token") === null) {
+            alert(
+              "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
+            );
+            navigate("/login", { replace: true });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const claimItem = () => {
+    let url = `item/createPotentialMatch`;
+    const jsonData = {
+      foundItemId: idtwo,
+    };
+    /* return (
+      <span style={{ fontSize: 12, color: "green" }}>
+        Request Successful! Email sent to the host.
+      </span>
+    ); */
+    fetcher(url, { body: JSON.stringify(jsonData) })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json().then((json) => {
+            console.log(json);
             console.log();
           });
         } else {
@@ -156,63 +187,6 @@ export default function Claim() {
     console.log(itemdata);
   };
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    var controller = new AbortController();
-    const signal = controller.signal;
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
-    } else {
-      const jsonData = {
-        lostRequestId: idtwo,
-        itemName: itemdata.itemName,
-        type: itemdata.category,
-        colour: itemdata.colour,
-        description: itemdata.description,
-        timeLost: itemdata.timeLost,
-        timeSubmitted: itemdata.timeSubmitted,
-        locationLost: itemdata.location,
-        brand: itemdata.brand,
-        size: itemdata.size,
-      };
-
-      console.log(jsonData);
-      console.log(token);
-      return fetch("http://localhost:3000/item/lostRequest", {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-        files: itemdata.files,
-        body: JSON.stringify(jsonData),
-        signal: signal,
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            return response.json().then((json) => {
-              console.log("got 200");
-              console.log(json);
-              //SuccessfulMatches();
-            });
-          } else {
-            // Handle other status codes
-            return response.text().then((errorMessage) => {
-              const errorObject = JSON.parse(errorMessage);
-              controller.abort();
-            });
-          }
-        })
-        .catch((err) => {
-          console.log("errored out");
-          console.log(err);
-          console.log(err);
-        });
-    }
-  };
-
   const viewItem = () => {
     return (
       <div class="row">
@@ -222,7 +196,7 @@ export default function Claim() {
           </div>
         </div>
         <div class="col-xl-8">
-          <form noValidate validated={validated} onSubmit={submitHandler}>
+          <form noValidate validated={validated}>
             <div class="mb-3">
               <label
                 class=" small mb-1 fw-bold control-label"
@@ -336,9 +310,10 @@ export default function Claim() {
 
             <div>
               <button
-                type="submit"
-                class="btn btn-danger item-may-be-mine-button mb-2 mt-2"
+                type="button"
+                class="btn btn-primary item-may-be-mine-button mb-2 mt-2"
                 style={{ "margin-right": "4px" }}
+                onClick={claimItem}
               >
                 This Item May be Mine!
               </button>

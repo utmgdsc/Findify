@@ -218,6 +218,10 @@ export default function Match() {
   };
 
   const dateLostHandler = (date) => {
+    console.log("DATE:", date);
+    const formattedDate = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+    console.log(formattedDate);
+
     setselectedDate(date);
     setitemData({ ...itemdata, timeLost: date });
     setDisabled(false);

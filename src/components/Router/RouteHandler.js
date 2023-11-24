@@ -8,8 +8,7 @@ import RequestItem from "../views/RequestLostItemView/RequestLost";
 import FoundItem from "../views/ReportFoundItemView/ReportFound";
 import Match from "../views/MatchView/itemDetail";
 import Found from "../views/FoundItemView/itemDetail";
-import Claim from "../views/ClaimView/Claim" 
-import Handoff from "../views/HandoffView/Handoff" 
+import Claim from "../views/ClaimView/Claim";
 
 export default function RouteHandler() {
   return (
@@ -23,7 +22,6 @@ export default function RouteHandler() {
       <Route path="/lostitem/:id" element={<Match />} />
       <Route path="/founditem/:id" element={<Found />} />
       <Route path="/claim" element={<Claim />} />
-      <Route path="/handoff" element={<Handoff />} />
     </Routes>
   );
 }
