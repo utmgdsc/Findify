@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
 
-export default function FoundItem() {
+export default function FoundRequest() {
   const { id } = useParams();
   const [idtwo, setid] = useState("");
   const token = localStorage.getItem("token");
