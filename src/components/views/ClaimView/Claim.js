@@ -6,7 +6,6 @@ import fetcher from "../../../fetchHelper";
 import { useParams } from "react-router-dom";
 import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
-import { format } from "date-fns";
 
 export default function Claim() {
   const { id } = useParams();
@@ -46,7 +45,7 @@ export default function Claim() {
               colour: json.foundItem.colour,
               files: json.foundItem.imageUrls,
               description: json.foundItem.description,
-              timeFound: json.foundItem.timeFound,
+              timeFound: json.foundItem.timeFound.substring(0, 10),
               timeSubmitted: json.foundItem.createdAt,
               locationFound: json.foundItem.locationFound,
               brand: json.foundItem.brand,
@@ -69,9 +68,9 @@ export default function Claim() {
       });
   };
 
-  const claimItem = () => {
+  const claimItem = (event) => {
+    event.preventDefault();
     let url = `item/createPotentialMatch/`;
-    console.log("drop");
     const jsonData = {
       foundItemId: idtwo,
     };
@@ -85,8 +84,8 @@ export default function Claim() {
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
+            console.log("success bro");
             console.log(json);
-            console.log();
           });
         } else {
           // Check if user is logged in
@@ -106,23 +105,24 @@ export default function Claim() {
   const createImagesCard = (files) => {
     return (
       <div className="text-center">
-        <div>
+        {files.length > 1 ? (
           <div id="carouselExample" className="carousel slide">
             <div className="carousel-inner">
-              {files.length !== 0 ? (
-                files.map((i, index) => {
-                  let class_value = "";
-                  if (index === 0) class_value = "carousel-item active";
-                  else class_value = "carousel-item";
-                  return (
-                    <div className={class_value}>
-                      <img src={i} alt="" width="300px" height="200px" />
-                    </div>
-                  );
-                })
-              ) : (
-                <img src={no_img} alt="" width="200px" height="150px" />
-              )}
+              {files.map((i, index) => {
+                let class_value =
+                  index === 0 ? "carousel-item active" : "carousel-item";
+                return (
+                  <div className={class_value} key={index}>
+                    <img
+                      src={i}
+                      alt=""
+                      width="300px"
+                      height="200px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                );
+              })}
             </div>
             <button
               className="carousel-control-prev"
@@ -149,42 +149,29 @@ export default function Claim() {
               <span className="visually-hidden">Next</span>
             </button>
           </div>
-          <div className="card-body">
-            <div className="mb-3">
-              <label className="form-label fw-bold" for="customFile">
-                Update Images
-              </label>
-              <input
-                type="file"
-                className="form-control"
-                id="customFile"
-                accept="image/*"
-                multiple
-                onChange={imagehandler}
+        ) : (
+          <div>
+            {files.length === 1 ? (
+              <img
+                src={files[0]}
+                alt=""
+                width="300px"
+                height="200px"
+                style={{ objectFit: "fill" }}
               />
-            </div>
+            ) : (
+              <img
+                src={no_img}
+                alt=""
+                width="200px"
+                height="150px"
+                style={{ objectFit: "cover" }}
+              />
+            )}
           </div>
-        </div>
+        )}
       </div>
     );
-  };
-
-  const imagehandler = (e) => {
-    let imageurls = [];
-    for (let i = 0; i < e.target.files.length; i++) {
-      console.log(e.target.files[i]);
-      if (e.target.files[i].size < 3000000)
-        //imageurls.push(URL.createObjectURL(e.target.files[i]));
-        imageurls.push(e.target.files[i]);
-      else
-        setitemData({
-          ...itemdata,
-          images: "Warning: A file is larger than 3mb.",
-        });
-    }
-    console.log(imageurls);
-    setitemData({ ...itemdata, images: imageurls });
-    console.log(itemdata);
   };
 
   const viewItem = () => {
@@ -228,7 +215,7 @@ export default function Claim() {
 
               <div className="col-md-6">
                 <label class="small mb-1 fw-bold" for="inputlocation">
-                  Location lost
+                  Location Found
                 </label>
                 <input
                   class="form-control"
@@ -242,7 +229,7 @@ export default function Claim() {
             <div class="row gx-3 mb-3">
               <div className="col-md-6">
                 <label class="small mb-1 fw-bold">
-                  Date when item was lost
+                  Date when item was found
                 </label>
                 <input
                   class="form-control"
@@ -313,7 +300,7 @@ export default function Claim() {
                 type="button "
                 class="btn btn-primary item-may-be-mine-button mb-2 mt-2"
                 style={{ "margin-right": "4px" }}
-                onClick={claimItem()}
+                onClick={claimItem}
               >
                 This Item May be Mine!
               </button>

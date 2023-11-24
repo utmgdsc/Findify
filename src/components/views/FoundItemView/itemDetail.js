@@ -63,7 +63,7 @@ export default function FoundRequest() {
               colour: json.foundItem.colour,
               files: json.foundItem.imageUrls,
               description: json.foundItem.description,
-              timeFound: json.foundItem.timeFound,
+              timeFound: json.foundItem.timeFound.substring(0, 10),
               timeSubmitted: json.foundItem.createdAt,
               locationFound: json.foundItem.locationFound,
               brand: json.foundItem.brand,
