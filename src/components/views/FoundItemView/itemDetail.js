@@ -20,6 +20,8 @@ export default function FoundRequest() {
   const [showView, setshowView] = useState(true);
   const [formattedDate, setFormattedDate] = useState("");
   const [LostItemId, setLostItemId] = useState("");
+  const [showHandover, setShowHandover] = useState(false);
+  const [handoverUser, setHandoverUser] = useState(0);
 
   const [itemdata, setitemData] = useState({
     itemName: "",
@@ -200,17 +202,42 @@ export default function FoundRequest() {
     );
   };
 
-  const handoverhandler = () => {
-    let url = `item/createPotentialMatch`;
+  const clickMeHandler = () => {
+    {
+      setHandoverUser(1);
+      setShowHandover(true);
+    }
+  };
+
+  const callHandoverHandler = () => {
+    {
+      handoverUser === 1 ? handoveradmin() : handoverfinal();
+      console.log(handoverUser);
+    }
+  };
+
+  const handoveradmin = () => {
+    let url = `item/lostAndFoundHandoff`;
     const jsonData = {
-      LostItemId: LostItemId,
+      foundItemId: idtwo,
     };
-    fetcher(url, { body: JSON.stringify(jsonData) })
+
+    return fetch("item/lostAndFoundHandoff", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(jsonData),
+    })
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
             console.log(json);
             console.log();
+            alert(json.message);
+            navigate("/home", { replace: true });
           });
         } else {
           // Check if user is logged in
@@ -224,6 +251,47 @@ export default function FoundRequest() {
       })
       .catch((err) => {
         console.log(err);
+        const errorObject = JSON.parse(err);
+        setErrorSubmit(errorObject.message);
+      });
+  };
+
+  const handoverfinal = () => {
+    const jsonData = {
+      foundItemId: idtwo,
+      lostRequestId: LostItemId,
+    };
+    return fetch("item/finalHandoff", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(jsonData),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json().then((json) => {
+            console.log(json);
+            console.log();
+            alert(json.message);
+            navigate("/home", { replace: true });
+          });
+        } else {
+          // Check if user is logged in
+          if (localStorage.getItem("token") === null) {
+            alert(
+              "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
+            );
+            navigate("/login", { replace: true });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        const errorObject = JSON.parse(err);
+        setErrorSubmit(errorObject.message);
       });
   };
 
@@ -510,6 +578,90 @@ export default function FoundRequest() {
                   disabled={true}
                 />
               </div>
+            </div>
+
+            <div>
+              <label
+                class="small mb-1 fw-bold"
+                style={{ "margin-right": "10px" }}
+              >
+                Want to handover the item?
+              </label>
+              <button
+                type="button"
+                class="btn btn-info btn-sm mb-2 mt-2"
+                style={{ "margin-right": "10px" }}
+                onClick={clickMeHandler}
+              >
+                Click me
+              </button>
+
+              {showHandover ? (
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input "
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio1"
+                      value="option1"
+                      checked
+                    />
+                    <label
+                      class="form-check-label small mb-1 fw-bold"
+                      for="inlineRadio1"
+                      onClick={() => setHandoverUser(1)}
+                    >
+                      Lost and Found
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input "
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio2"
+                      onClick={() => setHandoverUser(2)}
+                    />
+                    <label
+                      class="form-check-label small mb-1 fw-bold"
+                      for="inlineRadio2"
+                    >
+                      Other User
+                    </label>
+                  </div>
+
+                  {handoverUser == 2 ? (
+                    <div className="mb-3">
+                      <label
+                        class=" small mb-1 fw-bold"
+                        style={{ "margin-right": "10px" }}
+                      >
+                        Enter the ID of the Lost Request (*):
+                      </label>
+                      <input
+                        required
+                        type="text"
+                        className="form-control-sm"
+                        onChange={(e) => {
+                          setLostItemId(e.target.value);
+                        }}
+                      />
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {showHandover ? (
+                <button
+                  type="button"
+                  class="btn btn-info mb-2 mt-2 btn-sm"
+                  style={{ "margin-right": "10px" }}
+                  onClick={callHandoverHandler}
+                >
+                  Request Handover
+                </button>
+              ) : null}
             </div>
 
             <span style={{ fontSize: 15, color: "red" }}>{errorSubmit}</span>
