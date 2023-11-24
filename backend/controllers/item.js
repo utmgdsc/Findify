@@ -220,7 +220,7 @@ module.exports.editFoundRequest = async (req, res, next) => {
       type: req.body.type ? req.body.type : foundItem.type,
       brand: req.body.brand ? req.body.brand : foundItem.brand,
       size: req.body.size ? req.body.size : foundItem.size,
-      colour: req.body.color ? req.body.color : foundItem.colour,
+      colour: req.body.colour ? req.body.colour : foundItem.colour,
       locationFound: req.body.locationFound
         ? req.body.locationFound
         : foundItem.locationFound,

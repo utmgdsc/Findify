@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import validator from "validator";
 import "./style.css";
 
-export default function Login () {
+export default function Login() {
   let navigate = useNavigate();
   const [disabled, setDisabled] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -54,7 +54,6 @@ export default function Login () {
         .then((response) => {
           if (response.status === 200) {
             return response.json().then((json) => {
-              console.log(json);
               setDisabled(false);
               setValidated(true);
               setErrors({ ...errors, submit: "" });
@@ -97,8 +96,8 @@ export default function Login () {
                 <div className="auth-inner">
                   <form
                     noValidate
-                    validated={ validated }
-                    onSubmit={ submitHandler }
+                    validated={validated}
+                    onSubmit={submitHandler}
                   >
                     <h3 className="text-center">Log In</h3>
                     <div className="mb-3">
@@ -108,10 +107,10 @@ export default function Login () {
                         type="email"
                         className="form-control"
                         placeholder="Email"
-                        onChange={ (e) => emailValid(e) }
+                        onChange={(e) => emailValid(e)}
                       />
-                      <span style={ { fontSize: 15, color: "red" } }>
-                        { errors.email }
+                      <span style={{ fontSize: 15, color: "red" }}>
+                        {errors.email}
                       </span>
                     </div>
 
@@ -122,18 +121,18 @@ export default function Login () {
                         className="form-control"
                         placeholder="Password"
                         required
-                        onChange={ (e) =>
+                        onChange={(e) =>
                           setData({ ...data, password: e.target.value })
                         }
                       />
-                      <span style={ { fontSize: 15, color: "red" } }>
-                        { errors.submit }
+                      <span style={{ fontSize: 15, color: "red" }}>
+                        {errors.submit}
                       </span>
                       <div>
                         <button
                           type="submit"
                           className="signup-button mb-2"
-                          disabled={ disabled }
+                          disabled={disabled}
                         >
                           Log In
                         </button>

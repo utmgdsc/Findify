@@ -12,31 +12,18 @@ body{
     overflow: hidden; 
 }
 
-#requestLostItem a {
+#requestLostItem a, #reportFoundItem a {
   line-height: 3;
   font-size: 1.5rem;
-  color: rgb(29, 141, 227);
-  background-color: rgb(255, 251, 251);
+  color: rgb(255, 251, 251);
+  background-color: rgb(29, 141, 227);
   margin-top: 2.2em;
   margin-right: -20%;
   width: 65%;
+  border-radius: 1rem;
 }
 
-#requestLostItem a:hover {
-  font-size: 1.6rem;
-}
-
-#reportFoundItem a {
-  line-height: 3;
-  font-size: 1.5rem;
-  color: rgb(29, 141, 227);
-  background-color: rgb(255, 251, 251);
-  margin-top: 2.2em;
-  margin-left: -20%;
-  width: 65%;
-}
-
-#reportFoundItem a:hover {
+#requestLostItem a:hover, #reportFoundItem a:hover {
   font-size: 1.6rem;
 }
 

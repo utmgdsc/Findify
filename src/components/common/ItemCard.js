@@ -9,6 +9,7 @@ export default function ItemCard(props) {
   let imageUrls = props.imageUrls;
   let location = props.location;
   let daysAgo = props.daysAgo;
+  let category = props.category;
 
   return (
     <div className="col-lg-3 col-md-6 col-sm-10 my-4">
@@ -71,9 +72,13 @@ export default function ItemCard(props) {
           <p className="card-title">Date: {dateStr}</p>
 
           <a
-            className="btn btn-outline-success"
+            className={
+              card_status === "card opacity-25"
+                ? "btn btn-outline-success disabled"
+                : "btn btn-outline-success"
+            }
             role="button"
-            href={`/lostitem/${id}`}
+            href={`/${category}/${id}`}
           >
             Read More
           </a>
