@@ -8,7 +8,6 @@ import { useParams } from "react-router-dom";
 import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
 import Matches from "./Matches";
-import { format } from "date-fns";
 
 export default function Match() {
   const { id } = useParams();
@@ -260,7 +259,7 @@ export default function Match() {
         otherLocationText: "If Miway, please specify the route. Example: 44N",
       });
     }
-    setitemData({ ...itemdata, location: e.target.value });
+    setitemData({ ...itemdata, locationLost: e.target.value });
     setDisabled(false);
   };
 
@@ -287,7 +286,7 @@ export default function Match() {
         otherCategoryText: "If other, please specify the category.",
       });
     }
-    setitemData({ ...itemdata, category: e.target.value });
+    setitemData({ ...itemdata, type: e.target.value });
     setDisabled(false);
   };
 
@@ -310,30 +309,29 @@ export default function Match() {
       event.stopPropagation();
       setDisabled(false);
     } else {
-      const jsonData = {
-        lostRequestId: idtwo,
-        itemName: itemdata.itemName,
-        type: itemdata.category,
-        colour: itemdata.colour,
-        description: itemdata.description,
-        timeLost: itemdata.timeLost,
-        timeSubmitted: itemdata.timeSubmitted,
-        locationLost: itemdata.location,
-        brand: itemdata.brand,
-        size: itemdata.size,
-        imageUrls: itemdata.files,
-      };
+      const formData = new FormData();
+      formData.append("lostRequestId", idtwo);
+      formData.append("itemName", itemdata.itemName);
+      formData.append("type", itemdata.type);
+      formData.append("colour", itemdata.colour);
+      formData.append("description", itemdata.description);
+      formData.append("timeLost", itemdata.timeLost);
+      formData.append("timeSubmitted", itemdata.timeSubmitted);
+      formData.append("locationLost", itemdata.locationLost);
+      formData.append("brand", itemdata.brand);
+      formData.append("size", itemdata.size);
+      itemdata.files.forEach((imageUrl) => {
+        console.log("each image:", imageUrl);
+        formData.append("images", imageUrl);
+      });
 
-      console.log(jsonData);
       return fetch("http://localhost:3000/item/lostRequest", {
         method: "PUT",
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          accept: "multipart/form-data",
           authorization: `Bearer ${token}`,
         },
-        files: itemdata.files,
-        body: JSON.stringify(jsonData),
+        body: formData,
         signal: signal,
       })
         .then((response) => {
@@ -342,7 +340,7 @@ export default function Match() {
               setDisabled(false);
               setErrorSubmit("");
               setshowView(true);
-              //window.location.reload();
+              window.location.reload();
               //SuccessfulMatches();
             });
           } else {
@@ -615,7 +613,7 @@ export default function Match() {
                     onChange={(e) => {
                       setitemData({
                         ...itemdata,
-                        category: e.target.value,
+                        type: e.target.value,
                       });
                     }}
                   />
@@ -660,7 +658,7 @@ export default function Match() {
                     onChange={(e) => {
                       setitemData({
                         ...itemdata,
-                        location: e.target.value,
+                        locationLost: e.target.value,
                       });
                     }}
                   />
@@ -669,7 +667,7 @@ export default function Match() {
             </div>
             <div class="row gx-3 mb-3">
               <div className="col-md-6">
-                <label class="small mb-1 fw-bold">
+                <label class="small mb-1 fw-bold m-2">
                   Date when item was lost
                 </label>
                 <DatePicker

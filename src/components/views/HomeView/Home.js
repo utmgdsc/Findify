@@ -10,18 +10,85 @@ export default function Home() {
   let navigate = useNavigate();
   const [lostItems, setLostItems] = useState([]);
   const [foundItems, setFoundItems] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    getUserRequests(); // eslint-disable-next-line
+    checkAdmin(); // eslint-disable-next-line
   }, []);
 
-  const getUserRequests = () => {
+  const checkAdmin = () => {
+    let url = `admin/allLostItems/`;
+    fetcher(url)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("admin user");
+          setIsAdmin(true);
+          getAdminPosts();
+        } else if (response.status == 403) {
+          console.log("normal user");
+          setIsAdmin(false);
+          getUserPosts();
+        } else {
+          console.log("unexpected error");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getAdminPosts = () => {
+    let url = `admin/allLostItems/`;
+    fetcher(url)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json().then((json) => {
+            console.log(json.lostItems);
+            setLostItems([...json.lostItems, ...lostItems]);
+          });
+        } else {
+          // Check if user is logged in
+          if (localStorage.getItem("token") === null) {
+            alert(
+              "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
+            );
+            navigate("/login", { replace: true });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    url = `admin/allFoundItems/`;
+    fetcher(url)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json().then((json) => {
+            console.log(json.foundItems);
+            setFoundItems([...json.foundItems, ...foundItems]);
+          });
+        } else {
+          // Check if user is logged in
+          if (localStorage.getItem("token") === null) {
+            alert(
+              "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
+            );
+            navigate("/login", { replace: true });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getUserPosts = () => {
     let url = `item/getUserPosts/`;
     fetcher(url)
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
-            setLostItems([...json.userPosts.lostItems, ...lostItems]);
             setLostItems(json.userPosts.lostItems);
             setFoundItems(json.userPosts.foundItems);
           });
@@ -40,7 +107,7 @@ export default function Home() {
       });
   };
 
-  const createItemCard = (item) => {
+  const createItemCard = (item, category) => {
     const time = item.timeLost
       ? new Date(item.timeLost)
       : new Date(item.timeFound);
@@ -67,6 +134,7 @@ export default function Home() {
         imageUrls={item.imageUrls}
         location={item.locationLost ? item.locationLost : item.locationFound}
         daysAgo={daysAgo}
+        category={category}
       />
     );
   };
@@ -119,7 +187,9 @@ export default function Home() {
                           data-bs-toggle="tab"
                           href="#lost"
                         >
-                          Past lost item queries
+                          {isAdmin
+                            ? "All Lost Items"
+                            : "Past lost item queries"}
                         </a>
                       </li>
                       <li className="nav-item items-link">
@@ -128,7 +198,9 @@ export default function Home() {
                           data-bs-toggle="tab"
                           href="#found"
                         >
-                          Past unidentified items reported
+                          {isAdmin
+                            ? "All Found Items"
+                            : "Past found item queries"}
                         </a>
                       </li>
                     </ul>
@@ -141,14 +213,18 @@ export default function Home() {
                           >
                             <div className="row">
                               {lostItems.length !== 0
-                                ? lostItems.map((item) => createItemCard(item))
+                                ? lostItems.map((item) =>
+                                    createItemCard(item, "lostitem")
+                                  )
                                 : createNoResultsCard()}
                             </div>
                           </div>
                           <div id="found" className="tab-pane fade ">
                             <div className="row">
                               {foundItems.length !== 0
-                                ? foundItems.map((item) => createItemCard(item))
+                                ? foundItems.map((item) =>
+                                    createItemCard(item, "founditem")
+                                  )
                                 : createNoResultsCard()}
                             </div>
                           </div>

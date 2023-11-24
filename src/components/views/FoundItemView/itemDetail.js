@@ -7,7 +7,6 @@ import fetcher from "../../../fetchHelper";
 import { useParams } from "react-router-dom";
 import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
-import { format } from "date-fns";
 
 export default function FoundRequest() {
   const { id } = useParams();
@@ -19,6 +18,7 @@ export default function FoundRequest() {
   const [selectedDate, setselectedDate] = useState(null);
   const [errorSubmit, setErrorSubmit] = useState("");
   const [showView, setshowView] = useState(true);
+  const [formattedDate, setFormattedDate] = useState("");
 
   const [itemdata, setitemData] = useState({
     itemName: "",
@@ -26,7 +26,7 @@ export default function FoundRequest() {
     colour: "",
     files: "",
     description: "",
-    timeFound: "",
+    timeFound: new Date(),
     timeSubmitted: "",
     locationFound: "",
     brand: "",
@@ -60,7 +60,7 @@ export default function FoundRequest() {
               colour: json.foundItem.colour,
               files: json.foundItem.imageUrls,
               description: json.foundItem.description,
-              // timeFound: format(json.lostItem.timeFound, "MMMM do yyyy"),
+              timeFound: json.foundItem.timeFound,
               timeSubmitted: json.foundItem.createdAt,
               locationFound: json.foundItem.locationFound,
               brand: json.foundItem.brand,
@@ -69,7 +69,7 @@ export default function FoundRequest() {
             setid(json.foundItem._id);
             //setselectedDate(itemdata.timeFound);
             console.log(itemdata);
-            console.log();
+            setFormattedDate(json.foundItem.timeFound.slice(0, 10));
           });
         } else {
           // Check if user is logged in
@@ -113,23 +113,24 @@ export default function FoundRequest() {
   const createImagesCard = (files) => {
     return (
       <div className="text-center">
-        <div>
+        {files.length > 1 ? (
           <div id="carouselExample" className="carousel slide">
             <div className="carousel-inner">
-              {files.length !== 0 ? (
-                files.map((i, index) => {
-                  let class_value = "";
-                  if (index === 0) class_value = "carousel-item active";
-                  else class_value = "carousel-item";
-                  return (
-                    <div className={class_value}>
-                      <img src={i} alt="" width="300px" height="200px" />
-                    </div>
-                  );
-                })
-              ) : (
-                <img src={no_img} alt="" width="200px" height="150px" />
-              )}
+              {files.map((i, index) => {
+                let class_value =
+                  index === 0 ? "carousel-item active" : "carousel-item";
+                return (
+                  <div className={class_value} key={index}>
+                    <img
+                      src={i}
+                      alt=""
+                      width="300px"
+                      height="200px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                );
+              })}
             </div>
             <button
               className="carousel-control-prev"
@@ -156,22 +157,44 @@ export default function FoundRequest() {
               <span className="visually-hidden">Next</span>
             </button>
           </div>
-          <div className="card-body">
-            <div className="mb-3">
-              <label className="form-label fw-bold" for="customFile">
-                Update Images
-              </label>
-              <input
-                type="file"
-                className="form-control"
-                id="customFile"
-                accept="image/*"
-                multiple
-                onChange={imagehandler}
+        ) : (
+          <div>
+            {files.length === 1 ? (
+              <img
+                src={files[0]}
+                alt=""
+                width="300px"
+                height="200px"
+                style={{ objectFit: "fill" }}
               />
-            </div>
+            ) : (
+              <img
+                src={no_img}
+                alt=""
+                width="200px"
+                height="150px"
+                style={{ objectFit: "cover" }}
+              />
+            )}
+            {showView ? null : (
+              <div className="card-body">
+                <div className="mb-3">
+                  <label className="form-label fw-bold" htmlFor="customFile">
+                    Update Images
+                  </label>
+                  <input
+                    type="file"
+                    className="form-control"
+                    id="customFile"
+                    accept="image/*"
+                    multiple
+                    onChange={imagehandler}
+                  />
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
     );
   };
@@ -186,15 +209,16 @@ export default function FoundRequest() {
       else
         setitemData({
           ...itemdata,
-          images: "Warning: A file is larger than 3mb.",
+          files: "Warning: A file is larger than 3mb.",
         });
     }
     console.log(imageurls);
-    setitemData({ ...itemdata, images: imageurls });
+    setitemData({ ...itemdata, files: imageurls });
     console.log(itemdata);
+    setDisabled(false);
   };
 
-  const dateLostHandler = (date) => {
+  const dateFoundHandler = (date) => {
     setselectedDate(date);
     setitemData({ ...itemdata, timeFound: date });
     setDisabled(false);
@@ -233,7 +257,7 @@ export default function FoundRequest() {
         otherLocationText: "If Miway, please specify the route. Example: 44N",
       });
     }
-    setitemData({ ...itemdata, location: e.target.value });
+    setitemData({ ...itemdata, locationFound: e.target.value });
     setDisabled(false);
   };
 
@@ -259,7 +283,7 @@ export default function FoundRequest() {
         otherCategoryText: "If other, please specify the category.",
       });
     }
-    setitemData({ ...itemdata, category: e.target.value });
+    setitemData({ ...itemdata, type: e.target.value });
     setDisabled(false);
   };
 
@@ -282,30 +306,31 @@ export default function FoundRequest() {
       event.stopPropagation();
       setDisabled(false);
     } else {
-      const jsonData = {
-        lostRequestId: idtwo,
-        itemName: itemdata.itemName,
-        type: itemdata.category,
-        colour: itemdata.colour,
-        description: itemdata.description,
-        timeFound: itemdata.timeFound,
-        timeSubmitted: itemdata.timeSubmitted,
-        locationFound: itemdata.location,
-        brand: itemdata.brand,
-        size: itemdata.size,
-      };
+      const formData = new FormData();
+      formData.append("foundRequestId", idtwo);
+      formData.append("itemName", itemdata.itemName);
+      formData.append("type", itemdata.type);
+      formData.append("colour", itemdata.colour);
+      formData.append("description", itemdata.description);
+      formData.append("timeFound", itemdata.timeFound);
+      formData.append("timeSubmitted", itemdata.timeSubmitted);
+      formData.append("locationFound", itemdata.locationFound);
+      formData.append("brand", itemdata.brand);
+      formData.append("size", itemdata.size);
+      itemdata.files.forEach((imageUrl) => {
+        console.log("each image:", imageUrl);
+        formData.append("images", imageUrl);
+      });
 
-      console.log(jsonData);
-      console.log(token);
+      console.log(itemdata.colour);
+
       return fetch("http://localhost:3000/item/foundRequest", {
         method: "PUT",
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          accept: "multipart/form-data",
           authorization: `Bearer ${token}`,
         },
-        files: itemdata.files,
-        body: JSON.stringify(jsonData),
+        body: formData,
         signal: signal,
       })
         .then((response) => {
@@ -316,6 +341,7 @@ export default function FoundRequest() {
               setDisabled(false);
               setErrorSubmit("");
               setshowView(true);
+              //window.location.reload();
             });
           } else {
             // Handle other status codes
@@ -371,7 +397,7 @@ export default function FoundRequest() {
                   class="form-control"
                   id="inputCategory"
                   type="text"
-                  value={itemdata.category}
+                  value={itemdata.type}
                   disabled={true}
                 />
               </div>
@@ -398,7 +424,7 @@ export default function FoundRequest() {
                   class="form-control"
                   id="inputCategory"
                   type="text"
-                  value={itemdata.timeFound}
+                  value={formattedDate}
                   disabled={true}
                 />
               </div>
@@ -598,7 +624,7 @@ export default function FoundRequest() {
 
               <div className="col-md-6">
                 <label class="small mb-1 fw-bold" for="inputlocation">
-                  Location lost
+                  Location Found
                 </label>
                 <select
                   class="form-select form-select-sm"
@@ -643,14 +669,15 @@ export default function FoundRequest() {
             </div>
             <div class="row gx-3 mb-3">
               <div className="col-md-6">
-                <label class="small mb-1 fw-bold">
-                  Date when item was lost
+                <label class="small mb-1 fw-bold m-2">
+                  Date when item was found
                 </label>
                 <DatePicker
                   selected={selectedDate}
                   class="form-control"
-                  onChange={(date) => dateLostHandler(date)}
+                  onChange={(date) => dateFoundHandler(date)}
                   maxDate={new Date()}
+                  value={itemdata.timeFound}
                 />
               </div>
 
