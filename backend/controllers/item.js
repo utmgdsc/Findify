@@ -303,7 +303,7 @@ module.exports.createPotentialMatch = async (req, res, next) => {
   try {
     const foundItem = await FoundItem.findById(foundItemId).populate("host").exec();
     if (!foundItem) {
-      throw new Error('404 Not Found: Lost or Found item not found');
+      return res.status(404).json({message: "Invalid found item ID"});
     }
 
     const hostEmail = foundItem.host.email;
@@ -333,12 +333,12 @@ module.exports.lostAndFoundHandoff = async (req, res, next) => {
     const foundItem = await FoundItem.findById(foundItemId);
 
     if (!foundItem) {
-      throw new Error('404 Not Found: Found item not found (lol)');
+      return res.status(404).json({message: "Invalid item ID"});
     }
 
     // ensure only the current host can hand off the item
     if (!user.isAdmin && !foundItem.host.equals(user._id)) {
-      throw new Error('401 Unauthorized: User does not own found request');
+      return res.status(401).json({message: "User does not own the item"});
     }
 
     // set the host of the found item to be the lost and found
@@ -371,7 +371,7 @@ module.exports.finalHandoff = async (req, res, next) => {
     const lostItem = await LostItem.findById(lostRequestId).session(session);
 
     if (!foundItem || !lostItem) {
-      throw new Error('404 Not Found: Item not found');
+      return res.status(404).json({message: "Invalid item ID(s)"});
     }
 
     // Additional secuity checks if needed:
@@ -384,7 +384,7 @@ module.exports.finalHandoff = async (req, res, next) => {
 
     // Ensure only the current host of the found item can hand off the item
     if (!user.isAdmin && !foundItem.host.equals(user._id)) {
-      throw new Error('401 Unauthorized: User does not own found item');
+      return res.status(401).json({message: "User does not own the item"});
     }
 
     // Mark both items as inactive and store the final match
