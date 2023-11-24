@@ -21,7 +21,7 @@ export default function RouteHandler() {
       <Route path="/reportFoundItem" element={<FoundItem />} />
       <Route path="/lostitem/:id" element={<Match />} />
       <Route path="/founditem/:id" element={<Found />} />
-      <Route path="/claim" element={<Claim />} />
+      <Route path="/claim/:id" element={<Claim />} />
     </Routes>
   );
 }

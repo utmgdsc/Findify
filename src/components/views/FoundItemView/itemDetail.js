@@ -19,6 +19,7 @@ export default function FoundRequest() {
   const [errorSubmit, setErrorSubmit] = useState("");
   const [showView, setshowView] = useState(true);
   const [formattedDate, setFormattedDate] = useState("");
+  const [LostItemId, setLostItemId] = useState("");
 
   const [itemdata, setitemData] = useState({
     itemName: "",
@@ -197,6 +198,33 @@ export default function FoundRequest() {
         )}
       </div>
     );
+  };
+
+  const handoverhandler = () => {
+    let url = `item/createPotentialMatch`;
+    const jsonData = {
+      LostItemId: LostItemId,
+    };
+    fetcher(url, { body: JSON.stringify(jsonData) })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json().then((json) => {
+            console.log(json);
+            console.log();
+          });
+        } else {
+          // Check if user is logged in
+          if (localStorage.getItem("token") === null) {
+            alert(
+              "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
+            );
+            navigate("/login", { replace: true });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const imagehandler = (e) => {
@@ -424,7 +452,7 @@ export default function FoundRequest() {
                   class="form-control"
                   id="inputCategory"
                   type="text"
-                  value={formattedDate}
+                  value={itemdata.timeFound}
                   disabled={true}
                 />
               </div>

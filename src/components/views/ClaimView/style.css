@@ -1,16 +1,4 @@
-.body-claim{
-    margin:0;
-    padding:0;
-    min-height: 100%;
-    background-color: #7EB2DD !important;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover !important;
-}
-.container-claim{
-    margin-top:100px;
-}
+
 p {
     font-size: larger;
 }
@@ -55,13 +43,3 @@ p {
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.item-may-be-mine-button {
-margin-top: 6px !important;
-margin-left: 6px !important;
-width: 100% !important;
-}
-
-      
-.item-may-be-mine-button:hover{
-        background:white;
-}

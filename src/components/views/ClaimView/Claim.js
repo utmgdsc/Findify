@@ -21,9 +21,9 @@ export default function Claim() {
     colour: "",
     files: "",
     description: "",
-    timeLost: "",
+    timeFound: "",
     timeSubmitted: "",
-    locationLost: "",
+    locationFound: "",
     brand: "",
     size: "",
   });
@@ -33,28 +33,26 @@ export default function Claim() {
   }, []);
 
   const getItemDetails = () => {
-    let url = `item/lostRequest/${id}`;
+    let url = `item/foundRequest/${id}`;
     fetcher(url)
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
-            console.log(json.lostItem);
+            console.log(json.foundItem);
             setitemData({
               ...itemdata,
-              itemName: json.lostItem.itemName,
-              type: json.lostItem.type,
-              colour: json.lostItem.colour,
-              files: json.lostItem.imageUrls,
-              description: json.lostItem.description,
-              timeLost: format(json.lostItem.timeLost, "MMMM do yyyy"),
-              timeSubmitted: json.lostItem.createdAt,
-              locationLost: json.lostItem.locationLost,
-              brand: json.lostItem.brand,
-              size: json.lostItem.size,
+              itemName: json.foundItem.itemName,
+              type: json.foundItem.type,
+              colour: json.foundItem.colour,
+              files: json.foundItem.imageUrls,
+              description: json.foundItem.description,
+              timeFound: json.foundItem.timeFound,
+              timeSubmitted: json.foundItem.createdAt,
+              locationFound: json.foundItem.locationFound,
+              brand: json.foundItem.brand,
+              size: json.foundItem.size,
             });
-            setid(json.lostItem._id);
-            console.log(itemdata);
-            console.log();
+            setid(json.foundItem._id);
           });
         } else {
           // Check if user is logged in
@@ -72,16 +70,18 @@ export default function Claim() {
   };
 
   const claimItem = () => {
-    let url = `item/createPotentialMatch`;
+    let url = `item/createPotentialMatch/`;
+    console.log("drop");
     const jsonData = {
       foundItemId: idtwo,
     };
+    console.log(jsonData);
     /* return (
       <span style={{ fontSize: 12, color: "green" }}>
         Request Successful! Email sent to the host.
       </span>
     ); */
-    fetcher(url, { body: JSON.stringify(jsonData) })
+    fetcher(url, { method: "POST", body: JSON.stringify(jsonData) })
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
@@ -221,7 +221,7 @@ export default function Claim() {
                   class="form-control"
                   id="inputCategory"
                   type="text"
-                  value={itemdata.category}
+                  value={itemdata.type}
                   disabled={true}
                 />
               </div>
@@ -234,7 +234,7 @@ export default function Claim() {
                   class="form-control"
                   id="inputLocation"
                   type="text"
-                  value={itemdata.locationLost}
+                  value={itemdata.locationFound}
                   disabled={true}
                 />
               </div>
@@ -248,7 +248,7 @@ export default function Claim() {
                   class="form-control"
                   id="inputCategory"
                   type="text"
-                  value={itemdata.timeLost}
+                  value={itemdata.timeFound}
                   disabled={true}
                 />
               </div>
@@ -308,12 +308,12 @@ export default function Claim() {
               </div>
             </div>
 
-            <div>
+            <div class="text-center">
               <button
-                type="button"
+                type="button "
                 class="btn btn-primary item-may-be-mine-button mb-2 mt-2"
                 style={{ "margin-right": "4px" }}
-                onClick={claimItem}
+                onClick={claimItem()}
               >
                 This Item May be Mine!
               </button>
