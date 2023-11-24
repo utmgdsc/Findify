@@ -341,7 +341,7 @@ export default function FoundItem() {
               setDisabled(false);
               setErrorSubmit("");
               setshowView(true);
-              //window.location.reload();
+              window.location.reload();
             });
           } else {
             // Handle other status codes

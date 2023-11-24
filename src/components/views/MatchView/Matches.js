@@ -102,6 +102,7 @@ export default function Matches() {
                                     : item.locationFound
                                 }
                                 daysAgo={daysAgo}
+                                category="founditem"
                               />
                             );
                           })
