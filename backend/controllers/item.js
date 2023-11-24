@@ -100,8 +100,12 @@ module.exports.deleteLostRequest = async (req, res, next) => {
   const lostItem = await LostItem.findById(lostRequestId);
 
   try {
+    if (!lostItem) {
+      return res.status(400).json({message: "Invalid item ID"});
+    }
+
     if (!user.isAdmin && !lostItem.host.equals(user._id)) {
-      throw new Error('401 Unauthorized: User does not own lost request')
+      return res.status(401).json({message: "User does not own found request"});
     }
     await LostItem.findByIdAndDelete(lostRequestId);
     res.status(200).json({ message: "Deleted item"});
@@ -204,8 +208,12 @@ module.exports.deleteFoundRequest = async (req, res, next) => {
   const foundItem = await FoundItem.findById(foundRequestId);
 
   try {
+    if (!foundItem) {
+      return res.status(400).json({message: "Invalid item ID"});
+    }
+
     if (!user.isAdmin && !foundItem.host.equals(user._id)) {
-      throw new Error('401 Unauthorized: User does not own found request')
+      return res.status(401).json({message: "User does not own found request"});
     }
     await FoundItem.findByIdAndDelete(foundRequestId);
     res.status(200).json({ message: "Deleted item"});
