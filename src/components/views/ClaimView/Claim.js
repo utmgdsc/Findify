@@ -80,7 +80,14 @@ export default function Claim() {
         Request Successful! Email sent to the host.
       </span>
     ); */
-    fetcher(url, { method: "POST", body: JSON.stringify(jsonData) })
+    fetcher(url, {
+      method: "POST",
+      body: JSON.stringify(jsonData),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
