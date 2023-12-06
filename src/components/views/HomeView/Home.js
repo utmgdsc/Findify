@@ -154,8 +154,8 @@ export default function Home () {
     <>
       <NavBar />
       <div className="container surrounding-box text-center">
-        <div className="row buttons" style={ { height: 20 + "vh" } }>
-          <div className="col-6" id="requestLostItem">
+        <div className="row buttons justify-content-center">
+          <div className="col-5" id="requestLostItem">
             <a
               className="btn btn-outline-info"
               role="button"
@@ -164,7 +164,7 @@ export default function Home () {
               Request Lost Item Query
             </a>
           </div>
-          <div className="col-6" id="reportFoundItem">
+          <div className="col-5" id="reportFoundItem">
             <a
               className="btn btn-outline-info"
               role="button"
@@ -183,24 +183,24 @@ export default function Home () {
                     <ul className="nav nav-tabs item-tabs justify-content-center">
                       <li className="nav-item items-link">
                         <a
-                          className="nav-link active p-2"
+                          className="nav-link active py-2 justify-content-center"
                           data-bs-toggle="tab"
                           href="#lost"
                         >
                           { isAdmin
                             ? "All Lost Items"
-                            : "Past lost item queries" }
+                            : "Lost Item Requests" }
                         </a>
                       </li>
                       <li className="nav-item items-link">
                         <a
-                          className="nav-link p-2"
+                          className="nav-link py-2 justify-content-center"
                           data-bs-toggle="tab"
                           href="#found"
                         >
                           { isAdmin
                             ? "All Found Items"
-                            : "Past found item queries" }
+                            : "Found Item Reports" }
                         </a>
                       </li>
                     </ul>
