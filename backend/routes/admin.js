@@ -1,7 +1,6 @@
 const express = require('express');
 const { checkRequiredAttributes, authenticate, adminAuthenticate } = require('../middlewares/user');
 const AdminController = require('../controllers/admin');
-const multerUpload = require("../middlewares/multer");
 
 const router = express.Router();
 
@@ -16,6 +15,7 @@ router.route('/allLostItems')
       }
     }
   )
+
 router.route('/allFoundItems')
   .get(
     adminAuthenticate,
@@ -27,6 +27,7 @@ router.route('/allFoundItems')
       }
     }
   )
+
 router.route('/allPotentialMatches')
   .get(
     adminAuthenticate,
@@ -42,6 +43,7 @@ router.route('/allPotentialMatches')
 router.route('/emailAdmin')
   .post(
     authenticate,
+    checkRequiredAttributes(["subject", "body"]),
     async (req, res) => {
       try {
         await AdminController.emailAdmin(req, res, errorHandler)
