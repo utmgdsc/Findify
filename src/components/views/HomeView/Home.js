@@ -6,7 +6,7 @@ import no_results from "../../../assets/img/no_results.png";
 import { useNavigate } from "react-router-dom";
 import ItemCard from "../../common/ItemCard";
 
-export default function Home() {
+export default function Home () {
   let navigate = useNavigate();
   const [lostItems, setLostItems] = useState([]);
   const [foundItems, setFoundItems] = useState([]);
@@ -127,14 +127,14 @@ export default function Home() {
 
     return (
       <ItemCard
-        id={item._id}
-        name={item.itemName}
-        dateStr={dateStr}
-        card_status={card_status}
-        imageUrls={item.imageUrls}
-        location={item.locationLost ? item.locationLost : item.locationFound}
-        daysAgo={daysAgo}
-        category={category}
+        id={ item._id }
+        name={ item.itemName }
+        dateStr={ dateStr }
+        card_status={ card_status }
+        imageUrls={ item.imageUrls }
+        location={ item.locationLost ? item.locationLost : item.locationFound }
+        daysAgo={ daysAgo }
+        category={ category }
       />
     );
   };
@@ -142,7 +142,7 @@ export default function Home() {
   const createNoResultsCard = () => {
     return (
       <div className="col">
-        <img src={no_results} alt="" className="card-img-top no-result" />
+        <img src={ no_results } alt="" className="card-img-top no-result" />
         <p className="no-resulst-text">
           Sorry! It looks like you have not made any reports previously.
         </p>
@@ -154,7 +154,7 @@ export default function Home() {
     <>
       <NavBar />
       <div className="container surrounding-box text-center">
-        <div className="row buttons" style={{ height: 20 + "vh" }}>
+        <div className="row buttons" style={ { height: 20 + "vh" } }>
           <div className="col-6" id="requestLostItem">
             <a
               className="btn btn-outline-info"
@@ -187,9 +187,9 @@ export default function Home() {
                           data-bs-toggle="tab"
                           href="#lost"
                         >
-                          {isAdmin
+                          { isAdmin
                             ? "All Lost Items"
-                            : "Past lost item queries"}
+                            : "Past lost item queries" }
                         </a>
                       </li>
                       <li className="nav-item items-link">
@@ -198,9 +198,9 @@ export default function Home() {
                           data-bs-toggle="tab"
                           href="#found"
                         >
-                          {isAdmin
+                          { isAdmin
                             ? "All Found Items"
-                            : "Past found item queries"}
+                            : "Past found item queries" }
                         </a>
                       </li>
                     </ul>
@@ -211,21 +211,21 @@ export default function Home() {
                             id="lost"
                             className="tab-pane fade in active show"
                           >
-                            <div className="row">
-                              {lostItems.length !== 0
+                            <div className="row justify-content-around">
+                              { lostItems.length !== 0
                                 ? lostItems.map((item) =>
-                                    createItemCard(item, "lostitem")
-                                  )
-                                : createNoResultsCard()}
+                                  createItemCard(item, "lostitem")
+                                )
+                                : createNoResultsCard() }
                             </div>
                           </div>
                           <div id="found" className="tab-pane fade ">
-                            <div className="row">
-                              {foundItems.length !== 0
+                            <div className="row justify-content-around">
+                              { foundItems.length !== 0
                                 ? foundItems.map((item) =>
-                                    createItemCard(item, "founditem")
-                                  )
-                                : createNoResultsCard()}
+                                  createItemCard(item, "founditem")
+                                )
+                                : createNoResultsCard() }
                             </div>
                           </div>
                         </div>
