@@ -5,6 +5,7 @@ import "./style.css";
 import no_results from "../../../assets/img/no_results.png";
 import { useNavigate } from "react-router-dom";
 import ItemCard from "../../common/ItemCard";
+import Footer from "../../common/Footer";
 
 export default function Home() {
   let navigate = useNavigate();
@@ -153,6 +154,7 @@ export default function Home() {
   return (
     <>
       <NavBar />
+
       <div className="container surrounding-box text-center">
         <div className="row buttons" style={{ height: 20 + "vh" }}>
           <div className="col-6" id="requestLostItem">
@@ -238,6 +240,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

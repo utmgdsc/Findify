@@ -9,6 +9,7 @@ import FoundItem from "../views/ReportFoundItemView/ReportFound";
 import Match from "../views/MatchView/itemDetail";
 import Found from "../views/FoundItemView/itemDetail";
 import Claim from "../views/ClaimView/Claim";
+import Contact from "../views/EmailAdminView/EmailAdmin";
 
 export default function RouteHandler() {
   return (
@@ -22,6 +23,7 @@ export default function RouteHandler() {
       <Route path="/lostitem/:id" element={<Match />} />
       <Route path="/founditem/:id" element={<Found />} />
       <Route path="/claim/:id" element={<Claim />} />
+      <Route path="/emailAdmin" element={<Contact />} />
     </Routes>
   );
 }

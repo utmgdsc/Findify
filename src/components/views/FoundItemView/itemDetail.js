@@ -7,6 +7,7 @@ import fetcher from "../../../fetchHelper";
 import { useParams } from "react-router-dom";
 import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
+import Footer from "../../common/Footer";
 
 export default function FoundRequest() {
   const { id } = useParams();
@@ -17,11 +18,14 @@ export default function FoundRequest() {
   const [disabled, setDisabled] = useState(true);
   const [selectedDate, setselectedDate] = useState(null);
   const [errorSubmit, setErrorSubmit] = useState("");
+  const [errorHandover, seterrorHandover] = useState("");
   const [showView, setshowView] = useState(true);
   const [formattedDate, setFormattedDate] = useState("");
   const [LostItemId, setLostItemId] = useState("");
   const [showHandover, setShowHandover] = useState(false);
   const [handoverUser, setHandoverUser] = useState(0);
+  const [handoverSuccess, sethandoverSuccess] = useState(false);
+  const [handoverSuccessMessage, sethandoverSuccessMessage] = useState("");
 
   const [itemdata, setitemData] = useState({
     itemName: "",
@@ -176,7 +180,7 @@ export default function FoundRequest() {
                 alt=""
                 width="200px"
                 height="150px"
-                style={{ objectFit: "cover" }}
+                style={{ objectFit: "cover", marginBottom: "5px" }}
               />
             )}
             {showView ? null : (
@@ -203,17 +207,23 @@ export default function FoundRequest() {
   };
 
   const clickMeHandler = () => {
-    {
-      setHandoverUser(1);
-      setShowHandover(true);
-    }
+    setHandoverUser(0);
+    seterrorHandover("");
+    sethandoverSuccessMessage("");
+    setShowHandover(!showHandover);
   };
 
-  const callHandoverHandler = () => {
-    {
-      handoverUser === 1 ? handoveradmin() : handoverfinal();
-      console.log(handoverUser);
-    }
+  const callHandoverHandler = (event) => {
+    console.log(event);
+    console.log(handoverUser);
+    seterrorHandover("");
+    event.preventDefault();
+    handoverUser === 1
+      ? handoveradmin()
+      : handoverUser === 2
+      ? handoverfinal()
+      : seterrorHandover("You must select an option.");
+    console.log(handoverUser);
   };
 
   const handoveradmin = () => {
@@ -221,23 +231,20 @@ export default function FoundRequest() {
     const jsonData = {
       foundItemId: idtwo,
     };
-
-    return fetch("item/lostAndFoundHandoff", {
+    fetcher(url, {
       method: "POST",
+      body: JSON.stringify(jsonData),
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(jsonData),
     })
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
             console.log(json);
-            console.log();
-            alert(json.message);
-            navigate("/home", { replace: true });
+            sethandoverSuccess(true);
+            sethandoverSuccessMessage(json.message);
           });
         } else {
           // Check if user is logged in
@@ -246,13 +253,20 @@ export default function FoundRequest() {
               "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
             );
             navigate("/login", { replace: true });
+          } else {
+            return response.text().then((errorMessage) => {
+              const errorObject = JSON.parse(errorMessage);
+              sethandoverSuccessMessage(errorObject.message);
+              seterrorHandover(errorObject.message);
+            });
           }
         }
       })
       .catch((err) => {
         console.log(err);
         const errorObject = JSON.parse(err);
-        setErrorSubmit(errorObject.message);
+        sethandoverSuccessMessage(errorObject.message);
+        seterrorHandover(errorObject.message);
       });
   };
 
@@ -261,22 +275,20 @@ export default function FoundRequest() {
       foundItemId: idtwo,
       lostRequestId: LostItemId,
     };
-    return fetch("item/finalHandoff", {
+    fetcher("item/finalHandoff", {
       method: "POST",
+      body: JSON.stringify(jsonData),
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(jsonData),
     })
       .then((response) => {
         if (response.status === 200) {
           return response.json().then((json) => {
             console.log(json);
-            console.log();
-            alert(json.message);
-            navigate("/home", { replace: true });
+            sethandoverSuccess(true);
+            sethandoverSuccessMessage(json.message);
           });
         } else {
           // Check if user is logged in
@@ -285,13 +297,20 @@ export default function FoundRequest() {
               "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
             );
             navigate("/login", { replace: true });
+          } else {
+            return response.text().then((errorMessage) => {
+              const errorObject = JSON.parse(errorMessage);
+              sethandoverSuccessMessage(errorObject.message);
+              seterrorHandover(errorObject.message);
+            });
           }
         }
       })
       .catch((err) => {
         console.log(err);
         const errorObject = JSON.parse(err);
-        setErrorSubmit(errorObject.message);
+        sethandoverSuccessMessage(errorObject.message);
+        seterrorHandover(errorObject.message);
       });
   };
 
@@ -605,12 +624,11 @@ export default function FoundRequest() {
                       name="inlineRadioOptions"
                       id="inlineRadio1"
                       value="option1"
-                      checked
+                      onClick={() => setHandoverUser(1)}
                     />
                     <label
                       class="form-check-label small mb-1 fw-bold"
                       for="inlineRadio1"
-                      onClick={() => setHandoverUser(1)}
                     >
                       Lost and Found
                     </label>
@@ -630,7 +648,6 @@ export default function FoundRequest() {
                       Other User
                     </label>
                   </div>
-
                   {handoverUser == 2 ? (
                     <div className="mb-3">
                       <label
@@ -658,13 +675,82 @@ export default function FoundRequest() {
                   class="btn btn-info mb-2 mt-2 btn-sm"
                   style={{ "margin-right": "10px" }}
                   onClick={callHandoverHandler}
+                  data-bs-toggle="modal"
+                  data-bs-target="#handover"
                 >
                   Request Handover
                 </button>
               ) : null}
             </div>
 
-            <span style={{ fontSize: 15, color: "red" }}>{errorSubmit}</span>
+            {handoverSuccess ? (
+              <div
+                class="modal fade"
+                id="handover"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabindex="-1"
+                aria-labelledby="handoverLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5
+                        class="modal-title"
+                        id="handoverLabel"
+                        style={{ color: "green" }}
+                      >
+                        Your handover was successful.
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        onClick={() => navigate("/home", { replace: true })}
+                      ></button>
+                    </div>
+                    <div class="modal-body">{handoverSuccessMessage}</div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            {!handoverSuccess ? (
+              <div
+                class="modal fade"
+                id="handover"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabindex="-1"
+                aria-labelledby="handoverLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5
+                        class="modal-title"
+                        id="handoverLabel"
+                        style={{ color: "red" }}
+                      >
+                        Your handover was unsuccessful.
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">{handoverSuccessMessage}</div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            <span style={{ fontSize: 15, color: "red" }}>{errorHandover}</span>
 
             <div>
               <button
@@ -995,6 +1081,7 @@ export default function FoundRequest() {
             <div>{showView ? viewItem() : editItem()}</div>
           </div>
         </div>
+        <Footer />
       </div>
     </div>
   );

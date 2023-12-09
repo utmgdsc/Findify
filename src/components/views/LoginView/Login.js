@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
 import "./style.css";
+import { Icon } from "react-icons-kit";
+import { eyeOff } from "react-icons-kit/feather/eyeOff";
+import { eye } from "react-icons-kit/feather/eye";
 
 export default function Login() {
   let navigate = useNavigate();
@@ -16,6 +19,25 @@ export default function Login() {
     password: "",
     submit: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [type, setType] = useState("password");
+  const [icon, setIcon] = useState(eyeOff);
+
+  const handleToggle = () => {
+    if (type === "password") {
+      setIcon(eye);
+      setType("text");
+    } else {
+      setIcon(eyeOff);
+      setType("password");
+    }
+  };
+
+  const passwordHandler = (e) => {
+    setData({ ...data, password: e.target.value });
+    setErrors({ ...errors, password: "" });
+    setErrors({ ...errors, submit: "" });
+  };
 
   const emailValid = (e) => {
     let email = e.target.value;
@@ -114,20 +136,33 @@ export default function Login() {
                       </span>
                     </div>
 
-                    <div className="mb-3">
-                      <label>Password</label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        placeholder="Password"
-                        required
-                        onChange={(e) =>
-                          setData({ ...data, password: e.target.value })
-                        }
-                      />
+                    <div className="mb-3 form-group has-feedback">
+                      <label class="control-label">Password</label>
+                      <div class="input-group mb-3">
+                        <input
+                          type={type}
+                          className="form-control"
+                          placeholder="Password"
+                          style={{ width: "80%" }}
+                          required
+                          value={data.password}
+                          autoComplete="current-password"
+                          onChange={(e) => passwordHandler(e)}
+                        />
+                        <div class="input-group-append">
+                          <span onClick={handleToggle}>
+                            <Icon
+                              class="absolute mr-10 input-group-text"
+                              icon={icon}
+                              size={25}
+                            />
+                          </span>
+                        </div>
+                      </div>
                       <span style={{ fontSize: 15, color: "red" }}>
                         {errors.submit}
                       </span>
+
                       <div>
                         <button
                           type="submit"
