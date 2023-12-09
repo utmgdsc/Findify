@@ -57,14 +57,16 @@
 
 .item-card {
   font-size: smaller;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  border-radius: 1.5rem !important;
 }
 
 .item-img {
   width: 80px;
-  height: 100px;
-  object-fit:scale-down;
+  height: 120px;
+  object-fit: scale-down;
+}
+
+a.btn.btn-outline-primary {
+  margin: 10px 20px;
 }
 
 .carousel-control-prev-icon,

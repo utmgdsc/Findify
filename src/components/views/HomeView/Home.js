@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import ItemCard from "../../common/ItemCard";
 import Footer from "../../common/Footer";
 
-export default function Home() {
+export default function Home () {
   let navigate = useNavigate();
   const [lostItems, setLostItems] = useState([]);
   const [foundItems, setFoundItems] = useState([]);
@@ -128,14 +128,14 @@ export default function Home() {
 
     return (
       <ItemCard
-        id={item._id}
-        name={item.itemName}
-        dateStr={dateStr}
-        card_status={card_status}
-        imageUrls={item.imageUrls}
-        location={item.locationLost ? item.locationLost : item.locationFound}
-        daysAgo={daysAgo}
-        category={category}
+        id={ item._id }
+        name={ item.itemName }
+        dateStr={ dateStr }
+        card_status={ card_status }
+        imageUrls={ item.imageUrls }
+        location={ item.locationLost ? item.locationLost : item.locationFound }
+        daysAgo={ daysAgo }
+        category={ category }
       />
     );
   };
@@ -143,7 +143,7 @@ export default function Home() {
   const createNoResultsCard = () => {
     return (
       <div className="col">
-        <img src={no_results} alt="" className="card-img-top no-result" />
+        <img src={ no_results } alt="" className="card-img-top no-result" />
         <p className="no-resulst-text">
           Sorry! It looks like you have not made any reports previously.
         </p>
@@ -156,8 +156,8 @@ export default function Home() {
       <NavBar />
 
       <div className="container surrounding-box text-center">
-        <div className="row buttons" style={{ height: 20 + "vh" }}>
-          <div className="col-6" id="requestLostItem">
+        <div className="row buttons justify-content-center">
+          <div className="col-5" id="requestLostItem">
             <a
               className="btn btn-outline-info"
               role="button"
@@ -166,7 +166,7 @@ export default function Home() {
               Request Lost Item Query
             </a>
           </div>
-          <div className="col-6" id="reportFoundItem">
+          <div className="col-5" id="reportFoundItem">
             <a
               className="btn btn-outline-info"
               role="button"
@@ -185,24 +185,24 @@ export default function Home() {
                     <ul className="nav nav-tabs item-tabs justify-content-center">
                       <li className="nav-item items-link">
                         <a
-                          className="nav-link active p-2"
+                          className="nav-link active py-2 justify-content-center"
                           data-bs-toggle="tab"
                           href="#lost"
                         >
-                          {isAdmin
+                          { isAdmin
                             ? "All Lost Items"
-                            : "Past lost item queries"}
+                            : "Lost Item Requests" }
                         </a>
                       </li>
                       <li className="nav-item items-link">
                         <a
-                          className="nav-link p-2"
+                          className="nav-link py-2 justify-content-center"
                           data-bs-toggle="tab"
                           href="#found"
                         >
-                          {isAdmin
+                          { isAdmin
                             ? "All Found Items"
-                            : "Past found item queries"}
+                            : "Found Item Reports" }
                         </a>
                       </li>
                     </ul>
@@ -213,21 +213,21 @@ export default function Home() {
                             id="lost"
                             className="tab-pane fade in active show"
                           >
-                            <div className="row">
-                              {lostItems.length !== 0
+                            <div className="row justify-content-around">
+                              { lostItems.length !== 0
                                 ? lostItems.map((item) =>
-                                    createItemCard(item, "lostitem")
-                                  )
-                                : createNoResultsCard()}
+                                  createItemCard(item, "lostitem")
+                                )
+                                : createNoResultsCard() }
                             </div>
                           </div>
                           <div id="found" className="tab-pane fade ">
-                            <div className="row">
-                              {foundItems.length !== 0
+                            <div className="row justify-content-around">
+                              { foundItems.length !== 0
                                 ? foundItems.map((item) =>
-                                    createItemCard(item, "founditem")
-                                  )
-                                : createNoResultsCard()}
+                                  createItemCard(item, "founditem")
+                                )
+                                : createNoResultsCard() }
                             </div>
                           </div>
                         </div>

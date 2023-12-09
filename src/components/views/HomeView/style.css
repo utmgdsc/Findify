@@ -1,61 +1,86 @@
-body{
+body {
   letter-spacing: 0.5px;
   background: linear-gradient(90deg, rgba(202, 201, 223, 0.75) 0%, rgba(40, 40, 159, 0.95) 0%, rgba(28, 92, 188, 0.75) 30%, rgba(0, 212, 255, 0.75) 100%);
   height: 100%;
 }
 
 .surrounding-box {
-    background: whitesmoke;
-    border-radius: 2rem;
-    margin: 2em 0;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    overflow: hidden; 
+  background: whitesmoke;
+  border-radius: 2rem;
+  margin: 2em 0;
+  overflow: hidden;
 }
 
-#requestLostItem a, #reportFoundItem a {
+#requestLostItem a,
+#reportFoundItem a {
   line-height: 3;
   font-size: 1.5rem;
   color: rgb(29, 141, 227);
-  background-color: rgb(255, 251, 251);
+  background-color: rgb(192, 229, 255);
+  border: 0px solid;
+  font-weight: 700;
   margin-top: 2.2em;
   width: 65%;
   border-radius: 1rem;
 }
 
 #requestLostItem a {
-  margin-right: -5em;
+  width: 100%;
+  line-height: 1.6rem;
+  padding: 25px;
 }
 
 #reportFoundItem a {
-  margin-left: -10em;
+  width: 100%;
+  line-height: 1.6rem;
+  padding: 25px;
 }
 
-#requestLostItem a:hover, #reportFoundItem a:hover {
+#requestLostItem a:hover,
+#reportFoundItem a:hover {
   color: rgb(255, 251, 251);
   background-color: rgb(29, 141, 227);
 }
 
 .item-list {
-    border-radius: 1.5em;
-    background: white;
-    max-height: 70vh;
-    overflow-y: auto;
-    margin-top: -30px;
+  border-radius: 1.5em;
+  background: white;
+  max-height: 70vh;
+  overflow-y: auto;
+  margin-top: -30px;
 }
 
 .item-tabs {
-    top: 0;
-    z-index: 100;
-    font-size: large;
+  top: 0;
+  z-index: 100;
+  font-size: large;
 }
 
-.items-link {
-    color: rgb(29, 141, 227) !important;
-    padding-left: 2%;
+.items-link a.nav-link {
+  color: rgb(29, 141, 227);
+  font-weight: 700;
+  padding: 0px 25px;
+  border: 2px solid rgb(225, 225, 225);
+  border-bottom: 0;
+  width: 245px;
 }
 
-.items-link.active {
-  color: rgb(29, 141, 227) !important;
+.items-link a.nav-link:hover {
+  color: rgb(4, 97, 167);
+  background-color: rgb(226, 242, 255);
+  font-weight: 700;
+  padding: 0px 25px;
+  border: 2px solid rgb(225, 225, 225);
+  border-bottom: 0;
+  width: 245px;
+}
+
+.items-link a.nav-link.active {
+  color: white;
+  font-weight: 700;
+  background-color: rgb(29, 141, 227);
+  border: 1px solid rgb(29, 141, 227);
+  border-bottom: 0;
 
 }
 
