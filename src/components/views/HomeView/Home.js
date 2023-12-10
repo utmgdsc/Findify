@@ -213,7 +213,7 @@ export default function Home () {
                             id="lost"
                             className="tab-pane fade in active show"
                           >
-                            <div className="row justify-content-around">
+                            <div className="row justify-content-start">
                               { lostItems.length !== 0
                                 ? lostItems.map((item) =>
                                   createItemCard(item, "lostitem")
@@ -222,7 +222,7 @@ export default function Home () {
                             </div>
                           </div>
                           <div id="found" className="tab-pane fade ">
-                            <div className="row justify-content-around">
+                            <div className="row justify-content-start">
                               { foundItems.length !== 0
                                 ? foundItems.map((item) =>
                                   createItemCard(item, "founditem")

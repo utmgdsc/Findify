@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./style.css";
 import fetcher from "../../../fetchHelper";
 import NavBar from "../../common/NavBar";
+import Footer from '../../common/Footer';
 
 export default function UserProfile () {
   const token = localStorage.getItem("token");
@@ -126,6 +127,7 @@ export default function UserProfile () {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 
