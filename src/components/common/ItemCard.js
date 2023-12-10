@@ -13,7 +13,7 @@ export default function ItemCard(props) {
 
   return (
     <div
-      className={`item-card col-lg-2 mx-2 p-0 col-md-3 col-sm-10 my-4 ${card_status}`}
+      className={`item-card col-lg-2 mx-2 p-0 col-md-3 col-sm-10 my-3 mx-3 ${card_status}`}
     >
       {imageUrls.length > 1 ? (
         <div id="carouselExample" className="carousel slide">

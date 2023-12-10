@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NavBar from "../../common/NavBar";
 import { format } from "date-fns";
+import Footer from "../../common/Footer";
 import "./style.css";
 
 export default function ReportFound() {
@@ -410,6 +411,7 @@ export default function ReportFound() {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     </>
   );

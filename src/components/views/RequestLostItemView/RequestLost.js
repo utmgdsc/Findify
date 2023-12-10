@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NavBar from "../../common/NavBar";
 import { format } from "date-fns";
+import Footer from "../../common/Footer";
 import "./style.css";
 
 export default function RequestLost() {
@@ -426,6 +427,7 @@ export default function RequestLost() {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     </>
   );

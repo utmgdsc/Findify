@@ -5,6 +5,7 @@ import "./style.css";
 import no_results from "../../../assets/img/no_results.png";
 import { useNavigate } from "react-router-dom";
 import ItemCard from "../../common/ItemCard";
+import Footer from "../../common/Footer";
 
 export default function Home () {
   let navigate = useNavigate();
@@ -153,6 +154,7 @@ export default function Home () {
   return (
     <>
       <NavBar />
+
       <div className="container surrounding-box text-center">
         <div className="row buttons justify-content-center">
           <div className="col-5" id="requestLostItem">
@@ -211,7 +213,7 @@ export default function Home () {
                             id="lost"
                             className="tab-pane fade in active show"
                           >
-                            <div className="row justify-content-around">
+                            <div className="row justify-content-start">
                               { lostItems.length !== 0
                                 ? lostItems.map((item) =>
                                   createItemCard(item, "lostitem")
@@ -220,7 +222,7 @@ export default function Home () {
                             </div>
                           </div>
                           <div id="found" className="tab-pane fade ">
-                            <div className="row justify-content-around">
+                            <div className="row justify-content-start">
                               { foundItems.length !== 0
                                 ? foundItems.map((item) =>
                                   createItemCard(item, "founditem")
@@ -238,6 +240,7 @@ export default function Home () {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

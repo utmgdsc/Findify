@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
 import Matches from "./Matches";
+import Footer from "../../common/Footer";
 
 export default function Match() {
   const { id } = useParams();
@@ -386,6 +387,23 @@ export default function Match() {
                 disabled={true}
               />
             </div>
+
+            <div class="mb-3">
+              <label
+                class=" small mb-1 fw-bold control-label"
+                for="inputItemID"
+              >
+                Item ID
+              </label>
+              <input
+                class="form-control"
+                id="inputItemID"
+                type="text"
+                value={idtwo}
+                disabled={true}
+              />
+            </div>
+
             <div class="row gx-3 mb-3">
               <div className="col-md-6 ">
                 <label class="small mb-1 fw-bold" for="inputCategory">
@@ -578,6 +596,7 @@ export default function Match() {
                 onChange={(e) => itemNameHandler(e)}
               />
             </div>
+
             <div class="row gx-3 mb-3">
               <div className="col-md-6 ">
                 <label class="small mb-1 fw-bold" for="inputCategory">
@@ -817,6 +836,7 @@ export default function Match() {
         </div>
       </div>
       <Matches />
+      <Footer />
     </div>
   );
 }
