@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NavBar from "../../common/NavBar";
+import { format } from "date-fns";
 import "./style.css";
 
 export default function ReportFound() {
@@ -18,7 +19,7 @@ export default function ReportFound() {
     colour: "",
     files: [],
     description: "",
-    timeLost: "",
+    timeFound: "",
     timeSubmitted: new Date(),
     location: "",
     brand: "",
@@ -43,9 +44,13 @@ export default function ReportFound() {
     otherCategory: false,
   });
 
-  const dateLostHandler = (date) => {
+  const dateFoundHandler = (date) => {
+    console.log(date);
+    const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+    console.log(formattedDate);
     setselectedDate(date);
-    setData({ ...data, timeFound: date });
+    console.log(selectedDate);
+    setData({ ...data, timeFound: formattedDate });
   };
 
   const imagehandler = (e) => {
@@ -127,7 +132,7 @@ export default function ReportFound() {
         colour: data.colour,
         files: data.files,
         description: data.description,
-        timeFound: data.timeLost,
+        timeFound: data.timeFound,
         timeSubmitted: data.timeSubmitted,
         locationFound: data.location,
         brand: data.brand,
@@ -180,11 +185,11 @@ export default function ReportFound() {
   return (
     <>
       <NavBar />
-      <div className="body-request-lost">
+      <div className="body-request-found">
         <div className="container h-40">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-              <div className="card rounded-3" id="requestlostitem-card">
+              <div className="card rounded-3" id="requestfounditem-card">
                 <div className="card-body p-4">
                   <form
                     noValidate
@@ -250,7 +255,7 @@ export default function ReportFound() {
                       <label>Date when the item was found*</label>
                       <DatePicker
                         selected={selectedDate}
-                        onChange={(date) => dateLostHandler(date)}
+                        onChange={(date) => dateFoundHandler(date)}
                         maxDate={data.timeSubmitted}
                         required
                         isClearable
