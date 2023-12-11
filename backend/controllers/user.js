@@ -93,8 +93,8 @@ module.exports.edit = async (req, res, next) => {
     if (!user.isAdmin && email !== user.email) {
       throw new Error('Email does not match user!');
     }
-
-    user.password = password || user.password;
+    
+    if (password) user.password = password;
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
     user.contactNumber = contactNumber || user.contactNumber;
