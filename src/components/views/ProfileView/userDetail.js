@@ -11,7 +11,14 @@ export default function UserProfile () {
   let navigate = useNavigate();
 
   const [disabled, setDisabled] = useState(true);
-  const [userDetails, setUserDetails] = useState({ email: '', firstName: '', lastName: '', contactNumber: '' })
+  const [errors, setErrors] = useState({
+    password: "",
+    repeatPassword: "",
+    submit: "",
+  });
+  const [userDetails, setUserDetails] = useState({
+    email: '', firstName: '', lastName: '', contactNumber: '', newPassword: '', confirmPassword: ''
+  })
 
   useEffect(() => {
     getUserDetails();
@@ -51,6 +58,27 @@ export default function UserProfile () {
   const contactNumberHandler = (e) => {
     setUserDetails({ ...userDetails, contactNumber: e.target.value })
   }
+  const newPasswordHandler = (e) => {
+    let regex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,24}$/;
+    if (e.target.value && !regex.test(e.target.value)) {
+      setErrors({
+        ...errors,
+        password: "Password must contain one digit from 1 to 9, one lowercase letter, one uppercase letter, one special character, no space, and it must be 8-16 characters long ",
+        submit: "Fix all errors before submitting."
+      });
+    } else {
+      setErrors({ ...errors, password: '', submit: errors.repeatPassword === '' ? '' : errors.submit })
+      setUserDetails({ ...userDetails, newPassword: e.target.value })
+    }
+  }
+  const confirmPasswordHandler = (e) => {
+    if (e.target.value !== userDetails.newPassword) {
+      setErrors({ ...errors, repeatPassword: "Both passwords do not match.", submit: "Fix all errors before submitting." });
+    } else {
+      setErrors({ ...errors, repeatPassword: '', submit: errors.password === '' ? '' : errors.submit })
+      setUserDetails({ ...userDetails, confirmPassword: e.target.value })
+    }
+  }
   const editHandler = (e) => {
     setDisabled(false);
   }
@@ -63,20 +91,22 @@ export default function UserProfile () {
   const submitHandler = async (e) => {
     e.preventDefault();
     setDisabled(true);
-    return fetch("http://localhost:3000/user/edit", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        'Accept': 'application/json',
-        authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(userDetails),
-    }).then((res) => {
-      console.log('SUCCESS!', res);
-    }).catch((err) => {
-      console.error('ERROR!', err);
-      getUserDetails();
-    })
+    if (errors.submit === '' && errors.password === '' && errors.repeatPassword === '') {
+      return fetch("http://localhost:3000/user/edit", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(userDetails),
+      }).then((res) => {
+        console.log('SUCCESS!', res);
+      }).catch((err) => {
+        console.error('ERROR!', err);
+        getUserDetails();
+      })
+    }
   }
 
   const Buttons = () => {
@@ -86,8 +116,11 @@ export default function UserProfile () {
     }
     return (
       <>
-        <button className="btn btn-primary" onClick={ submitHandler }>Save Changes</button>
+        <button className="btn btn-primary" onClick={ submitHandler } disabled={ errors.submit !== '' }>Save Changes</button>
         <button className="btn btn-secondary mx-3" onClick={ cancelHandler }>Cancel Edit</button>
+        <div style={ { fontSize: 12, color: "red" } }>
+          { errors.submit }
+        </div>
       </>)
   }
 
@@ -104,21 +137,46 @@ export default function UserProfile () {
                   <label htmlFor="email" className="form-label mb-0">Email</label>
                   <input type="email" className="form-control" id="email" disabled value={ userDetails.email } />
                 </div>
-                <div className="mb-3">
-                  <label htmlFor="firstName" className="form-label mb-0">First Name</label>
-                  <input type="text" className="form-control" id="firstName" disabled={ disabled }
-                    value={ userDetails.firstName } onChange={ (e) => firstNameHandler(e) } />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="lastName" className="form-label mb-0">Last Name</label>
-                  <input type="text" className="form-control" id="lastName" disabled={ disabled }
-                    value={ userDetails.lastName } onChange={ (e) => lastNameHandler(e) } />
+                <div className="row">
+                  <div className="mb-3 col-md-6">
+                    <label htmlFor="firstName" className="form-label mb-0">First Name</label>
+                    <input type="text" className="form-control" id="firstName" disabled={ disabled }
+                      value={ userDetails.firstName } onChange={ (e) => firstNameHandler(e) } />
+                  </div>
+                  <div className="mb-3 col-md-6">
+                    <label htmlFor="lastName" className="form-label mb-0">Last Name</label>
+                    <input type="text" className="form-control" id="lastName" disabled={ disabled }
+                      value={ userDetails.lastName } onChange={ (e) => lastNameHandler(e) } />
+                  </div>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="contactNumber" className="form-label mb-0">Contact Number</label>
                   <input type="tel" className="form-control" id="contactNumber" disabled={ disabled }
                     value={ userDetails.contactNumber } onChange={ (e) => contactNumberHandler(e) } />
                 </div>
+                {
+                  !disabled ? (
+                    <>
+                      <p className="fw-bold mt-5">Change Password</p>
+                      <div className="mb-3">
+                        <label htmlFor="newPassword" className="form-label mb-0">New Password</label>
+                        <input type="password" className="form-control" id="newPassword" disabled={ disabled }
+                          value={ userDetails.newPassword } onChange={ (e) => newPasswordHandler(e) } />
+                        <span style={ { fontSize: 12, color: "red", lineHeight: "normal" } }>
+                          { errors.password }
+                        </span>
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="confirmPassword" className="form-label mb-0">Confirm Password</label>
+                        <input type="password" className="form-control" id="confirmPassword" disabled={ disabled }
+                          value={ userDetails.confirmPassword } onChange={ (e) => confirmPasswordHandler(e) } />
+                        <span style={ { fontSize: 12, color: "red" } }>
+                          { errors.repeatPassword }
+                        </span>
+                      </div>
+                    </>
+                  ) : <></>
+                }
               </form >
               <div className="justify-content-start mt-2 mb-3">
                 <Buttons />

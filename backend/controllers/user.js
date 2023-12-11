@@ -87,14 +87,15 @@ module.exports.login = async (req, res, next) => {
 // Edit an existing user
 module.exports.edit = async (req, res, next) => {
   try {
-    const { email, password, firstName, lastName, contactNumber } = req.body;
-
+    const { email, newPassword, firstName, lastName, contactNumber } = req.body;
+    console.log(req.body);
     const user = req.user;
+
     if (!user.isAdmin && email !== user.email) {
       throw new Error('Email does not match user!');
     }
 
-    user.password = password || user.password;
+    user.password = newPassword || user.password;
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
     user.contactNumber = contactNumber || user.contactNumber;
