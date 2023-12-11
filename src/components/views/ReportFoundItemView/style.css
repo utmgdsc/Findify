@@ -1,7 +1,7 @@
 .body-request-found {
     margin:0;
     padding:0;
-    background-color: lightskyblue !important;
+    background: linear-gradient(90deg, rgba(202, 201, 223, 0.75) 0%, rgba(40, 40, 159, 0.95) 0%, rgba(28, 92, 188, 0.75) 30%, rgba(0, 212, 255, 0.75) 100%);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;

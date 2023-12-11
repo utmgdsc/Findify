@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import ItemCard from "../../common/ItemCard";
 import Footer from "../../common/Footer";
 
-export default function Home () {
+export default function Home() {
   let navigate = useNavigate();
   const [lostItems, setLostItems] = useState([]);
   const [foundItems, setFoundItems] = useState([]);
@@ -15,27 +15,27 @@ export default function Home () {
 
   useEffect(() => {
     checkAdmin(); // eslint-disable-next-line
+    isAdmin ? getAdminPosts() : getUserPosts();
   }, []);
 
   const checkAdmin = () => {
-    let url = `admin/allLostItems/`;
-    fetcher(url)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("admin user");
-          setIsAdmin(true);
-          getAdminPosts();
-        } else if (response.status == 403) {
-          console.log("normal user");
-          setIsAdmin(false);
-          getUserPosts();
+    fetcher("user/getUser")
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json().then((json) => {
+            setIsAdmin(json.user.isAdmin);
+          });
         } else {
-          console.log("unexpected error");
+          if (localStorage.getItem("token") === null) {
+            alert(
+              "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
+            );
+            navigate("/login", { replace: true });
+          } else {
+          }
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => console.error(err));
   };
 
   const getAdminPosts = () => {
@@ -128,14 +128,14 @@ export default function Home () {
 
     return (
       <ItemCard
-        id={ item._id }
-        name={ item.itemName }
-        dateStr={ dateStr }
-        card_status={ card_status }
-        imageUrls={ item.imageUrls }
-        location={ item.locationLost ? item.locationLost : item.locationFound }
-        daysAgo={ daysAgo }
-        category={ category }
+        id={item._id}
+        name={item.itemName}
+        dateStr={dateStr}
+        card_status={card_status}
+        imageUrls={item.imageUrls}
+        location={item.locationLost ? item.locationLost : item.locationFound}
+        daysAgo={daysAgo}
+        category={category}
       />
     );
   };
@@ -143,7 +143,7 @@ export default function Home () {
   const createNoResultsCard = () => {
     return (
       <div className="col">
-        <img src={ no_results } alt="" className="card-img-top no-result" />
+        <img src={no_results} alt="" className="card-img-top no-result" />
         <p className="no-resulst-text">
           Sorry! It looks like you have not made any reports previously.
         </p>
@@ -189,9 +189,7 @@ export default function Home () {
                           data-bs-toggle="tab"
                           href="#lost"
                         >
-                          { isAdmin
-                            ? "All Lost Items"
-                            : "Lost Item Requests" }
+                          {isAdmin ? "All Lost Items" : "Lost Item Requests"}
                         </a>
                       </li>
                       <li className="nav-item items-link">
@@ -200,9 +198,7 @@ export default function Home () {
                           data-bs-toggle="tab"
                           href="#found"
                         >
-                          { isAdmin
-                            ? "All Found Items"
-                            : "Found Item Reports" }
+                          {isAdmin ? "All Found Items" : "Found Item Reports"}
                         </a>
                       </li>
                     </ul>
@@ -214,20 +210,20 @@ export default function Home () {
                             className="tab-pane fade in active show"
                           >
                             <div className="row justify-content-start">
-                              { lostItems.length !== 0
+                              {lostItems.length !== 0
                                 ? lostItems.map((item) =>
-                                  createItemCard(item, "lostitem")
-                                )
-                                : createNoResultsCard() }
+                                    createItemCard(item, "lostitem")
+                                  )
+                                : createNoResultsCard()}
                             </div>
                           </div>
                           <div id="found" className="tab-pane fade ">
                             <div className="row justify-content-start">
-                              { foundItems.length !== 0
+                              {foundItems.length !== 0
                                 ? foundItems.map((item) =>
-                                  createItemCard(item, "founditem")
-                                )
-                                : createNoResultsCard() }
+                                    createItemCard(item, "founditem")
+                                  )
+                                : createNoResultsCard()}
                             </div>
                           </div>
                         </div>

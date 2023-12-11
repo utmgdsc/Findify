@@ -13,6 +13,7 @@ export default function FoundRequest() {
   const { id } = useParams();
   const [idtwo, setid] = useState("");
   const token = localStorage.getItem("token");
+  const [isAdmin, setIsAdmin] = useState(false);
   let navigate = useNavigate();
   const [validated, setValidated] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -50,10 +51,32 @@ export default function FoundRequest() {
   });
 
   useEffect(() => {
+    getUserDetails();
     getItemDetails(); // eslint-disable-next-line
   }, []);
 
+  const getUserDetails = () => {
+    fetcher("user/getUser")
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json().then((json) => {
+            setIsAdmin(json.user.isAdmin);
+          });
+        } else {
+          if (token === null) {
+            alert(
+              "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
+            );
+            navigate("/login", { replace: true });
+          } else {
+          }
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+
   const getItemDetails = () => {
+    console.log(isAdmin);
     let url = `item/foundRequest/${id}`;
     fetcher(url)
       .then((response) => {
@@ -617,38 +640,7 @@ export default function FoundRequest() {
 
               {showHandover ? (
                 <div>
-                  <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input "
-                      type="radio"
-                      name="inlineRadioOptions"
-                      id="inlineRadio1"
-                      value="option1"
-                      onClick={() => setHandoverUser(1)}
-                    />
-                    <label
-                      class="form-check-label small mb-1 fw-bold"
-                      for="inlineRadio1"
-                    >
-                      Lost and Found
-                    </label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input "
-                      type="radio"
-                      name="inlineRadioOptions"
-                      id="inlineRadio2"
-                      onClick={() => setHandoverUser(2)}
-                    />
-                    <label
-                      class="form-check-label small mb-1 fw-bold"
-                      for="inlineRadio2"
-                    >
-                      Other User
-                    </label>
-                  </div>
-                  {handoverUser == 2 ? (
+                  {isAdmin ? (
                     <div className="mb-3">
                       <label
                         class=" small mb-1 fw-bold"
@@ -665,7 +657,59 @@ export default function FoundRequest() {
                         }}
                       />
                     </div>
-                  ) : null}
+                  ) : (
+                    <div>
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input "
+                          type="radio"
+                          name="inlineRadioOptions"
+                          id="inlineRadio1"
+                          value="option1"
+                          onClick={() => setHandoverUser(1)}
+                        />
+                        <label
+                          class="form-check-label small mb-1 fw-bold"
+                          for="inlineRadio1"
+                        >
+                          Lost and Found
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input "
+                          type="radio"
+                          name="inlineRadioOptions"
+                          id="inlineRadio2"
+                          onClick={() => setHandoverUser(2)}
+                        />
+                        <label
+                          class="form-check-label small mb-1 fw-bold"
+                          for="inlineRadio2"
+                        >
+                          Other User
+                        </label>
+                      </div>
+                      {handoverUser === 2 ? (
+                        <div className="mb-3">
+                          <label
+                            class=" small mb-1 fw-bold"
+                            style={{ "margin-right": "10px" }}
+                          >
+                            Enter the ID of the Lost Request (*):
+                          </label>
+                          <input
+                            required
+                            type="text"
+                            className="form-control-sm"
+                            onChange={(e) => {
+                              setLostItemId(e.target.value);
+                            }}
+                          />
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
                 </div>
               ) : null}
 

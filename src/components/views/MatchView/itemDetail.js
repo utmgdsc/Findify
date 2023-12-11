@@ -94,7 +94,6 @@ export default function Match() {
         if (response.status === 200) {
           return response.json().then((json) => {
             navigate("/home", { replace: true });
-            //setselectedDate(itemdata.timeLost);
           });
         } else {
           // Check if user is logged in
