@@ -18,24 +18,24 @@ export default function Home() {
   }, []);
 
   const checkAdmin = () => {
-    let url = `admin/allLostItems/`;
-    fetcher(url)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("admin user");
-          setIsAdmin(true);
-          getAdminPosts();
-        } else if (response.status == 403) {
-          console.log("normal user");
-          setIsAdmin(false);
-          getUserPosts();
+    fetcher("user/getUser")
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json().then((json) => {
+            setIsAdmin(json.user.isAdmin);
+            json.user.isAdmin ? getAdminPosts() : getUserPosts();
+          });
         } else {
-          console.log("unexpected error");
+          if (localStorage.getItem("token") === null) {
+            alert(
+              "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
+            );
+            navigate("/login", { replace: true });
+          } else {
+          }
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => console.error(err));
   };
 
   const getAdminPosts = () => {
@@ -154,7 +154,9 @@ export default function Home() {
   return (
     <>
       <NavBar />
-
+      {console.log(isAdmin)}
+      {console.log(lostItems)}
+      {console.log(foundItems)}
       <div className="container surrounding-box text-center">
         <div className="row buttons justify-content-center">
           <div className="col-5" id="requestLostItem">
@@ -218,7 +220,7 @@ export default function Home() {
                             </div>
                           </div>
                           <div id="found" className="tab-pane fade ">
-                            <div className="row justify-content-around">
+                            <div className="row justify-content-start">
                               {foundItems.length !== 0
                                 ? foundItems.map((item) =>
                                     createItemCard(item, "founditem")

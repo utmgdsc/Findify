@@ -62,7 +62,8 @@ module.exports.createLostRequest = async (req, res, next) => {
     const item = await lostItem.save();
 
     res.status(200).json({
-      message: `Created lost item successfully ID: ${item._id}`,
+      message: "Created lost item successfully",
+      id: item._id,
       urlLocations: imageUrls,
     });
   } catch (err) {
@@ -195,7 +196,8 @@ module.exports.createFoundRequest = async (req, res, next) => {
     const item = await foundItem.save();
 
     res.status(200).json({
-      message: `Created found item successfully ID: ${item._id}`,
+      message: "Created found item successfully",
+      id: item._id,
       urlLocations: imageUrls,
     });
   } catch (err) {
@@ -444,7 +446,7 @@ module.exports.finalHandoff = async (req, res, next) => {
     // }
 
     // Ensure only the current host of the found item can hand off the item
-    if (!user.isAdmin && !foundItem.host.equals(user._id)) {
+    if (!foundItem.host.equals(user._id)) {
       return res.status(401).json({ message: "User does not own the item" });
     }
 

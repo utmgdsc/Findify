@@ -40,16 +40,21 @@ router.route('/sendOTP')
     })
 
 router.route('/edit')
-  .post(authenticate,
+  .put(authenticate,
     checkRequiredAttributes(["email"]),
     async (req, res) => {
-    try {
-      await UserController.edit(req, res, errorHandler);
-    } catch (err) {
-      res.json({ message: `Edit User Error: ${err}` })
-    }
+      try {
+        await UserController.edit(req, res, errorHandler);
+      } catch (err) {
+        res.json({ message: `Edit User Error: ${err}` })
+      }
+    })
+
+router.route('/getUser')
+  .get(authenticate, (req, res) => {
+    res.json({ user: req.user })
   })
 
-const errorHandler = (err) => {}
+const errorHandler = (err) => { }
 
 module.exports = router;

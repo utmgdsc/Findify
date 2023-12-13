@@ -13,6 +13,9 @@ export default function Claim() {
   const token = localStorage.getItem("token");
   let navigate = useNavigate();
   const [validated, setValidated] = useState(false);
+  const [requestSuccess, setRequestSuccess] = useState(null);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertVisible, setAlertVisible] = useState(false);
 
   const [itemdata, setitemData] = useState({
     itemName: "",
@@ -75,11 +78,6 @@ export default function Claim() {
       foundItemId: idtwo,
     };
     console.log(jsonData);
-    /* return (
-      <span style={{ fontSize: 12, color: "green" }}>
-        Request Successful! Email sent to the host.
-      </span>
-    ); */
     fetcher(url, {
       method: "POST",
       body: JSON.stringify(jsonData),
@@ -93,6 +91,11 @@ export default function Claim() {
           return response.json().then((json) => {
             console.log("success bro");
             console.log(json);
+            setAlertVisible(true);
+            setRequestSuccess(true);
+            setAlertMessage(
+              `Please contact ${json.hostEmail} to enquire about this item`
+            );
           });
         } else {
           // Check if user is logged in
@@ -101,11 +104,22 @@ export default function Claim() {
               "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
             );
             navigate("/login", { replace: true });
+          } else {
+            return response.text().then((error) => {
+              const errorObject = JSON.parse(error);
+              setAlertVisible(true);
+              setRequestSuccess(false);
+              setAlertMessage(errorObject.message);
+            });
           }
         }
       })
       .catch((err) => {
         console.log(err);
+        const errorObject = JSON.parse(err);
+        setAlertVisible(true);
+        setRequestSuccess(false);
+        setAlertMessage(errorObject.message);
       });
   };
 
@@ -312,6 +326,22 @@ export default function Claim() {
                 This Item May be Mine!
               </button>
             </div>
+            {alertVisible && requestSuccess !== null && (
+              <div
+                className={`alert ${
+                  requestSuccess ? "alert-success" : "alert-danger"
+                } alert-dismissible fade show`}
+                role="alert"
+              >
+                {alertMessage}
+                <button
+                  type="button"
+                  class="btn-close"
+                  onClick={() => setAlertVisible(false)}
+                  aria-label="Close"
+                ></button>
+              </div>
+            )}
           </form>
         </div>
       </div>
