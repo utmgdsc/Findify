@@ -93,7 +93,9 @@ export default function Claim() {
             console.log(json);
             setAlertVisible(true);
             setRequestSuccess(true);
-            setAlertMessage(`${json.message} for user ${json.hostEmail}`);
+            setAlertMessage(
+              `Please contact ${json.hostEmail} to enquire about this item`
+            );
           });
         } else {
           // Check if user is logged in

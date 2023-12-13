@@ -15,7 +15,6 @@ export default function Home() {
 
   useEffect(() => {
     checkAdmin(); // eslint-disable-next-line
-    isAdmin ? getAdminPosts() : getUserPosts();
   }, []);
 
   const checkAdmin = () => {
@@ -24,6 +23,7 @@ export default function Home() {
         if (res.status === 200) {
           return res.json().then((json) => {
             setIsAdmin(json.user.isAdmin);
+            json.user.isAdmin ? getAdminPosts() : getUserPosts();
           });
         } else {
           if (localStorage.getItem("token") === null) {
@@ -154,7 +154,9 @@ export default function Home() {
   return (
     <>
       <NavBar />
-
+      {console.log(isAdmin)}
+      {console.log(lostItems)}
+      {console.log(foundItems)}
       <div className="container surrounding-box text-center">
         <div className="row buttons justify-content-center">
           <div className="col-5" id="requestLostItem">
