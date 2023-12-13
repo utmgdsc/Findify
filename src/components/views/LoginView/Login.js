@@ -56,7 +56,6 @@ export default function Login() {
     const form = event.currentTarget;
     var controller = new AbortController();
     const signal = controller.signal;
-    setDisabled(true);
     if (form.checkValidity() === false) {
       event.stopPropagation();
       setDisabled(false);
