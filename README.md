@@ -18,6 +18,11 @@ you can get the Latest version of NodeJS from [here](https://nodejs.org/en/) [Th
 The database user here is [Mongoose](https://www.npmjs.com/package/mongoose) which  is a [MongoDB](https://www.mongodb.org/) object modeling tool designed to work in an asynchronous environment. You can get started with mongoose (https://mongoosejs.com/docs/) or you can read thisawesome article on getting started with [Mongoose](https://medium.com/@scalegridio/getting-started-with-mongodb-and-mongoose-c406541d325a). Fill your databse url in the keys_dev.js file inside the config folder.
 
 
+### Run the Backend
+Run the following commands to get the backend started.\
+ 		`cd backend`\
+                `node index.js`
+
 ### `npm start`
 
 Runs the app in the development mode.\
