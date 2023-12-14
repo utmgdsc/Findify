@@ -119,15 +119,14 @@ export default function FoundRequest() {
       });
   };
 
-  const deleteRequest = () => {
+  const deleteRequest = async (event) => {
+    event.preventDefault();
     let url = `item/foundRequest/${id}`;
     fetcher(url, { method: "DELETE" })
       .then((response) => {
         if (response.status === 200) {
-          return response.json().then((json) => {
-            navigate("/home", { replace: true });
-            console.log();
-          });
+          navigate("/home", { replace: true });
+          window.location.reload();
         } else {
           // Check if user is logged in
           if (localStorage.getItem("token") === null) {
@@ -157,7 +156,7 @@ export default function FoundRequest() {
                     <img
                       src={i}
                       alt=""
-                      width="300px"
+                      width="200px"
                       height="200px"
                       style={{ objectFit: "cover" }}
                     />
@@ -196,7 +195,7 @@ export default function FoundRequest() {
               <img
                 src={files[0]}
                 alt=""
-                width="300px"
+                width="200px"
                 height="200px"
                 style={{ objectFit: "fill" }}
               />
@@ -204,7 +203,7 @@ export default function FoundRequest() {
               <img
                 src={no_img}
                 alt=""
-                width="200px"
+                width="150px"
                 height="150px"
                 style={{ objectFit: "cover", marginBottom: "5px" }}
               />
@@ -526,7 +525,7 @@ export default function FoundRequest() {
     return (
       <div class="row">
         <div class="col-xl-4 text-center">
-          <div class="card col-md-9 mx-auto">
+          <div class="card col-md-9 mx-auto" style={{ paddingBottom: "10px" }}>
             <div class="card-images">{createImagesCard(itemdata.files)}</div>
           </div>
         </div>
@@ -840,7 +839,7 @@ export default function FoundRequest() {
                         <button
                           type="button"
                           class="btn btn-danger"
-                          onClick={deleteRequest}
+                          onClick={(e) => deleteRequest(e)}
                         >
                           Yes, delete
                         </button>

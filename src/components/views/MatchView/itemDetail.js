@@ -50,7 +50,6 @@ export default function Match() {
   }, []);
 
   const getItemDetails = () => {
-    console.log("reached");
     let url = `item/lostRequest/${id}`;
     fetcher(url)
       .then((response) => {
@@ -89,14 +88,14 @@ export default function Match() {
       });
   };
 
-  const deleteRequest = () => {
+  const deleteRequest = async (event) => {
+    event.preventDefault();
     let url = `item/lostRequest/${id}`;
     fetcher(url, { method: "DELETE" })
       .then((response) => {
         if (response.status === 200) {
-          return response.json().then((json) => {
-            navigate("/home", { replace: true });
-          });
+          navigate("/home", { replace: true });
+          window.location.reload();
         } else {
           // Check if user is logged in
           if (localStorage.getItem("token") === null) {
@@ -165,7 +164,7 @@ export default function Match() {
               <img
                 src={files[0]}
                 alt=""
-                width="300px"
+                width="200px"
                 height="200px"
                 style={{ objectFit: "fill" }}
               />
@@ -173,7 +172,7 @@ export default function Match() {
               <img
                 src={no_img}
                 alt=""
-                width="200px"
+                width="150px"
                 height="150px"
                 style={{ objectFit: "cover" }}
               />
@@ -367,7 +366,7 @@ export default function Match() {
     return (
       <div class="row">
         <div class="col-xl-4 text-center">
-          <div class="card col-md-9 mx-auto">
+          <div class="card col-md-9 mx-auto" style={{ paddingBottom: "10px" }}>
             <div class="card-images">{createImagesCard(itemdata.files)}</div>
           </div>
         </div>
@@ -558,7 +557,7 @@ export default function Match() {
                         <button
                           type="button"
                           class="btn btn-danger"
-                          onClick={deleteRequest}
+                          onClick={(e) => deleteRequest(e)}
                         >
                           Yes, delete
                         </button>
