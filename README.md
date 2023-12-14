@@ -21,7 +21,7 @@ The database user here is [Mongoose](https://www.npmjs.com/package/mongoose) whi
 ### Run the Backend
 Run the following commands to get the backend started.\
  		`cd backend`\
-                `node index.js`\
+                `node index.js`
 
 ### `npm start`
 
