@@ -12,9 +12,12 @@ export default function Contact() {
   const form = useRef();
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
+  const [emailSuccess, setEmailSuccess] = useState(null);
+  const [alertVisible, setAlertVisible] = useState(false);
   const [errorEmail, setErrorEmail] = useState("");
 
   const submitHandler = async (event) => {
+    setErrorEmail("");
     event.preventDefault();
     let url = `admin/emailAdmin`;
     const jsonData = {
@@ -34,6 +37,11 @@ export default function Contact() {
           return response.json().then((json) => {
             console.log(json);
             console.log("successful admin");
+            setErrorEmail(json.message);
+            setEmailSuccess(true);
+            setAlertVisible(true);
+            setSubject("");
+            setBody("");
           });
         } else {
           // Check if user is logged in
@@ -41,11 +49,11 @@ export default function Contact() {
             alert(
               "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
             );
-            //navigate("/login", { replace: true });
           } else {
             return response.text().then((errorMessage) => {
               const errorObject = JSON.parse(errorMessage);
               setErrorEmail(errorObject.message);
+              setAlertVisible(true);
             });
           }
         }
@@ -54,6 +62,7 @@ export default function Contact() {
         console.log(err);
         const errorObject = JSON.parse(err);
         setErrorEmail(errorObject.message);
+        setAlertVisible(true);
       });
   };
 
@@ -94,30 +103,51 @@ export default function Contact() {
           >
             <StyledContactForm>
               <form ref={form} onSubmit={submitHandler}>
-                <label class="label-email" style={{ color: "black" }}>
+                <label class="Name" style={{ color: "black" }} required>
                   Name
                 </label>
                 <input type="text" name="user_name" />
-                <label class="label-email" style={{ color: "black" }}>
-                  Subect
+                <label class="Subject" style={{ color: "black" }}>
+                  Subject
                 </label>
                 <input
-                  type="email"
+                  type="text"
                   name="user_subject"
+                  value={subject}
                   onChange={(e) => setSubject(e.target.value)}
+                  required
                 />
-                <label class="label-email" style={{ color: "black" }}>
+                <label class="Body" style={{ color: "black" }}>
                   Body
                 </label>
                 <textarea
+                  value={body}
                   name="message"
                   onChange={(e) => setBody(e.target.value)}
+                  required
                 />
                 <div class="d-flex justify-content-center">
                   <input type="submit" value="Send" />
                 </div>
               </form>
             </StyledContactForm>
+            <br />
+            {alertVisible && emailSuccess !== null && (
+              <div
+                className={`alert ${
+                  emailSuccess ? "alert-success" : "alert-danger"
+                } alert-dismissible fade show`}
+                role="alert"
+              >
+                {errorEmail}
+                <button
+                  type="button"
+                  class="btn-close"
+                  onClick={() => setAlertVisible(false)}
+                  aria-label="Close"
+                ></button>
+              </div>
+            )}
           </div>
         </div>
       </div>

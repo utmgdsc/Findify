@@ -21,6 +21,7 @@ export default function Match() {
   const [errorSubmit, setErrorSubmit] = useState("");
   const [showView, setshowView] = useState(true);
   const [formattedDate, setFormattedDate] = useState("");
+  const [isActive, setIsActive] = useState(null);
 
   const [itemdata, setitemData] = useState({
     itemName: "",
@@ -71,6 +72,7 @@ export default function Match() {
             });
             setid(json.lostItem._id);
             setFormattedDate(json.lostItem.timeLost.slice(0, 10));
+            setIsActive(json.lostItem.isActive);
           });
         } else {
           // Check if user is logged in
@@ -501,69 +503,71 @@ export default function Match() {
 
             <span style={{ fontSize: 15, color: "red" }}>{errorSubmit}</span>
 
-            <div>
-              <button
-                type="button"
-                class="btn btn-danger mb-2 mt-2"
-                style={{ "margin-right": "4px" }}
-                data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop"
-              >
-                Delete Request
-              </button>
-              <button
-                type="button"
-                class="btn btn-success mb-2 mt-2"
-                style={{ "margin-right": "4px" }}
-                onClick={() => setshowView(false)}
-              >
-                Edit Request
-              </button>
-              <div
-                class="modal fade"
-                id="staticBackdrop"
-                data-bs-backdrop="static"
-                data-bs-keyboard="false"
-                tabindex="-1"
-                aria-labelledby="staticBackdropLabel"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">
-                        Are you sure you want to delete the request?
-                      </h5>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                      ></button>
-                    </div>
-                    <div class="modal-body">
-                      This action can not be reversed.
-                    </div>
-                    <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn-danger"
-                        onClick={deleteRequest}
-                      >
-                        Yes, delete
-                      </button>
+            {isActive && (
+              <div>
+                <button
+                  type="button"
+                  class="btn btn-danger mb-2 mt-2"
+                  style={{ "margin-right": "4px" }}
+                  data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop"
+                >
+                  Delete Request
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-success mb-2 mt-2"
+                  style={{ "margin-right": "4px" }}
+                  onClick={() => setshowView(false)}
+                >
+                  Edit Request
+                </button>
+                <div
+                  class="modal fade"
+                  id="staticBackdrop"
+                  data-bs-backdrop="static"
+                  data-bs-keyboard="false"
+                  tabindex="-1"
+                  aria-labelledby="staticBackdropLabel"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">
+                          Are you sure you want to delete the request?
+                        </h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        This action can not be reversed.
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-danger"
+                          onClick={deleteRequest}
+                        >
+                          Yes, delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </form>
         </div>
       </div>
@@ -605,6 +609,7 @@ export default function Match() {
                   id="inputCategory"
                   class="form-select form-select-sm"
                   aria-label=".form-select-sm"
+                  value={itemdata.type}
                   onChange={(e) => categoryhandler(e)}
                 >
                   <option selected>{itemdata.type}</option>
@@ -646,6 +651,7 @@ export default function Match() {
                   class="form-select form-select-sm"
                   id="inputlocation"
                   aria-label=".form-select-sm"
+                  value={itemdata.locationLost}
                   onChange={(e) => locationhandler(e)}
                 >
                   <option selected>{itemdata.locationLost}</option>
@@ -717,6 +723,7 @@ export default function Match() {
                 <select
                   class="form-select form-select-sm"
                   aria-label=".form-select-sm example"
+                  value={itemdata.colour}
                   onChange={(e) => colorhandler(e)}
                 >
                   <option selected>{itemdata.colour}</option>
@@ -760,6 +767,7 @@ export default function Match() {
                   id="inputSize"
                   class="form-select form-select-sm"
                   aria-label=".form-select-sm example"
+                  value={itemdata.size}
                   onChange={(e) => sizehandler(e)}
                 >
                   <option selected>{itemdata.size}</option>
@@ -834,7 +842,7 @@ export default function Match() {
           </div>
         </div>
       </div>
-      <Matches />
+      {isActive ? <Matches /> : null}
       <Footer />
     </div>
   );

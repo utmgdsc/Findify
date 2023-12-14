@@ -16,6 +16,7 @@ export default function Claim() {
   const [requestSuccess, setRequestSuccess] = useState(null);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertVisible, setAlertVisible] = useState(false);
+  const [isActive, setIsActive] = useState(null);
 
   const [itemdata, setitemData] = useState({
     itemName: "",
@@ -55,6 +56,7 @@ export default function Claim() {
               size: json.foundItem.size,
             });
             setid(json.foundItem._id);
+            setIsActive(json.foundItem.isActive);
           });
         } else {
           // Check if user is logged in
@@ -78,49 +80,53 @@ export default function Claim() {
       foundItemId: idtwo,
     };
     console.log(jsonData);
-    fetcher(url, {
-      method: "POST",
-      body: JSON.stringify(jsonData),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json().then((json) => {
-            console.log("success bro");
-            console.log(json);
-            setAlertVisible(true);
-            setRequestSuccess(true);
-            setAlertMessage(
-              `Please contact ${json.hostEmail} to enquire about this item`
-            );
-          });
-        } else {
-          // Check if user is logged in
-          if (localStorage.getItem("token") === null) {
-            alert(
-              "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
-            );
-            navigate("/login", { replace: true });
-          } else {
-            return response.text().then((error) => {
-              const errorObject = JSON.parse(error);
-              setAlertVisible(true);
-              setRequestSuccess(false);
-              setAlertMessage(errorObject.message);
-            });
-          }
-        }
+    if (!isActive) {
+      navigate("/contact", { replace: true });
+    } else {
+      fetcher(url, {
+        method: "POST",
+        body: JSON.stringify(jsonData),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
       })
-      .catch((err) => {
-        console.log(err);
-        const errorObject = JSON.parse(err);
-        setAlertVisible(true);
-        setRequestSuccess(false);
-        setAlertMessage(errorObject.message);
-      });
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json().then((json) => {
+              console.log("success bro");
+              console.log(json);
+              setAlertVisible(true);
+              setRequestSuccess(true);
+              setAlertMessage(
+                `Please contact ${json.hostEmail} to enquire about this item`
+              );
+            });
+          } else {
+            // Check if user is logged in
+            if (localStorage.getItem("token") === null) {
+              alert(
+                "Sorry, looks like you're not logged in. Click ok to be redirected back to the login page"
+              );
+              navigate("/login", { replace: true });
+            } else {
+              return response.text().then((error) => {
+                const errorObject = JSON.parse(error);
+                setAlertVisible(true);
+                setRequestSuccess(false);
+                setAlertMessage(errorObject.message);
+              });
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          const errorObject = JSON.parse(err);
+          setAlertVisible(true);
+          setRequestSuccess(false);
+          setAlertMessage(errorObject.message);
+        });
+    }
   };
 
   const createImagesCard = (files) => {
@@ -325,7 +331,14 @@ export default function Claim() {
               >
                 This Item May be Mine!
               </button>
+              <br />
+              {!isActive ? (
+                <span style={{ fontSize: 15, color: "red" }}>
+                  You will be redirected to contact the Admin.
+                </span>
+              ) : null}
             </div>
+
             {alertVisible && requestSuccess !== null && (
               <div
                 className={`alert ${

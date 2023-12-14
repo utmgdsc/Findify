@@ -14,6 +14,7 @@ export default function FoundRequest() {
   const [idtwo, setid] = useState("");
   const token = localStorage.getItem("token");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   let navigate = useNavigate();
   const [validated, setValidated] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -26,6 +27,7 @@ export default function FoundRequest() {
   const [showHandover, setShowHandover] = useState(false);
   const [handoverUser, setHandoverUser] = useState(0);
   const [handoverSuccess, sethandoverSuccess] = useState(false);
+  const [handoverModalHeading, setHandoverModalHeading] = useState("");
   const [handoverSuccessMessage, sethandoverSuccessMessage] = useState("");
 
   const [itemdata, setitemData] = useState({
@@ -97,6 +99,7 @@ export default function FoundRequest() {
               size: json.foundItem.size,
             });
             setid(json.foundItem._id);
+            setIsActive(json.foundItem.isActive);
             //setselectedDate(itemdata.timeFound);
             console.log(itemdata);
             setFormattedDate(json.foundItem.timeFound.slice(0, 10));
@@ -268,6 +271,7 @@ export default function FoundRequest() {
             console.log(json);
             sethandoverSuccess(true);
             sethandoverSuccessMessage(json.message);
+            setHandoverModalHeading("Your handover was successful");
           });
         } else {
           // Check if user is logged in
@@ -279,7 +283,9 @@ export default function FoundRequest() {
           } else {
             return response.text().then((errorMessage) => {
               const errorObject = JSON.parse(errorMessage);
+              sethandoverSuccess(false);
               sethandoverSuccessMessage(errorObject.message);
+              setHandoverModalHeading("Your handover was unsuccessful");
               seterrorHandover(errorObject.message);
             });
           }
@@ -288,7 +294,9 @@ export default function FoundRequest() {
       .catch((err) => {
         console.log(err);
         const errorObject = JSON.parse(err);
+        sethandoverSuccess(false);
         sethandoverSuccessMessage(errorObject.message);
+        setHandoverModalHeading("Your handover was unsuccessful");
         seterrorHandover(errorObject.message);
       });
   };
@@ -312,6 +320,7 @@ export default function FoundRequest() {
             console.log(json);
             sethandoverSuccess(true);
             sethandoverSuccessMessage(json.message);
+            setHandoverModalHeading("Your handover was successful");
           });
         } else {
           // Check if user is logged in
@@ -323,8 +332,10 @@ export default function FoundRequest() {
           } else {
             return response.text().then((errorMessage) => {
               const errorObject = JSON.parse(errorMessage);
+              sethandoverSuccess(false);
               sethandoverSuccessMessage(errorObject.message);
               seterrorHandover(errorObject.message);
+              setHandoverModalHeading("Your handover was unsuccessful");
             });
           }
         }
@@ -332,9 +343,19 @@ export default function FoundRequest() {
       .catch((err) => {
         console.log(err);
         const errorObject = JSON.parse(err);
+        sethandoverSuccess(false);
         sethandoverSuccessMessage(errorObject.message);
         seterrorHandover(errorObject.message);
+        setHandoverModalHeading("Your handover was unsuccessful");
       });
+  };
+
+  const closeHandlerModal = () => {
+    if (handoverSuccess) {
+      navigate("/home", { replace: true });
+    } else {
+      sethandoverSuccess(null);
+    }
   };
 
   const imagehandler = (e) => {
@@ -621,147 +642,114 @@ export default function FoundRequest() {
                 />
               </div>
             </div>
-
-            <div>
-              <label
-                class="small mb-1 fw-bold"
-                style={{ "margin-right": "10px" }}
-              >
-                Want to handover the item?
-              </label>
-              <button
-                type="button"
-                class="btn btn-info btn-sm mb-2 mt-2"
-                style={{ "margin-right": "10px" }}
-                onClick={clickMeHandler}
-              >
-                Click me
-              </button>
-
-              {showHandover ? (
-                <div>
-                  {isAdmin ? (
-                    <div className="mb-3">
-                      <label
-                        class=" small mb-1 fw-bold"
-                        style={{ "margin-right": "10px" }}
-                      >
-                        Enter the ID of the Lost Request (*):
-                      </label>
-                      <input
-                        required
-                        type="text"
-                        className="form-control-sm"
-                        onChange={(e) => {
-                          setLostItemId(e.target.value);
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <div class="form-check form-check-inline">
-                        <input
-                          class="form-check-input "
-                          type="radio"
-                          name="inlineRadioOptions"
-                          id="inlineRadio1"
-                          value="option1"
-                          onClick={() => setHandoverUser(1)}
-                        />
-                        <label
-                          class="form-check-label small mb-1 fw-bold"
-                          for="inlineRadio1"
-                        >
-                          Lost and Found
-                        </label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input
-                          class="form-check-input "
-                          type="radio"
-                          name="inlineRadioOptions"
-                          id="inlineRadio2"
-                          onClick={() => setHandoverUser(2)}
-                        />
-                        <label
-                          class="form-check-label small mb-1 fw-bold"
-                          for="inlineRadio2"
-                        >
-                          Other User
-                        </label>
-                      </div>
-                      {handoverUser === 2 ? (
-                        <div className="mb-3">
-                          <label
-                            class=" small mb-1 fw-bold"
-                            style={{ "margin-right": "10px" }}
-                          >
-                            Enter the ID of the Lost Request (*):
-                          </label>
-                          <input
-                            required
-                            type="text"
-                            className="form-control-sm"
-                            onChange={(e) => {
-                              setLostItemId(e.target.value);
-                            }}
-                          />
-                        </div>
-                      ) : null}
-                    </div>
-                  )}
-                </div>
-              ) : null}
-
-              {showHandover ? (
+            {isActive && (
+              <div>
+                <label
+                  class="small mb-1 fw-bold"
+                  style={{ "margin-right": "10px" }}
+                >
+                  Want to handover the item?
+                </label>
                 <button
                   type="button"
-                  class="btn btn-info mb-2 mt-2 btn-sm"
+                  class="btn btn-info btn-sm mb-2 mt-2"
                   style={{ "margin-right": "10px" }}
-                  onClick={callHandoverHandler}
-                  data-bs-toggle="modal"
-                  data-bs-target="#handover"
+                  onClick={clickMeHandler}
                 >
-                  Request Handover
+                  Click me
                 </button>
-              ) : null}
-            </div>
 
-            {handoverSuccess ? (
-              <div
-                class="modal fade"
-                id="handover"
-                data-bs-backdrop="static"
-                data-bs-keyboard="false"
-                tabindex="-1"
-                aria-labelledby="handoverLabel"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5
-                        class="modal-title"
-                        id="handoverLabel"
-                        style={{ color: "green" }}
-                      >
-                        Your handover was successful.
-                      </h5>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                        onClick={() => navigate("/home", { replace: true })}
-                      ></button>
-                    </div>
-                    <div class="modal-body">{handoverSuccessMessage}</div>
+                {showHandover ? (
+                  <div>
+                    {isAdmin ? (
+                      <div className="mb-3">
+                        <label
+                          class=" small mb-1 fw-bold"
+                          style={{ "margin-right": "10px" }}
+                        >
+                          Enter the ID of the Lost Request (*):
+                        </label>
+                        <input
+                          required
+                          type="text"
+                          className="form-control-sm"
+                          onChange={(e) => {
+                            setLostItemId(e.target.value);
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="radio"
+                            name="inlineRadioOptions"
+                            id="inlineRadio1"
+                            value="option1"
+                            onClick={() => setHandoverUser(1)}
+                          />
+                          <label
+                            class="form-check-label small mb-1 fw-bold"
+                            for="inlineRadio1"
+                          >
+                            Lost and Found
+                          </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input "
+                            type="radio"
+                            name="inlineRadioOptions"
+                            id="inlineRadio2"
+                            onClick={() => setHandoverUser(2)}
+                          />
+                          <label
+                            class="form-check-label small mb-1 fw-bold"
+                            for="inlineRadio2"
+                          >
+                            Other User
+                          </label>
+                        </div>
+                        {handoverUser === 2 ? (
+                          <div className="mb-3">
+                            <label
+                              class=" small mb-1 fw-bold"
+                              style={{ "margin-right": "10px" }}
+                            >
+                              Enter the ID of the item that was Lost (*):
+                            </label>
+                            <input
+                              required
+                              type="text"
+                              className="form-control-sm"
+                              onChange={(e) => {
+                                setLostItemId(e.target.value);
+                              }}
+                            />
+                          </div>
+                        ) : null}
+                      </div>
+                    )}
                   </div>
-                </div>
-              </div>
-            ) : null}
+                ) : null}
 
-            {!handoverSuccess ? (
+                {showHandover ? (
+                  <button
+                    type="button"
+                    class="btn btn-info mb-2 mt-2 btn-sm"
+                    style={{ "margin-right": "10px" }}
+                    onClick={callHandoverHandler}
+                    data-bs-toggle="modal"
+                    data-bs-target="#handover"
+                  >
+                    Request Handover
+                  </button>
+                ) : null}
+              </div>
+            )}
+
+            {handoverSuccess != null ? (
               <div
                 class="modal fade"
                 id="handover"
@@ -777,15 +765,16 @@ export default function FoundRequest() {
                       <h5
                         class="modal-title"
                         id="handoverLabel"
-                        style={{ color: "red" }}
+                        style={{ color: handoverSuccess ? "green" : "red" }}
                       >
-                        Your handover was unsuccessful.
+                        {handoverModalHeading}
                       </h5>
                       <button
                         type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"
+                        onClick={() => closeHandlerModal()}
                       ></button>
                     </div>
                     <div class="modal-body">{handoverSuccessMessage}</div>
@@ -796,69 +785,71 @@ export default function FoundRequest() {
 
             <span style={{ fontSize: 15, color: "red" }}>{errorHandover}</span>
 
-            <div>
-              <button
-                type="button"
-                class="btn btn-danger mb-2 mt-2"
-                style={{ "margin-right": "4px" }}
-                data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop"
-              >
-                Delete Request
-              </button>
-              <button
-                type="button"
-                class="btn btn-success mb-2 mt-2"
-                style={{ "margin-right": "4px" }}
-                onClick={() => setshowView(false)}
-              >
-                Edit Request
-              </button>
-              <div
-                class="modal fade"
-                id="staticBackdrop"
-                data-bs-backdrop="static"
-                data-bs-keyboard="false"
-                tabindex="-1"
-                aria-labelledby="staticBackdropLabel"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">
-                        Are you sure you want to delete the request?
-                      </h5>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                      ></button>
-                    </div>
-                    <div class="modal-body">
-                      This action can not be reversed.
-                    </div>
-                    <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn-danger"
-                        onClick={deleteRequest}
-                      >
-                        Yes, delete
-                      </button>
+            {isActive && (
+              <div>
+                <button
+                  type="button"
+                  class="btn btn-danger mb-2 mt-2"
+                  style={{ "margin-right": "4px" }}
+                  data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop"
+                >
+                  Delete Request
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-success mb-2 mt-2"
+                  style={{ "margin-right": "4px" }}
+                  onClick={() => setshowView(false)}
+                >
+                  Edit Request
+                </button>
+                <div
+                  class="modal fade"
+                  id="staticBackdrop"
+                  data-bs-backdrop="static"
+                  data-bs-keyboard="false"
+                  tabindex="-1"
+                  aria-labelledby="staticBackdropLabel"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">
+                          Are you sure you want to delete the request?
+                        </h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        This action can not be reversed.
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-danger"
+                          onClick={deleteRequest}
+                        >
+                          Yes, delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </form>
         </div>
       </div>

@@ -89,7 +89,6 @@ export default function Login() {
                 ...errors,
                 submit: errorObject.message,
               });
-              setDisabled(true);
               controller.abort();
             });
           }
@@ -101,7 +100,6 @@ export default function Login() {
             ...errors,
             submit: errorObject.message,
           });
-          setDisabled(true);
           setValidated(false);
         });
     }
@@ -153,7 +151,7 @@ export default function Login() {
                             <Icon
                               class="absolute mr-10 input-group-text"
                               icon={icon}
-                              size={25}
+                              size={17}
                             />
                           </span>
                         </div>
