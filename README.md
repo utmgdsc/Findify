@@ -30,6 +30,5 @@ npm install
 node index.js
 ```
 
-[!NOTE] 
-You need to create a `.env` file with the AWS secret keys, Email keys and etc.
+> :warning: You need to create a `.env` file in the /backend folder with the AWS secret keys, email keys to run the backend. Refer to .env.example file for the structure.
 
