@@ -228,10 +228,10 @@ module.exports.getUserPosts = async (req, res, next) => {
     const userId = req.user._id;
 
     // Fetch Lost Items
-    const lostItems = await LostItem.find({ host: userId }).select("-__v");
+    const lostItems = await LostItem.find({ host: userId }).sort({ updatedAt: -1 }).select("-__v");
 
     // Fetch Found Items
-    const foundItems = await FoundItem.find({ host: userId }).select("-__v");
+    const foundItems = await FoundItem.find({ host: userId }).sort({ updatedAt: -1 }).select("-__v");
     res.json({ userPosts: { lostItems, foundItems } })
   } catch (error) {
     console.error("Error fetching user's items:", error);
