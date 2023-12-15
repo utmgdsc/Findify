@@ -19,14 +19,14 @@ The database user here is [Mongoose](https://www.npmjs.com/package/mongoose) whi
 
 
 ### Run the Backend
-Run the following commands to get the backend started.\
+Run the following commands to get the backend started. The backend runs on port 3000.\
  		`cd backend`\
                 `node index.js`
 
 ### `npm start`
 
 Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Open [http://localhost:3001](http://localhost:3001) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
