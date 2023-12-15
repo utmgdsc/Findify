@@ -1,5 +1,5 @@
 const express = require('express');
-const { authenticate, checkRequiredAttributes } = require('../middlewares/user');
+const { authenticate, checkRequiredAttributes, checkValidObjectIdParam } = require('../middlewares/user');
 const ItemController = require('../controllers/item');
 const multerUpload = require("../middlewares/multer");
 
@@ -8,6 +8,7 @@ const router = express.Router();
 router.route('/lostRequest/:id')
   .get(
     authenticate,
+    checkValidObjectIdParam("id"),
     async (req, res) => {
       try {
         await ItemController.getLostRequest(req, res, errorHandler);
@@ -57,6 +58,7 @@ router.route('/lostRequest')
 router.route('/foundRequest/:id')
   .get(
     authenticate,
+    checkValidObjectIdParam("id"),
     async (req, res) => {
       try {
         await ItemController.getFoundRequest(req, res, errorHandler);
@@ -105,6 +107,7 @@ router.route('/foundRequest')
 router.route('/getSimilarItems/:id')
   .get(
     authenticate,
+    checkValidObjectIdParam("id"),
     async (req, res) => {
       try {
         await ItemController.getSimilarItems(req, res, errorHandler);
