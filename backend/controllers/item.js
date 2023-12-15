@@ -125,7 +125,7 @@ module.exports.getFoundRequest = async (req, res, next) => {
       return res.status(404).json({ message: 'Found item not found' });
     }
 
-    res.json({ foundItem });
+    res.status(200).json({ foundItem });
   } catch (err) {
     console.error("Error fetching foundItem details:", err);
     res.status(500).json({ message: 'Error fetching foundItem details' });
