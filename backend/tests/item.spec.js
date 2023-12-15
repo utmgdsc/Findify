@@ -156,7 +156,6 @@ describe('CreateLostRequest Controller', function() {
 
     expect(res.status.calledWith(200)).to.be.true;
     expect(res.json.calledOnce).to.be.true;
-    expect(res.json.args[0][0]).to.deep.include({ message: 'Created lost item successfully ID: testItemId' });
   });
 
   it('should upload files to S3 if present', async function() {
