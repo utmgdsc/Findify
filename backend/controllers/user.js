@@ -97,7 +97,7 @@ module.exports.login = async (req, res, next) => {
 // Edit an existing user
 module.exports.edit = async (req, res, next) => {
   try {
-    const { email, newPassword, firstName, lastName, contactNumber } = req.body;
+    const { email, password, firstName, lastName, contactNumber } = req.body;
     console.log(req.body);
     const user = req.user;
 
@@ -105,7 +105,7 @@ module.exports.edit = async (req, res, next) => {
       throw new Error("Email does not match user!");
     }
 
-    if (newPassword) user.password = newPassword;
+    if (password) user.password = password;
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
     user.contactNumber = contactNumber || user.contactNumber;

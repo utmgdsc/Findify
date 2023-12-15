@@ -142,7 +142,7 @@ export default function UserProfile() {
         firstName: userDetails.firstName,
         lastName: userDetails.lastName,
         contactNumber: userDetails.contactNumber,
-        newPassword: userDetails.newPassword,
+        password: userDetails.newPassword,
       };
       return fetch("http://localhost:3000/user/edit", {
         method: "PUT",
