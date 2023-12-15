@@ -5,7 +5,6 @@ import "./style.css";
 import no_results from "../../../assets/img/no_results.png";
 import { useNavigate } from "react-router-dom";
 import ItemCard from "../../common/ItemCard";
-import Footer from "../../common/Footer";
 
 export default function Home() {
   let navigate = useNavigate();
@@ -157,75 +156,77 @@ export default function Home() {
       {console.log(isAdmin)}
       {console.log(lostItems)}
       {console.log(foundItems)}
-      <div className="container surrounding-box text-center">
-        <div className="row buttons justify-content-center">
-          <div className="col-5" id="requestLostItem">
-            <a
-              className="btn btn-outline-info"
-              role="button"
-              href="/requestLostItem"
-            >
-              Request Lost Item Query
-            </a>
+      <div className=".body-home">
+        <div className="container surrounding-box text-center">
+          <div className="row buttons justify-content-center">
+            <div className="col-5" id="requestLostItem">
+              <a
+                className="btn btn-outline-info"
+                role="button"
+                href="/requestLostItem"
+              >
+                Request Lost Item Query
+              </a>
+            </div>
+            <div className="col-5" id="reportFoundItem">
+              <a
+                className="btn btn-outline-info"
+                role="button"
+                href="/reportFoundItem"
+              >
+                Report Unidentified Item Found
+              </a>
+            </div>
           </div>
-          <div className="col-5" id="reportFoundItem">
-            <a
-              className="btn btn-outline-info"
-              role="button"
-              href="/reportFoundItem"
-            >
-              Report Unidentified Item Found
-            </a>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col">
-            <div className="container py-5">
-              <div className="row">
-                <div className="col-12 ">
-                  <div className="item-list p-2">
-                    <ul className="nav nav-tabs item-tabs justify-content-center">
-                      <li className="nav-item items-link">
-                        <a
-                          className="nav-link active py-2 justify-content-center"
-                          data-bs-toggle="tab"
-                          href="#lost"
-                        >
-                          {isAdmin ? "All Lost Items" : "Lost Item Requests"}
-                        </a>
-                      </li>
-                      <li className="nav-item items-link">
-                        <a
-                          className="nav-link py-2 justify-content-center"
-                          data-bs-toggle="tab"
-                          href="#found"
-                        >
-                          {isAdmin ? "All Found Items" : "Found Item Reports"}
-                        </a>
-                      </li>
-                    </ul>
-                    <div className="row">
-                      <div className="col-12">
-                        <div className="tab-content p-4 ">
-                          <div
-                            id="lost"
-                            className="tab-pane fade in active show"
+          <div className="row">
+            <div className="col">
+              <div className="container py-5">
+                <div className="row">
+                  <div className="col-12 ">
+                    <div className="item-list p-2">
+                      <ul className="nav nav-tabs item-tabs justify-content-center">
+                        <li className="nav-item items-link">
+                          <a
+                            className="nav-link active py-2 justify-content-center"
+                            data-bs-toggle="tab"
+                            href="#lost"
                           >
-                            <div className="row justify-content-start">
-                              {lostItems.length !== 0
-                                ? lostItems.map((item) =>
-                                    createItemCard(item, "lostitem")
-                                  )
-                                : createNoResultsCard()}
+                            {isAdmin ? "All Lost Items" : "Lost Item Requests"}
+                          </a>
+                        </li>
+                        <li className="nav-item items-link">
+                          <a
+                            className="nav-link py-2 justify-content-center"
+                            data-bs-toggle="tab"
+                            href="#found"
+                          >
+                            {isAdmin ? "All Found Items" : "Found Item Reports"}
+                          </a>
+                        </li>
+                      </ul>
+                      <div className="row">
+                        <div className="col-12">
+                          <div className="tab-content p-4 ">
+                            <div
+                              id="lost"
+                              className="tab-pane fade in active show"
+                            >
+                              <div className="row justify-content-start">
+                                {lostItems.length !== 0
+                                  ? lostItems.map((item) =>
+                                      createItemCard(item, "lostitem")
+                                    )
+                                  : createNoResultsCard()}
+                              </div>
                             </div>
-                          </div>
-                          <div id="found" className="tab-pane fade ">
-                            <div className="row justify-content-start">
-                              {foundItems.length !== 0
-                                ? foundItems.map((item) =>
-                                    createItemCard(item, "founditem")
-                                  )
-                                : createNoResultsCard()}
+                            <div id="found" className="tab-pane fade ">
+                              <div className="row justify-content-start">
+                                {foundItems.length !== 0
+                                  ? foundItems.map((item) =>
+                                      createItemCard(item, "founditem")
+                                    )
+                                  : createNoResultsCard()}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -238,7 +239,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

@@ -8,14 +8,12 @@ import { useParams } from "react-router-dom";
 import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
 import Matches from "./Matches";
-import Footer from "../../common/Footer";
 
 export default function Match() {
   const { id } = useParams();
   const [idtwo, setid] = useState("");
   const token = localStorage.getItem("token");
   let navigate = useNavigate();
-  const [validated, setValidated] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [selectedDate, setselectedDate] = useState(null);
   const [errorSubmit, setErrorSubmit] = useState("");
@@ -125,9 +123,9 @@ export default function Match() {
                     <img
                       src={i}
                       alt=""
-                      width="300px"
+                      width="200px"
                       height="200px"
-                      style={{ objectFit: "cover" }}
+                      //style={{ objectFit: "cover" }}
                     />
                   </div>
                 );
@@ -166,7 +164,7 @@ export default function Match() {
                 alt=""
                 width="200px"
                 height="200px"
-                style={{ objectFit: "fill" }}
+                //style={{ objectFit: "fill" }}
               />
             ) : (
               <img
@@ -174,26 +172,26 @@ export default function Match() {
                 alt=""
                 width="150px"
                 height="150px"
-                style={{ objectFit: "cover" }}
+                style={{ marginBottom: "5px" }}
               />
             )}
-            {showView ? null : (
-              <div className="card-body">
-                <div className="mb-3">
-                  <label className="form-label fw-bold" htmlFor="customFile">
-                    Update Images
-                  </label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    id="customFile"
-                    accept="image/*"
-                    multiple
-                    onChange={imagehandler}
-                  />
-                </div>
-              </div>
-            )}
+          </div>
+        )}
+        {showView ? null : (
+          <div className="card-body">
+            <div className="mb-3">
+              <label className="form-label fw-bold" htmlFor="customFile">
+                Update Images
+              </label>
+              <input
+                type="file"
+                className="form-control"
+                id="customFile"
+                accept="image/*"
+                multiple
+                onChange={imagehandler}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -371,7 +369,7 @@ export default function Match() {
           </div>
         </div>
         <div class="col-xl-8">
-          <form noValidate validated={validated} onSubmit={submitHandler}>
+          <form onSubmit={submitHandler}>
             <div class="mb-3">
               <label
                 class=" small mb-1 fw-bold control-label"
@@ -582,7 +580,7 @@ export default function Match() {
           </div>
         </div>
         <div class="col-xl-8">
-          <form noValidate validated={validated} onSubmit={submitHandler}>
+          <form onSubmit={submitHandler}>
             <div class="mb-3">
               <label
                 class=" small mb-1 fw-bold control-label"
@@ -842,7 +840,6 @@ export default function Match() {
         </div>
       </div>
       {isActive ? <Matches /> : null}
-      <Footer />
     </div>
   );
 }

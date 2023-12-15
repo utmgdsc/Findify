@@ -4,7 +4,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NavBar from "../../common/NavBar";
 import { format } from "date-fns";
-import Footer from "../../common/Footer";
 import "./style.css";
 
 export default function RequestLost() {
@@ -386,12 +385,12 @@ export default function RequestLost() {
                     </div>
 
                     <div className="mb-3">
-                      <label className="form-label" for="customFile">
+                      <label class="form-label" for="customFile">
                         Upload images (Optional)
                       </label>
                       <input
                         type="file"
-                        className="form-control"
+                        class="form-control"
                         id="customFile"
                         accept="image/*"
                         multiple
@@ -427,7 +426,6 @@ export default function RequestLost() {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     </>
   );

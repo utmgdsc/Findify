@@ -7,7 +7,6 @@ import fetcher from "../../../fetchHelper";
 import { useParams } from "react-router-dom";
 import no_img from "../../../assets/img/no_img.png";
 import NavBar from "../../common/NavBar";
-import Footer from "../../common/Footer";
 
 export default function FoundRequest() {
   const { id } = useParams();
@@ -16,13 +15,11 @@ export default function FoundRequest() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isActive, setIsActive] = useState(false);
   let navigate = useNavigate();
-  const [validated, setValidated] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [selectedDate, setselectedDate] = useState(null);
   const [errorSubmit, setErrorSubmit] = useState("");
   const [errorHandover, seterrorHandover] = useState("");
   const [showView, setshowView] = useState(true);
-  const [formattedDate, setFormattedDate] = useState("");
   const [LostItemId, setLostItemId] = useState("");
   const [showHandover, setShowHandover] = useState(false);
   const [handoverUser, setHandoverUser] = useState(0);
@@ -102,7 +99,6 @@ export default function FoundRequest() {
             setIsActive(json.foundItem.isActive);
             //setselectedDate(itemdata.timeFound);
             console.log(itemdata);
-            setFormattedDate(json.foundItem.timeFound.slice(0, 10));
           });
         } else {
           // Check if user is logged in
@@ -154,11 +150,11 @@ export default function FoundRequest() {
                 return (
                   <div className={class_value} key={index}>
                     <img
+                      //className="card-img-top item-img border"
                       src={i}
                       alt=""
                       width="200px"
                       height="200px"
-                      style={{ objectFit: "cover" }}
                     />
                   </div>
                 );
@@ -193,40 +189,43 @@ export default function FoundRequest() {
           <div>
             {files.length === 1 ? (
               <img
+                //className="card-img-top item-img border"
                 src={files[0]}
                 alt=""
                 width="200px"
                 height="200px"
-                style={{ objectFit: "fill" }}
               />
             ) : (
               <img
+                //className="card-img-top item-img border"
                 src={no_img}
                 alt=""
                 width="150px"
                 height="150px"
-                style={{ objectFit: "cover", marginBottom: "5px" }}
+                style={{ marginBottom: "5px" }}
               />
-            )}
-            {showView ? null : (
-              <div className="card-body">
-                <div className="mb-3">
-                  <label className="form-label fw-bold" htmlFor="customFile">
-                    Update Images
-                  </label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    id="customFile"
-                    accept="image/*"
-                    multiple
-                    onChange={imagehandler}
-                  />
-                </div>
-              </div>
             )}
           </div>
         )}
+        <div>
+          {showView ? null : (
+            <div className="card-body">
+              <div className="mb-3">
+                <label className="form-label fw-bold" htmlFor="customFile">
+                  Update Images
+                </label>
+                <input
+                  type="file"
+                  className="form-control"
+                  id="customFile"
+                  accept="image/*"
+                  multiple
+                  onChange={imagehandler}
+                />
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     );
   };
@@ -530,7 +529,7 @@ export default function FoundRequest() {
           </div>
         </div>
         <div class="col-xl-8">
-          <form noValidate validated={validated} onSubmit={submitHandler}>
+          <form onSubmit={submitHandler}>
             <div class="mb-3">
               <label
                 class=" small mb-1 fw-bold control-label"
@@ -864,7 +863,7 @@ export default function FoundRequest() {
           </div>
         </div>
         <div class="col-xl-8">
-          <form noValidate validated={validated} onSubmit={submitHandler}>
+          <form onSubmit={submitHandler}>
             <div class="mb-3">
               <label
                 class=" small mb-1 fw-bold control-label"
@@ -1115,7 +1114,6 @@ export default function FoundRequest() {
             <div>{showView ? viewItem() : editItem()}</div>
           </div>
         </div>
-        <Footer />
       </div>
     </div>
   );

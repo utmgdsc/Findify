@@ -105,7 +105,7 @@ module.exports.edit = async (req, res, next) => {
       throw new Error("Email does not match user!");
     }
 
-    if (password) user.password = password;
+    if (newPassword) user.password = newPassword;
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
     user.contactNumber = contactNumber || user.contactNumber;
@@ -148,11 +148,9 @@ module.exports.sendOTP = async (req, res, next) => {
     const currentTime = new Date();
 
     if (lastOTPTime && currentTime - lastOTPTime < 60000) {
-      return res
-        .status(403)
-        .json({
-          message: "Minimum 1-minute gap required between OTP requests",
-        });
+      return res.status(403).json({
+        message: "Minimum 1-minute gap required between OTP requests",
+      });
     }
 
     const OTP = generateOTP();

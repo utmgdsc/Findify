@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
-import "./style.css";
 import fetcher from "../../../fetchHelper";
 import NavBar from "../../common/NavBar";
-import Footer from "../../common/Footer";
+import { PhoneInput } from "react-international-phone";
+import { PhoneNumberUtil } from "google-libphonenumber";
+import "react-international-phone/style.css";
 
 export default function UserProfile() {
   const token = localStorage.getItem("token");
@@ -61,8 +62,18 @@ export default function UserProfile() {
   const lastNameHandler = (e) => {
     setUserDetails({ ...userDetails, lastName: e.target.value });
   };
-  const contactNumberHandler = (e) => {
-    setUserDetails({ ...userDetails, contactNumber: e.target.value });
+
+  const phoneUtil = PhoneNumberUtil.getInstance();
+
+  const isPhoneValid = (contactNumber) => {
+    try {
+      return phoneUtil.isValidNumber(
+        phoneUtil.parseAndKeepRawInput(contactNumber)
+      );
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
   };
   const newPasswordHandler = (e) => {
     let regex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,24}$/;
@@ -100,21 +111,39 @@ export default function UserProfile() {
   };
   const editHandler = (e) => {
     setDisabled(false);
+    setErrors({
+      ...errors,
+      repeatPassword: "",
+      submit: "",
+    });
   };
 
   const cancelHandler = (e) => {
     getUserDetails();
     setDisabled(true);
+    setErrors({
+      ...errors,
+      repeatPassword: "",
+      submit: "",
+    });
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
     setDisabled(true);
+
     if (
       errors.submit === "" &&
       errors.password === "" &&
       errors.repeatPassword === ""
     ) {
+      const jsonData = {
+        email: userDetails.email,
+        firstName: userDetails.firstName,
+        lastName: userDetails.lastName,
+        contactNumber: userDetails.contactNumber,
+        newPassword: userDetails.newPassword,
+      };
       return fetch("http://localhost:3000/user/edit", {
         method: "PUT",
         headers: {
@@ -122,13 +151,30 @@ export default function UserProfile() {
           Accept: "application/json",
           authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(userDetails),
+        body: JSON.stringify(jsonData),
       })
-        .then((res) => {
-          console.log("SUCCESS!", res);
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json().then((json) => {
+              console.log(json);
+              setErrors({ ...errors, submit: "" });
+            });
+          } else {
+            // Handle other status codes
+            return response.text().then((errorMessage) => {
+              const errorObject = JSON.parse(errorMessage);
+              setErrors({
+                ...errors,
+                submit: errorObject.message,
+              });
+              getUserDetails();
+            });
+          }
         })
         .catch((err) => {
-          console.error("ERROR!", err);
+          const errorObject = JSON.parse(err);
+          setErrors({ ...errors, submit: errorObject.message });
+          console.log(err);
           getUserDetails();
         });
     }
@@ -212,7 +258,31 @@ export default function UserProfile() {
                   <label htmlFor="contactNumber" className="form-label mb-0">
                     Contact Number
                   </label>
-                  <input
+
+                  <div>
+                    <PhoneInput
+                      required
+                      id="contactNumber"
+                      defaultCountry="ca"
+                      value={userDetails.contactNumber}
+                      disabled={disabled}
+                      onChange={(contactNumber) =>
+                        setUserDetails({
+                          ...userDetails,
+                          contactNumber,
+                        })
+                      }
+                    />
+
+                    {!disabled && !isPhoneValid(userDetails.contactNumber) && (
+                      <span style={{ color: "red", fontSize: "15px" }}>
+                        Enter a valid Phone Number.
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* <input
                     type="tel"
                     className="form-control"
                     id="contactNumber"
@@ -220,7 +290,8 @@ export default function UserProfile() {
                     value={userDetails.contactNumber}
                     onChange={(e) => contactNumberHandler(e)}
                   />
-                </div>
+                    </div> */}
+
                 {!disabled ? (
                   <>
                     <p className="fw-bold mt-5">Change Password</p>
@@ -233,7 +304,6 @@ export default function UserProfile() {
                         className="form-control"
                         id="newPassword"
                         disabled={disabled}
-                        value={userDetails.newPassword}
                         onChange={(e) => newPasswordHandler(e)}
                       />
                       <span
@@ -258,7 +328,6 @@ export default function UserProfile() {
                         className="form-control"
                         id="confirmPassword"
                         disabled={disabled}
-                        value={userDetails.confirmPassword}
                         onChange={(e) => confirmPasswordHandler(e)}
                       />
                       <span style={{ fontSize: 12, color: "red" }}>
@@ -277,7 +346,6 @@ export default function UserProfile() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

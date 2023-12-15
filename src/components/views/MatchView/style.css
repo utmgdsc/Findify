@@ -70,3 +70,9 @@ border:0.02px grey solid;
     background:rgb(29, 141, 227);
     color: white;
 }
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(330deg) brightness(100%) contrast(100%);
+  margin-top: 3px;
+}

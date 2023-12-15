@@ -353,10 +353,10 @@ export default function SignUp() {
                           }
                         />
 
-                        {!isPhoneValid(data.phone) && (
-                          <div style={{ color: "red" }}>
-                            {errors.contactNumber}
-                          </div>
+                        {!isPhoneValid(data.contactNumber) && (
+                          <span style={{ color: "red", fontSize: "15px" }}>
+                            Enter a valid Phone Number.
+                          </span>
                         )}
                       </div>
                     </div>

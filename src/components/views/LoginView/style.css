@@ -1,13 +1,14 @@
 .body-sign {
     margin:0;
     padding:0;
-    background-image: url("../../../assets/img/login_bg.jpg");
+    background-image: url("../../../assets/img/login_bg.jpg") !important;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
     background-size: cover;
     flex: auto;
-    height: 60vw;
+    min-height: 60vw;
+    max-height: 70vw;
    }
 
 #signup-card {

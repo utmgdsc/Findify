@@ -1,14 +1,11 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import fetcher from "../../../fetchHelper";
-import { useNavigate } from "react-router-dom";
 import NavBar from "../../common/NavBar";
-import Footer from "../../common/Footer";
 import "./style.css";
 import contact_us from "../../../assets/img/contact_us.svg";
 
 export default function Contact() {
-  let navigate = useNavigate();
   const form = useRef();
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
@@ -67,18 +64,17 @@ export default function Contact() {
   };
 
   return (
-    <div>
+    <div className="body-email">
       <NavBar />
-      <Footer />
-      <div class="container">
-        <div class="row mb-5 mt-3">
-          <div class="col lg-8">
+      <div className="container">
+        <div className="row mb-5 mt-3">
+          <div className="col lg-8">
             <br />
             <br />
           </div>
         </div>
-        <div class="row">
-          <div class="col mb-5">
+        <div className="row">
+          <div className="col mb-5">
             <h1 className="display-7 mb-4" style={{ color: "aliceblue" }}>
               CONTACT US
             </h1>
@@ -98,7 +94,7 @@ export default function Contact() {
             ></img>
           </div>
           <div
-            class="col card d-flex align-items-right"
+            className="col card d-flex align-items-right"
             style={{ padding: "20px" }}
           >
             <StyledContactForm>

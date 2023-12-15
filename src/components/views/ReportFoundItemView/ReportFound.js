@@ -4,7 +4,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NavBar from "../../common/NavBar";
 import { format } from "date-fns";
-import Footer from "../../common/Footer";
 import "./style.css";
 
 export default function ReportFound() {
@@ -18,7 +17,7 @@ export default function ReportFound() {
     name: "",
     category: "",
     colour: "",
-    files: [],
+    images: [],
     description: "",
     timeFound: "",
     timeSubmitted: new Date(),
@@ -31,7 +30,7 @@ export default function ReportFound() {
     name: "",
     category: "",
     colour: "",
-    files: "",
+    images: "",
     description: "",
     timeFound: "",
     timeSubmitted: "",
@@ -60,11 +59,12 @@ export default function ReportFound() {
     for (let i = 0; i < e.target.files.length; i++) {
       console.log(e.target.files[i]);
       if (e.target.files[i].size < 3000000)
-        imageurls.push(URL.createObjectURL(e.target.files[i]));
-      else setData({ ...data, files: "Warning: A file is larger than 3mb." });
+        //imageurls.push(URL.createObjectURL(e.target.files[i]));
+        imageurls.push(e.target.files[i]);
+      else setData({ ...data, images: "Warning: A file is larger than 3mb." });
     }
     console.log(imageurls);
-    setData({ ...data, files: imageurls });
+    setData({ ...data, images: imageurls });
     console.log(data);
   };
 
@@ -127,29 +127,30 @@ export default function ReportFound() {
       event.stopPropagation();
       setDisabled(false);
     } else {
-      const jsonData = {
-        itemName: data.name,
-        type: data.category,
-        colour: data.colour,
-        files: data.files,
-        description: data.description,
-        timeFound: data.timeFound,
-        timeSubmitted: data.timeSubmitted,
-        locationFound: data.location,
-        brand: data.brand,
-        size: data.size,
-      };
+      const formData = new FormData();
+      formData.append("itemName", data.name);
+      formData.append("type", data.category);
+      formData.append("colour", data.colour);
+      data.images.forEach((file) => {
+        formData.append("images", file);
+      });
+      formData.append("description", data.description);
+      formData.append("timeFound", data.timeFound);
+      formData.append("timeSubmitted", data.timeSubmitted);
+      formData.append("locationFound", data.location);
+      formData.append("brand", data.brand);
+      formData.append("size", data.size);
 
-      console.log(jsonData);
+      console.log(data);
       console.log(token);
+      console.log(formData.get("images[]"));
       return fetch("http://localhost:3000/item/foundRequest", {
         method: "POST",
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          accept: "multipart/form-data",
           authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(jsonData),
+        body: formData,
         signal: signal,
       })
         .then((response) => {
@@ -411,7 +412,6 @@ export default function ReportFound() {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     </>
   );
