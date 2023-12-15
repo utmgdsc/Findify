@@ -257,17 +257,23 @@ module.exports.getSimilarItems = async (req, res, next) => {
       return res.status(403).json({ message: 'Only the lost item host can fetch similar items' });
     }
 
-    const foundItems = await FoundItem.find(
-      // exclude the current user's found items
-      // host: { $ne: mongoose.Types.ObjectId(excludedHostId) }
-    ).select("-__v");
+    const queryCriteria = { host: { $ne: user._id } };
+
+    const foundItems = await FoundItem.find(queryCriteria).select("-__v");
 
     const fuseOptions = {
       includeScore: true,
-      // You can add more fields here based on what you'd like to compare
       findAllMatches: true,
-      keys: ['itemName', 'type', 'brand', 'colour', 'description'],
-      threshold: 0.8, // Adjust this threshold to your needs for fuzziness
+      keys: [
+        { name: 'type', weight: 1 }, // Higher weight for 'type'
+        
+        // { name: 'itemName', weight: 0.2 },
+        // { name: 'type', weight: 0.5 }, // Higher weight for 'type'
+        // { name: 'brand', weight: 0.1 },
+        // { name: 'colour', weight: 0.1 },
+        // { name: 'locationLost', weight: 0.1 },
+      ],
+      threshold: 0.6
     };
 
     const fuse = new Fuse(foundItems, fuseOptions);
@@ -275,7 +281,7 @@ module.exports.getSimilarItems = async (req, res, next) => {
     // Create an array of existing property values
     let searchTerms = [];
     for (const key of fuseOptions.keys) {
-      lostItem[key] && searchTerms.push(lostItem[key].replace(/\s+/g, ' | '));
+      lostItem[key.name] && searchTerms.push(lostItem[key.name].replace(/\s+/g, ' | '));
     }
 
     // Join the terms using the '|' to create a string for a fuzzy 'OR' type search
