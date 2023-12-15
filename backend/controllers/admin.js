@@ -4,7 +4,7 @@ const { getTransporter } = require('../utils/otp');
 
 module.exports.getAllLostItems = async (req, res, next) => {
   try {
-    const lostItems = await LostItem.find({});
+    const lostItems = await LostItem.find({}).sort({ updatedAt: -1 });
     res.json({ lostItems });
   } catch (err) {
     console.error("Error fetching all lostItems:", err);
@@ -14,7 +14,7 @@ module.exports.getAllLostItems = async (req, res, next) => {
 
 module.exports.getAllFoundItems = async (req, res, next) => {
   try {
-    const foundItems = await FoundItem.find({});
+    const foundItems = await FoundItem.find({}).sort({ updatedAt: -1 });
     res.json({ foundItems });
   } catch (err) {
     console.error("Error fetching all foundItems:", err);
@@ -24,7 +24,7 @@ module.exports.getAllFoundItems = async (req, res, next) => {
 
 module.exports.getAllPotentialMatches = async (req, res, next) => {
   try {
-    const potentialMatches = await PotentialMatch.find({});
+    const potentialMatches = await PotentialMatch.find({}).sort({ updatedAt: -1 });
     res.json({ potentialMatches });
   } catch (err) {
     console.error("Error fetching all potentialMatches:", err);
