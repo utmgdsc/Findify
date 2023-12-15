@@ -39,13 +39,9 @@ module.exports.createLostRequest = async (req, res, next) => {
 
   try {
     if (req.files && req.files.length > 0) {
-<<<<<<< HEAD
       const uploadPromises = req.files.map((file) =>
-        uploadToS3("lost-items", file)
+        exports.uploadToS3("lost-items", file)
       );
-=======
-      const uploadPromises = req.files.map(file => exports.uploadToS3('lost-items', file));
->>>>>>> 21f39ac49bfdf346851faefe695869ea9e87dd35
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -88,13 +84,9 @@ module.exports.editLostRequest = async (req, res, next) => {
     }
 
     if (req.files && req.files.length > 0) {
-<<<<<<< HEAD
       const uploadPromises = req.files.map((file) =>
-        uploadToS3("found-items", file)
+        exports.uploadToS3("found-items", file)
       );
-=======
-      const uploadPromises = req.files.map(file => exports.uploadToS3('found-items', file));
->>>>>>> 21f39ac49bfdf346851faefe695869ea9e87dd35
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -181,13 +173,9 @@ module.exports.createFoundRequest = async (req, res, next) => {
 
   try {
     if (req.files && req.files.length > 0) {
-<<<<<<< HEAD
       const uploadPromises = req.files.map((file) =>
-        uploadToS3("found-items", file)
+        exports.uploadToS3("found-items", file)
       );
-=======
-      const uploadPromises = req.files.map(file => exports.uploadToS3('found-items', file));
->>>>>>> 21f39ac49bfdf346851faefe695869ea9e87dd35
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -230,13 +218,9 @@ module.exports.editFoundRequest = async (req, res, next) => {
     }
 
     if (req.files && req.files.length > 0) {
-<<<<<<< HEAD
       const uploadPromises = req.files.map((file) =>
-        uploadToS3("found-items", file)
+        exports.uploadToS3("found-items", file)
       );
-=======
-      const uploadPromises = req.files.map(file => exports.uploadToS3('found-items', file));
->>>>>>> 21f39ac49bfdf346851faefe695869ea9e87dd35
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -296,16 +280,15 @@ module.exports.getUserPosts = async (req, res, next) => {
     const userId = req.user._id;
 
     // Fetch Lost Items
-    const lostItems = await LostItem.find({ host: userId }).sort({ updatedAt: -1 }).select("-__v");
+    const lostItems = await LostItem.find({ host: userId })
+      .sort({ updatedAt: -1 })
+      .select("-__v");
 
     // Fetch Found Items
-<<<<<<< HEAD
-    const foundItems = await FoundItem.find({ host: userId }).select("-__v");
+    const foundItems = await FoundItem.find({ host: userId })
+      .sort({ updatedAt: -1 })
+      .select("-__v");
     res.json({ userPosts: { lostItems, foundItems } });
-=======
-    const foundItems = await FoundItem.find({ host: userId }).sort({ updatedAt: -1 }).select("-__v");
-    res.json({ userPosts: { lostItems, foundItems } })
->>>>>>> 21f39ac49bfdf346851faefe695869ea9e87dd35
   } catch (error) {
     console.error("Error fetching user's items:", error);
     res.status(500).json({ message: "Error fetching user requests" });
@@ -332,37 +315,23 @@ module.exports.getSimilarItems = async (req, res, next) => {
         .json({ message: "Only the lost item host can fetch similar items" });
     }
 
-<<<<<<< HEAD
-    const foundItems = await FoundItem
-      .find
-      // exclude the current user's found items
-      // host: { $ne: mongoose.Types.ObjectId(excludedHostId) }
-      ()
-      .select("-__v");
-=======
     const queryCriteria = { host: { $ne: user._id } };
 
     const foundItems = await FoundItem.find(queryCriteria).select("-__v");
->>>>>>> 21f39ac49bfdf346851faefe695869ea9e87dd35
 
     const fuseOptions = {
       includeScore: true,
       findAllMatches: true,
-<<<<<<< HEAD
-      keys: ["itemName", "type", "brand", "colour", "description"],
-      threshold: 0.8, // Adjust this threshold to your needs for fuzziness
-=======
       keys: [
-        { name: 'type', weight: 1 }, // Higher weight for 'type'
-        
+        { name: "type", weight: 1 }, // Higher weight for 'type'
+
         // { name: 'itemName', weight: 0.2 },
         // { name: 'type', weight: 0.5 }, // Higher weight for 'type'
         // { name: 'brand', weight: 0.1 },
         // { name: 'colour', weight: 0.1 },
         // { name: 'locationLost', weight: 0.1 },
       ],
-      threshold: 0.6
->>>>>>> 21f39ac49bfdf346851faefe695869ea9e87dd35
+      threshold: 0.6,
     };
 
     const fuse = new Fuse(foundItems, fuseOptions);
@@ -370,11 +339,8 @@ module.exports.getSimilarItems = async (req, res, next) => {
     // Create an array of existing property values
     let searchTerms = [];
     for (const key of fuseOptions.keys) {
-<<<<<<< HEAD
-      lostItem[key] && searchTerms.push(lostItem[key].replace(/\s+/g, " | "));
-=======
-      lostItem[key.name] && searchTerms.push(lostItem[key.name].replace(/\s+/g, ' | '));
->>>>>>> 21f39ac49bfdf346851faefe695869ea9e87dd35
+      lostItem[key.name] &&
+        searchTerms.push(lostItem[key.name].replace(/\s+/g, " | "));
     }
 
     // Join the terms using the '|' to create a string for a fuzzy 'OR' type search
@@ -521,7 +487,6 @@ module.exports.finalHandoff = async (req, res, next) => {
   }
 };
 
-
 module.exports.uploadToS3 = async function (folder, file) {
   const fileName = `${folder}/${uuidv4()}-${file.originalname}`;
 
@@ -542,4 +507,4 @@ module.exports.uploadToS3 = async function (folder, file) {
     console.error("An error occurred while uploading the file:", error);
     throw error; // Re-throw the error to be handled by the caller
   }
-}
+};
