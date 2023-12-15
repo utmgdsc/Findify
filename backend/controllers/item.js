@@ -30,7 +30,7 @@ module.exports.createLostRequest = async (req, res, next) => {
 
   try {
     if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map(file => uploadToS3('lost-items', file));
+      const uploadPromises = req.files.map(file => exports.uploadToS3('lost-items', file));
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -69,7 +69,7 @@ module.exports.editLostRequest = async (req, res, next) => {
     }
 
     if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map(file => uploadToS3('found-items', file));
+      const uploadPromises = req.files.map(file => exports.uploadToS3('found-items', file));
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -138,7 +138,7 @@ module.exports.createFoundRequest = async (req, res, next) => {
 
   try {
     if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map(file => uploadToS3('found-items', file));
+      const uploadPromises = req.files.map(file => exports.uploadToS3('found-items', file));
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -177,7 +177,7 @@ module.exports.editFoundRequest = async (req, res, next) => {
     }
 
     if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map(file => uploadToS3('found-items', file));
+      const uploadPromises = req.files.map(file => exports.uploadToS3('found-items', file));
       imageUrls = await Promise.all(uploadPromises);
     }
 
@@ -413,7 +413,7 @@ module.exports.finalHandoff = async (req, res, next) => {
 };
 
 
-async function uploadToS3 (folder, file) {
+module.exports.uploadToS3 = async function (folder, file) {
   const fileName = `${folder}/${uuidv4()}-${file.originalname}`;
 
   const command = new PutObjectCommand({
