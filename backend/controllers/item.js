@@ -17,7 +17,7 @@ module.exports.getLostRequest = async (req, res, next) => {
       return res.status(404).json({ message: 'Lost item not found' });
     }
 
-    res.json({ lostItem });
+    res.status(200).json({ lostItem });
   } catch (err) {
     console.error("Error fetching lostItem details:", err);
     res.status(500).json({ message: 'Error fetching lostItem details' });
